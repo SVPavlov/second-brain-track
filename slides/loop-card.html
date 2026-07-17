@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De dagelijkse routine van 5 minuten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --em-ink:#383D38; --em-white:#FFFFFF; --em-cream:#F3F3F1; --em-line:#CAC9C4;
+    --em-grey:#686861; --em-mute:#9A9990; --em-lime:#D4FF52; --em-lime-tint:#F6FFDB;
+    --em-font-display:"Space Grotesk","Inter","Helvetica Neue",Arial,sans-serif;
+    --em-font-text:"Inter Tight","Inter","Helvetica Neue",Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--em-cream);font-family:var(--em-font-text);color:var(--em-ink);
+    display:flex;justify-content:center;padding:24px}
+  .card{background:var(--em-white);max-width:760px;width:100%;padding:40px 44px;border:1px solid var(--em-line)}
+  .kicker{display:inline-block;background:var(--em-lime);font-family:var(--em-font-display);
+    font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;margin-bottom:14px}
+  h1{font-family:var(--em-font-display);font-weight:400;font-size:34px;line-height:1.1;margin-bottom:6px}
+  .sub{color:var(--em-grey);font-size:15px;margin-bottom:26px}
+  .step{display:grid;grid-template-columns:44px 92px 1fr 44px;gap:14px;align-items:start;
+    padding:14px 0;border-top:1px solid var(--em-line)}
+  .step:last-of-type{border-bottom:1px solid var(--em-line)}
+  .num{font-family:var(--em-font-display);font-size:26px;background:var(--em-lime);
+    width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+  .name{font-family:var(--em-font-display);font-size:17px;padding-top:8px}
+  .what{font-size:14.5px;line-height:1.45;padding-top:2px}
+  .what code{font-family:"SF Mono",Menlo,monospace;font-size:13px;background:var(--em-lime-tint);
+    padding:1px 5px;white-space:nowrap}
+  .min{font-size:13px;color:var(--em-mute);padding-top:10px;text-align:right}
+  .extras{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px}
+  .extras div{font-size:13.5px;line-height:1.4}
+  .extras code{font-family:"SF Mono",Menlo,monospace;font-size:12px;background:var(--em-cream);padding:1px 4px}
+  h2{font-family:var(--em-font-display);font-weight:400;font-size:19px;margin:28px 0 10px}
+  .rules{background:var(--em-cream);padding:16px 18px;margin-top:24px;font-size:13.5px;line-height:1.55}
+  .rules code{font-family:"SF Mono",Menlo,monospace;font-size:12px;background:var(--em-white);padding:1px 5px}
+  @media print{body{background:var(--em-white);padding:0}.card{border:none;padding:20px}}
+</style>
+</head>
+<body>
+<div class="card">
+  <span class="kicker">AI Second Brain Track · Sessie 2</span>
+  <h1>De dagelijkse routine van 5 minuten</h1>
+  <p class="sub">Elke ochtend, 5 minuten.</p>
+
+  <div class="step">
+    <div class="num">1</div><div class="name">Overzicht</div>
+    <div class="what">Zeg <code>daily brief</code>. Je overzicht (<code>02-command-center.md</code>) wordt ververst. Lees terug: wat is veranderd, wat moet er vandaag, wat vraagt aandacht?</div>
+    <div class="min">1 min</div>
+  </div>
+  <div class="step">
+    <div class="num">2</div><div class="name">Vragen</div>
+    <div class="what">Open <code>05-synthesis.md</code>, beantwoord maximaal 3 vragen van je brein. Kort antwoorden is genoeg; de antwoordopties staan in het bestand zelf.</div>
+    <div class="min">1 min</div>
+  </div>
+  <div class="step">
+    <div class="num">3</div><div class="name">Voorbereiden</div>
+    <div class="what">Zeg <code>brief me on [klant]</code> voor je eerstvolgende meeting: alles wat je brein over die klant weet, in één briefing. Klopt er iets niet? Zeg het, dan leert het brein.</div>
+    <div class="min">1 min</div>
+  </div>
+  <div class="step">
+    <div class="num">4</div><div class="name">Invoeren</div>
+    <div class="what">De meeting of mail van gisteren erin: plak je notities (<code>I just had a meeting with ...</code>) of zet een bestand in <code>Inbox/</code> en zeg <code>process my inbox</code>. Zonder voeding veroudert je overzicht.</div>
+    <div class="min">1 min</div>
+  </div>
+  <div class="step">
+    <div class="num">5</div><div class="name">Controleren</div>
+    <div class="what">Lees <code>05-synthesis.md</code> terug. Klopt wat het brein ervan maakte? Verkeerd opgeborgen, of een actie zonder eigenaar en datum? Terugsturen.</div>
+    <div class="min">1 min</div>
+  </div>
+
+  <h2>Meer tijd? De losse skills</h2>
+  <div class="extras">
+    <div><strong>Mail vol acties?</strong> Plak de thread → <code>email-to-actions</code></div>
+    <div><strong>Spannende meeting?</strong> <code>grill me before &lt;meeting&gt;</code></div>
+    <div><strong>Iets gebouwd dat werkte?</strong> <code>save this as a pattern</code></div>
+    <div><strong>Brein rommelig?</strong> <code>run synthesis</code> (1x per week)</div>
+  </div>
+
+  <div class="rules">
+    <strong>Data-regel:</strong> twijfel je of iets je brein in mag? Laat het thuis.<br>
+    <strong>Meetlat</strong> (elke sessie + 1x tussendoor, in de groep):<br>
+    <code>S2 | skills die echt draaien: … | uur bespaard deze week (schatting): … | synthese-vragen beantwoord &lt;48u: n/m</code>
+  </div>
+</div>
+</body>
+</html>

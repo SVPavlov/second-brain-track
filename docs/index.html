@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Second Brain Starter Kit Docs</title>
+  <meta name="description" content="Documentation for the AI Second Brain starter kit: a folder of markdown that an AI reads and writes for you.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#141914;--bg-panel:#1C211C;--bg-elevated:#252B25;--bg-inset:#111411;--bg-deep:#0D100D;
+      --fg:#F2F2F2;--fg-bright:#FFFFFF;--fg-muted:#9DA19B;--fg-dim:#5C5C55;
+      --accent:#C4FF57;--accent-soft:rgba(196,255,87,0.12);--accent-text:#111411;
+      --warning:#FACC15;--danger:#F0787D;--info:#7FB3FF;--success:#6BDB6B;
+      --border:#2A302A;--border-hover:#3A423A;
+      --font-h:'Space Grotesk',sans-serif;--font-b:'Inter',-apple-system,system-ui,sans-serif;--font-m:'JetBrains Mono',ui-monospace,monospace;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:24px}
+    body{background:var(--bg);color:var(--fg);font-family:var(--font-b);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+    a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+    .layout{display:flex}
+    /* Sidebar */
+    .sidebar{position:fixed;top:0;left:0;width:264px;height:100vh;overflow-y:auto;background:var(--bg-inset);border-right:1px solid var(--border);padding:22px 16px 40px}
+    .brand{font-family:var(--font-h);font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);padding:6px 12px 4px}
+    .brand small{display:block;color:var(--fg-dim);font-size:10px;letter-spacing:0.12em;margin-top:2px}
+    .nav-group{font-family:var(--font-h);font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--fg-dim);padding:18px 12px 6px}
+    .sidebar nav a{display:block;color:var(--fg-muted);font-size:13.5px;font-weight:500;padding:6px 12px;border-radius:6px;transition:all .12s}
+    .sidebar nav a:hover{color:var(--fg);background:var(--bg-elevated);text-decoration:none}
+    .sidebar nav a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+
+    /* Main */
+    .main{margin-left:264px;width:calc(100% - 264px);display:flex;justify-content:center;padding:0 40px}
+    .content{max-width:820px;width:100%;padding:56px 0 120px}
+    .eyebrow{font-family:var(--font-h);font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    h1{font-family:var(--font-h);font-weight:700;font-size:46px;letter-spacing:-0.02em;line-height:1.05;color:var(--fg-bright)}
+    h2{font-family:var(--font-h);font-weight:700;font-size:28px;letter-spacing:-0.02em;color:var(--fg-bright);margin:0 0 14px;padding-top:18px;scroll-margin-top:24px}
+    h3{font-family:var(--font-h);font-weight:600;font-size:18px;color:var(--fg-bright);margin:22px 0 8px}
+    section{padding:28px 0;border-top:1px solid var(--border)}
+    section:first-of-type{border-top:none}
+    p{margin:10px 0;max-width:68ch}
+    ul,ol{margin:10px 0 10px 22px;max-width:66ch}li{margin:5px 0}
+    strong{color:var(--fg-bright);font-weight:600}
+    .lead{font-size:19px;color:var(--fg-muted);line-height:1.6;max-width:60ch;margin:14px 0 0}
+    code{font-family:var(--font-m);font-size:0.88em;background:var(--bg-inset);color:var(--accent);padding:2px 6px;border-radius:4px;border:1px solid var(--border)}
+    pre{font-family:var(--font-m);font-size:13.5px;line-height:1.7;background:var(--bg-inset);color:var(--accent);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:12px 0;overflow-x:auto;white-space:pre}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    .callout{background:var(--bg-panel);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:14px 18px;margin:16px 0}
+    .callout.warn{border-left-color:var(--warning)}
+    .callout .t{font-family:var(--font-h);font-weight:600;font-size:13px;color:var(--fg-bright);margin-bottom:4px}
+    .callout p{margin:2px 0;font-size:14px;color:var(--fg-muted)}
+    table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;margin:14px 0}
+    th{text-align:left;font-family:var(--font-h);font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--accent);padding:10px 14px;border-bottom:2px solid var(--border);background:var(--bg-inset)}
+    td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--fg)}
+    td code{white-space:nowrap}
+    tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+    .pill{display:inline-block;font-family:var(--font-h);font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid rgba(196,255,87,.3);border-radius:100px;padding:2px 9px}
+    .steps{counter-reset:s;list-style:none;margin-left:0}
+    .steps>li{counter-increment:s;position:relative;padding-left:42px;margin:14px 0;max-width:64ch}
+    .steps>li::before{content:counter(s);position:absolute;left:0;top:-1px;width:28px;height:28px;border-radius:50%;background:var(--accent-soft);border:1px solid rgba(196,255,87,.4);color:var(--accent);font-family:var(--font-h);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+    .ftr{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);color:var(--fg-dim);font-size:13px}
+    .topbar{display:none}
+    @media (max-width:880px){
+      .sidebar{display:none}
+      .main{margin-left:0;width:100%;padding:0 20px}
+      .topbar{display:flex;align-items:center;gap:10px;position:sticky;top:0;background:rgba(17,20,17,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:12px 16px;z-index:20;font-family:var(--font-h);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+      h1{font-size:34px}
+    }
+  </style>
+</head>
+<body style="padding:0;">
+<nav style="background:#383D38;padding:0 20px;font-family:'Space Grotesk',sans-serif;">
+  <div style="max-width:820px;margin:0 auto;display:flex;gap:4px;align-items:center;flex-wrap:wrap;height:auto;min-height:48px;">
+    <a href="../index.html" style="background:#D4FF52;color:#383D38;font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;text-decoration:none;margin-right:12px;">Second Brain Track</a>
+    <a href="../index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Home</a>
+    <a href="../log/index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Track log</a>
+    <a href="../sessies/index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Sessies</a>
+    <a href="../docs/index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Docs</a>
+    <a href="https://github.com/SVPavlov/ai-second-brain-starter-kit" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Kit op GitHub</a>
+  </div>
+</nav>
+
+<div class="topbar">// stas.brain · starter kit docs</div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">// stas.brain<small>STARTER KIT DOCS</small></div>
+    <div class="nav-group">Start</div>
+    <nav>
+      <a href="#overview">Overview</a>
+      <a href="#quickstart">Quick Start</a>
+      <a href="#install">Install (Windows &amp; macOS)</a>
+    </nav>
+    <div class="nav-group">The Brain</div>
+    <nav>
+      <a href="#structure">The Vault Structure</a>
+      <a href="#profile">Your Profile</a>
+      <a href="#skills">Skills</a>
+      <a href="#memory">How Memory Works</a>
+      <a href="#synthesis">The Synthesis Discipline</a>
+    </nav>
+    <div class="nav-group">Keep It Safe</div>
+    <nav>
+      <a href="#backup">Backup &amp; Updates</a>
+      <a href="#safety">Working Safely</a>
+    </nav>
+    <div class="nav-group">More</div>
+    <nav>
+      <a href="#existing">Already Have a Brain?</a>
+      <a href="#tooling">Claude Code, Desktop &amp; Cowork</a>
+      <a href="#faq">FAQ</a>
+      <a href="#reading">Further Reading</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="content">
+
+      <section id="overview">
+        <p class="eyebrow">AI Second Brain Starter Kit</p>
+        <h1>Your second brain, in plain files</h1>
+        <p class="lead">A structured folder of markdown that an AI reads and writes for you. It speeds up your admin, remembers your client context, and thinks with you.</p>
+        <p style="margin-top:22px">This is not a chatbot with memory. It is a set of plain text files you own, and an AI (Claude Code) operates on them. <strong>The files are the brain. The AI is the engine.</strong> That distinction is why you can start one before the AI is even set up, and why it is yours to keep and move anywhere.</p>
+        <h3>What the kit gives you</h3>
+        <ul>
+          <li>A <strong>vault template</strong>: the folder structure, an operating manual, and a catalog.</li>
+          <li><strong>Eleven skills</strong> you trigger in plain words (meeting notes, client prep, inbox to actions, and more).</li>
+          <li>A <strong>quality discipline</strong> (synthesis) that keeps the brain trustworthy as it grows.</li>
+          <li>A <strong>data rule</strong> and trust rules so it stays safe.</li>
+        </ul>
+        <p>It runs today in Claude Code on your own laptop, opens in any editor, and moves to the enterprise stack later as a folder move, not a migration.</p>
+        <div class="callout"><div class="t">New here?</div><p>Go straight to <a href="#quickstart">Quick Start</a> for the 15-minute path, or <a href="#install">Install</a> for the full step-by-step on Windows and macOS.</p></div>
+      </section>
+
+      <section id="quickstart">
+        <h2>Quick Start</h2>
+        <p>From zero to a working brain in five steps. Full detail per operating system is in <a href="#install">Install</a>.</p>
+        <ol class="steps">
+          <li><strong>Install Claude Code.</strong> One line, no Node.js needed.
+            <pre><code># macOS
+curl -fsSL https://claude.ai/install.sh | bash
+# Windows (PowerShell)
+irm https://claude.ai/install.ps1 | iex</code></pre>
+            Check it: <code>claude --version</code>.
+          </li>
+          <li><strong>Get the kit.</strong> Download from <a href="https://placid-ripple-8nh2.here.now/">placid-ripple-8nh2.here.now</a> and unzip it.</li>
+          <li><strong>Make it a git repo</strong> (your version history and backup):
+            <pre><code>cp -r vault-template ~/my-brain
+cd ~/my-brain
+git init
+git add -A
+git commit -m "my brain"</code></pre>
+          </li>
+          <li><strong>Start it and set up.</strong> Run <code>claude</code>, then say:
+            <pre><code>set up my second brain</code></pre>
+            It interviews you, fills your profile, files your first document, and runs a first quality check.
+          </li>
+          <li><strong>Back it up to GitHub.</strong> See <a href="#backup">Backup &amp; Updates</a>.</li>
+        </ol>
+        <div class="callout"><div class="t">No Claude yet, or a locked-down laptop?</div><p>You can still begin. The files exist before any AI touches them. Fill your profile by hand or in claude.ai (free), and run the full thing once you can install Claude Code. Zero rework.</p></div>
+      </section>
+
+      <section id="install">
+        <h2>Install (Windows &amp; macOS)</h2>
+        <p>Written for someone who has never opened a terminal. A terminal is just a window where you type a command and press Enter.</p>
+        <h3>1. Install Claude Code</h3>
+        <p><strong>macOS:</strong> open Terminal (press <code>Cmd+Space</code>, type Terminal, Enter), paste and run:</p>
+        <pre><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre>
+        <p><strong>Windows:</strong> open PowerShell (press <code>Win+X</code>, click Windows PowerShell), paste and run:</p>
+        <pre><code>irm https://claude.ai/install.ps1 | iex</code></pre>
+        <p>Verify with <code>claude --version</code>. If the installer is blocked, install Node.js LTS from <a href="https://nodejs.org">nodejs.org</a> and run <code>npm install -g @anthropic-ai/claude-code</code> instead.</p>
+        <h3>2. Log in</h3>
+        <p>Run <code>claude</code>. A browser opens; sign in with your Claude Pro or Max account. It remembers you after that.</p>
+        <h3>3. Install git</h3>
+        <p><strong>macOS:</strong> run <code>git --version</code>; if missing, macOS offers to install it. <strong>Windows:</strong> install from <a href="https://git-scm.com/download/win">git-scm.com</a> (Next on every screen).</p>
+        <div class="callout warn"><div class="t">Stuck on a step?</div><p>Run <code>claude doctor</code> for a health check, and bring the exact error message to your group. Most fixes are one line.</p></div>
+      </section>
+
+      <section id="structure">
+        <h2>The Vault Structure</h2>
+        <p>Boring on purpose. The structure is what makes the AI reliable, not retrieval magic.</p>
+        <pre><code>my-brain/
+├── CLAUDE.md            the operating manual the AI follows
+├── 00-START-HERE.md     the map and the catalog
+├── 01-me.md             who you are
+├── 02-command-center.md your daily cockpit
+├── 03-tasks.md          your open loops
+├── 04-log.md            what the brain did
+├── 05-synthesis.md      the quality check + your questions
+├── Inbox/               raw drops, emptied during ingest
+├── Meetings/  People/   one note per meeting / person
+├── Clients/  Projects/  one folder per client / project
+├── Patterns/  Sources/  reusable plays / reference docs
+└── Archive/             superseded material</code></pre>
+        <p>Two layers: the <strong>numbered files (00 to 05) are working memory</strong> (always in view), and the <strong>capitalized folders are long-term memory</strong>. The two files the AI reads first are <code>CLAUDE.md</code> (the contract) and <code>00-START-HERE.md</code> (the map it rebuilds after every change).</p>
+        <h3>Conventions</h3>
+        <ul>
+          <li>Filenames in kebab-case; dated records as <code>YYYY-MM-DD-short-title.md</code>.</li>
+          <li>Four frontmatter fields on every note: <code>type</code>, <code>tags</code>, <code>last_updated</code>, <code>related</code>.</li>
+          <li>Wikilinks make the graph. A note nothing links to is a defect, not a preference.</li>
+        </ul>
+      </section>
+
+      <section id="profile">
+        <h2>Your Profile</h2>
+        <p><code>01-me.md</code> is who you are: your role, your clients (names and roles only), your recurring work, and your top time-sinks. The better this file is, the better your brain works, because the AI reads it on any task about your work.</p>
+        <p>You do not write it by hand. Say <code>set up my second brain</code> and the AI interviews you one question at a time, then writes the file. You can refine it anytime.</p>
+        <div class="callout"><div class="t">The time-sink list is the point</div><p>Naming your top three weekly admin time-sinks tells the brain what to win back first, and gives you a target to measure against.</p></div>
+      </section>
+
+      <section id="skills">
+        <h2>Skills</h2>
+        <p>Skills are capabilities you trigger in plain words. You ask for them; you do not hand-roll them. They are paste-based, so they work with zero connectors.</p>
+        <table>
+          <thead><tr><th>Say it like</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>set up my second brain</code></td><td>Guided first-run: interview, first ingest, first synthesis</td></tr>
+            <tr><td><code>process my inbox</code></td><td>Files any document or pasted text in the right place, linked</td></tr>
+            <tr><td><code>I just had a meeting</code></td><td>Turns notes or a transcript into a meeting note with actions</td></tr>
+            <tr><td><code>brief me on [client]</code></td><td>Everything the brain knows about a client before a call</td></tr>
+            <tr><td><code>run synthesis</code></td><td>The quality pass (see below)</td></tr>
+            <tr><td><code>grill me before [event]</code></td><td>The brain plays the toughest person in the room; you rehearse</td></tr>
+            <tr><td><code>save this as a pattern</code></td><td>Stores a reusable play for the next engagement</td></tr>
+            <tr><td><code>daily brief</code></td><td>Refreshes your command center</td></tr>
+            <tr><td><code>record this decision</code> (or <code>/decide</code>)</td><td>Captures what you chose, what you rejected and why, filed with the client</td></tr>
+            <tr><td><code>wrap up my session</code> (or <code>/wrap-up</code>)</td><td>End-of-day handoff: done / next / blocked, picked up by tomorrow's daily brief</td></tr>
+            <tr><td>paste an email</td><td>Extracts actions and drafts a reply in your voice</td></tr>
+          </tbody>
+        </table>
+        <p>Skills are maintained centrally and shipped in the kit at <code>.claude/skills/</code>. You report problems; fixes reach you through <a href="#backup">updates</a>.</p>
+      </section>
+
+      <section id="memory">
+        <h2>How Memory Works</h2>
+        <p>When you ingest something (<code>process my inbox</code>, or paste it), the brain reads it, decides where it lives, links it to related notes, and updates the catalog in <code>00-START-HERE.md</code>. Nothing lands at the root.</p>
+        <h3>Where things go</h3>
+        <table>
+          <thead><tr><th>Content</th><th>Home</th></tr></thead>
+          <tbody>
+            <tr><td>A meeting</td><td><code>Meetings/</code></td></tr>
+            <tr><td>A person</td><td><code>People/</code></td></tr>
+            <tr><td>Anything about a client</td><td><code>Clients/&lt;client&gt;/</code></td></tr>
+            <tr><td>Non-client work</td><td><code>Projects/</code></td></tr>
+            <tr><td>A reusable play</td><td><code>Patterns/</code></td></tr>
+            <tr><td>Reference docs</td><td><code>Sources/</code></td></tr>
+            <tr><td>Action items</td><td>appended to <code>03-tasks.md</code></td></tr>
+          </tbody>
+        </table>
+        <p>Always verify where a document landed and that the catalog updated. That habit (catching the brain when it files something wrong) is exactly the discernment that keeps it useful.</p>
+      </section>
+
+      <section id="synthesis">
+        <h2>The Synthesis Discipline</h2>
+        <p>The mechanism that keeps the brain trustworthy as it grows. Run it weekly, ideally after any heavy ingest day, with <code>run synthesis</code>.</p>
+        <p>It scans recent content against the vault, tags findings with evidence (<code>conflict</code>, <code>identity</code>, <code>stale</code>, <code>gap</code>, <code>unclassified</code>, <code>drift</code>), ranks them, and <strong>writes only the top three</strong> as questions in <code>05-synthesis.md</code>. The cap is the product: three questions get answered, twenty get ignored.</p>
+        <h3>The human gate</h3>
+        <p>The AI flags; you decide. Nothing auto-resolves. You answer each question with one of:</p>
+        <ul>
+          <li><strong>TAP</strong>: answer it directly.</li>
+          <li><strong>CTX</strong>: answer with context (the richest, teaches the brain).</li>
+          <li><strong>IDK</strong>: the brain digs deeper next run.</li>
+          <li><strong>SKIP</strong>: it returns lower; three skips and it parks.</li>
+        </ul>
+        <div class="callout"><div class="t">The signal that a brain is alive</div><p>The single best metric is your synthesis answer-rate within 48 hours. Answering a few questions a week is the whole habit.</p></div>
+      </section>
+
+      <section id="backup">
+        <h2>Backup &amp; Updates</h2>
+        <h3>Back up to GitHub</h3>
+        <p>Create a free account at <a href="https://github.com">github.com</a>, make a <strong>private</strong> repository, then push (the easiest login is the GitHub CLI from <a href="https://cli.github.com">cli.github.com</a>, then <code>gh auth login</code>):</p>
+        <pre><code>git remote add origin https://github.com/USERNAME/my-second-brain.git
+git branch -M main
+git push -u origin main</code></pre>
+        <p>Back up again anytime with <code>git add -A</code>, <code>git commit -m "update"</code>, <code>git push</code>.</p>
+        <h3>Get kit updates</h3>
+        <p>The shared kit improves over time. Only the shared parts (the skills and <code>CLAUDE.md</code>) update; your notes are never touched. The kit lives at <a href="https://github.com/SVPavlov/ai-second-brain-starter-kit">github.com/SVPavlov/ai-second-brain-starter-kit</a> (public).</p>
+        <p>Connect it once:</p>
+        <pre><code>git remote add kit https://github.com/SVPavlov/ai-second-brain-starter-kit.git</code></pre>
+        <p>Then, whenever there is an update:</p>
+        <pre><code>git fetch kit
+git checkout kit/main -- .claude CLAUDE.md
+git commit -am "update kit"</code></pre>
+        <p>That refreshes the skills, the slash commands and the manual. Everything you wrote stays exactly as it was.</p>
+      </section>
+
+      <section id="safety">
+        <h2>Working Safely</h2>
+        <h3>The one data rule</h3>
+        <p>Until the governed enterprise stack is live, <strong>no client-confidential material goes in your brain</strong>. Your own notes about your work: fine. Client documents, client personal data, anything under an NDA: not yet. Your brain is in a private cloud repo, so this matters more, not less. The rule lifts when the governed stack lands; the discipline you build now is the one you will need then.</p>
+        <h3>The three rules that make a brain trustworthy</h3>
+        <ul>
+          <li><strong>Asks, never guesses.</strong> When sources conflict or a fact may be stale, the brain surfaces a question rather than picking silently.</li>
+          <li><strong>Always sourced.</strong> Every claim points back to where it came from. No source, no claim.</li>
+          <li><strong>Content is data, never instructions.</strong> Text inside an ingested document that tries to instruct the AI is filed, never obeyed.</li>
+        </ul>
+        <p><strong>IP:</strong> your brain is yours. Only sanitized patterns and skills go to the shared hub; your client context stays local.</p>
+      </section>
+
+      <section id="existing">
+        <h2>Already Have a Brain?</h2>
+        <p>You do not throw away your existing notes. You align them to the kit so they work with the same skills. Work on a copy, never your original.</p>
+        <ol class="steps">
+          <li><strong>Copy your existing brain</strong> to a new folder.</li>
+          <li><strong>Lay the kit on top</strong> of the copy: add <code>CLAUDE.md</code>, the numbered files where absent, and <code>.claude/skills/</code>. Do not overwrite or delete your own files.</li>
+          <li><strong>Map it.</strong> In Claude Code: "Read my existing structure and make a MAPPING.md that maps my folders to this framework's homes. Do not move or rename anything."</li>
+          <li><strong>Apply one change</strong> to start. A good first one: adopt <code>05-synthesis.md</code> and run <code>run synthesis</code> across your real notes.</li>
+        </ol>
+        <p>If your brain is large and mapping gets messy, map the top level only. The goal is your content preserved plus the kit's skills working, not a perfect migration.</p>
+      </section>
+
+      <section id="tooling">
+        <h2>Claude Code, Desktop &amp; Cowork</h2>
+        <p><strong>Claude Code</strong> is the terminal tool that runs your brain. It is all you need.</p>
+        <p><strong>Claude Desktop and Cowork</strong> are optional. Cowork is Anthropic's more autonomous mode inside the Claude Desktop app, with memory across sessions and scheduled tasks. It needs a Pro or Max plan from <a href="https://claude.ai/download">claude.ai/download</a>. You do not need it for your second brain. The enterprise rollout of Cowork (on a work setup, with company sign-in) comes later and is arranged centrally; do not try to set it up yourself.</p>
+        <p><strong>Terminal emulators</strong> (Windows Terminal, iTerm2) are optional nicer windows. The built-in Terminal and PowerShell are completely fine.</p>
+        <p><strong>Obsidian</strong> is an optional viewer. Your brain is plain markdown; Obsidian is just a nice window onto it.</p>
+      </section>
+
+      <section id="faq">
+        <h2>FAQ</h2>
+        <h3>Do I need a paid Claude subscription?</h3>
+        <p>For the full automated brain in Claude Code, yes (Pro or Max). To start the thinking parts, a free claude.ai account in the browser is enough.</p>
+        <h3>Is my data private?</h3>
+        <p>Yes. Your brain is plain files on your laptop, backed up to a private repo you control. Plus the data rule above.</p>
+        <h3>I am not technical. Can I still do this?</h3>
+        <p>Yes. Follow Install top to bottom and paste the commands. If you cannot install anything today, you can still design your brain on paper and build it later with zero rework.</p>
+        <h3>Will updates overwrite my notes?</h3>
+        <p>No. The update command only refreshes the shared skills and the manual. Your notes are never touched.</p>
+        <h3>What if a skill makes something up?</h3>
+        <p>Check it. The brain should only state what its files support. A confident answer with no source is your signal to verify, which is what the synthesis discipline trains.</p>
+      </section>
+
+      <section id="reading">
+        <h2>Further Reading</h2>
+        <p>Durable sources, not hype.</p>
+        <ul>
+          <li><a href="https://fortelabs.com/blog/basboverview/">Building a Second Brain (overview)</a>, Tiago Forte. The concept and the case for an external knowledge system.</li>
+          <li><a href="https://fortelabs.com/blog/para/">The PARA Method</a>, Tiago Forte. The folder structure most AI-readable brains are built on.</li>
+          <li><a href="https://zettelkasten.de/introduction/">Introduction to the Zettelkasten Method</a>. The mental model behind atomic, linked notes.</li>
+          <li><a href="https://stephango.com/file-over-app">File over app</a>, Steph Ango. Why plain files are the durable home for your knowledge.</li>
+          <li><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">llm-wiki</a>, Andrej Karpathy. A blueprint for an AI-maintained markdown knowledge base. Almost exactly this pattern.</li>
+          <li><a href="https://www.ycombinator.com/library/MW-andrej-karpathy-software-is-changing-again">Software Is Changing (Again)</a>, Andrej Karpathy. LLMs as a new computing layer.</li>
+          <li><a href="https://simonwillison.net/series/using-llms/">How I use LLMs</a>, Simon Willison. A practitioner's honest take, including when to trust output.</li>
+          <li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">The lethal trifecta for AI agents</a>, Simon Willison. The reasoning behind the data rule.</li>
+          <li><a href="https://platform.claude.com/docs/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations">Reduce hallucinations</a>, Anthropic. Techniques to keep an AI knowledge base honest.</li>
+        </ul>
+        <div class="ftr">AI Second Brain Starter Kit docs · built for the emagine track. Kit: <a href="https://placid-ripple-8nh2.here.now/">placid-ripple-8nh2.here.now</a> · Updates: <a href="https://github.com/SVPavlov/ai-second-brain-starter-kit">github.com/SVPavlov/ai-second-brain-starter-kit</a></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // scrollspy: highlight the active section in the sidebar
+  const links = Array.from(document.querySelectorAll('.sidebar nav a'));
+  const map = {};
+  links.forEach(a => { const id = a.getAttribute('href').slice(1); map[id] = a; });
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = map[e.target.id]; if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
+  document.querySelectorAll('section[id]').forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

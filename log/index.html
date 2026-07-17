@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Second Brain Track · Log</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --em-ink:#383D38; --em-white:#FFFFFF; --em-cream:#F3F3F1; --em-line:#CAC9C4;
+    --em-grey:#686861; --em-mute:#9A9990; --em-lime:#D4FF52; --em-lime-tint:#F6FFDB;
+    --em-lime-tint-50:#E4FF99; --em-coral:#F0787D;
+    --fh:'Space Grotesk',sans-serif; --fb:'Inter Tight',sans-serif; --fm:'JetBrains Mono','SF Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--em-cream);color:var(--em-ink);font-family:var(--fb);line-height:1.6;padding:32px 20px}
+  .wrap{max-width:820px;margin:0 auto}
+  .kicker{display:inline-block;background:var(--em-lime);font-family:var(--fh);font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;margin-bottom:14px}
+  h1{font-family:var(--fh);font-weight:400;font-size:clamp(34px,5vw,46px);line-height:1.1;margin-bottom:8px}
+  .lead{color:var(--em-grey);font-size:17px;max-width:58ch;margin-bottom:26px}
+
+  .over{background:var(--em-white);border:1px solid var(--em-line);border-left:4px solid var(--em-lime);padding:22px 26px;margin-bottom:26px}
+  .over p{font-size:15.5px;max-width:66ch;margin-bottom:10px}
+  .over p:last-child{margin-bottom:0}
+
+  .tussenkop{font-family:var(--fh);font-weight:500;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--em-grey);margin:26px 0 10px}
+  .tijdlijn{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+  .sessie-chip{font-family:var(--fh);font-size:13px;padding:8px 13px;border:1px solid var(--em-line);background:var(--em-white)}
+  .sessie-chip.gedaan{background:var(--em-lime);border-color:var(--em-lime)}
+  .sessie-chip.volgende{border:2px solid var(--em-ink);font-weight:500}
+  .sessie-chip.stil{color:var(--em-mute)}
+  .tijdlijn-uitleg{color:var(--em-mute);font-size:13.5px;margin-bottom:18px}
+
+  .links{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px}
+  .links a{font-family:var(--fh);font-size:13px;color:var(--em-ink);background:var(--em-white);border:1px solid var(--em-line);padding:8px 13px;text-decoration:none}
+  .links a:hover{border-color:var(--em-ink)}
+
+  .entry{background:var(--em-white);border:1px solid var(--em-line);padding:32px 36px;margin-bottom:28px}
+  .entry-kop{margin-bottom:14px}
+  .entry h2{font-family:var(--fh);font-weight:400;font-size:28px;line-height:1.15}
+  .datum{font-family:var(--fm);font-size:13px;color:var(--em-mute)}
+  .entry h3{font-family:var(--fh);font-weight:500;font-size:15px;letter-spacing:.8px;text-transform:uppercase;margin:26px 0 10px;padding-top:18px;border-top:1px solid var(--em-line)}
+  .entry p{font-size:15.5px;margin-bottom:12px;max-width:66ch}
+  .entry ul{list-style:none;margin-bottom:10px}
+  .entry li{position:relative;padding-left:22px;font-size:15.5px;margin-bottom:10px;max-width:66ch}
+  .entry li::before{content:'';position:absolute;left:0;top:9px;width:10px;height:10px;background:var(--em-lime)}
+  code{font-family:var(--fm);font-size:.85em;background:var(--em-lime-tint);border:1px solid var(--em-lime-tint-50);padding:1px 6px}
+  .blok{font-family:var(--fm);font-size:13.5px;background:var(--em-cream);border:1px solid var(--em-line);border-left:4px solid var(--em-lime);padding:12px 14px;margin:10px 0;overflow-x:auto;white-space:pre}
+  .callout{background:var(--em-lime-tint);border:1px solid var(--em-lime-tint-50);padding:16px 20px;margin:14px 0;font-size:15px;max-width:66ch}
+  footer{color:var(--em-mute);font-size:13px;text-align:center;margin:30px 0 10px}
+</style>
+</head>
+<body style="padding:0 0 32px;">
+<nav style="background:#383D38;padding:0 20px;font-family:'Space Grotesk',sans-serif;">
+  <div style="max-width:820px;margin:0 auto;display:flex;gap:4px;align-items:center;flex-wrap:wrap;height:auto;min-height:48px;">
+    <a href="../index.html" style="background:#D4FF52;color:#383D38;font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;text-decoration:none;margin-right:12px;">Second Brain Track</a>
+    <a href="../index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Home</a>
+    <a href="../log/index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Track log</a>
+    <a href="../sessies/index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Sessies</a>
+    <a href="../docs/index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Docs</a>
+    <a href="https://github.com/SVPavlov/ai-second-brain-starter-kit" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Kit op GitHub</a>
+  </div>
+</nav>
+
+<div class="wrap" style="padding:32px 20px 0;">
+  <span class="kicker">AI Second Brain Track · NL pilot</span>
+  <h1>Track log</h1>
+  <p class="lead">Het logboek van onze track: per sessie wat we deden, wat we leerden en wat de volgende stap is. Ook leesbaar als je een sessie gemist hebt. Nieuwste sessie bovenaan.</p>
+
+  <div class="over">
+    <p><strong>Waar deze track over gaat.</strong> Ieder van ons bouwt een eigen second brain: een persoonlijk kennissysteem in gewone tekstbestanden, met een AI (Claude) als motor erop. Het doel is concreet: je brein onthoudt je klantcontext, doet je terugkerende administratie (mail uitpluizen, meetingverslagen, voorbereiding) en wint je dagelijks tijd terug.</p>
+    <p><strong>Waarom het een pilot is.</strong> Deze track is de proeftuin voor de bredere emagine-uitrol naar consultants vanaf september. Er is geen kant-en-klaar programma; dingen gaan stuk en dat is precies de bedoeling. Wat wij hier uitzoeken bepaalt hoe de grote uitrol eruit gaat zien, en wij zijn daarvoor de eerste ambassadeurs.</p>
+    <p><strong>Hoe we werken.</strong> Zes vrijdagen, om de twee weken, drie uur per keer. Weinig slides, veel bouwen aan je eigen echte werk. Tussen de sessies door is de WhatsApp-groep de plek voor vragen, fixes en wat er stukging.</p>
+  </div>
+
+  <div class="tussenkop">De sessies</div>
+  <div class="tijdlijn">
+    <span class="sessie-chip gedaan">1 · 19 jun ✓</span>
+    <span class="sessie-chip gedaan">2 · 17 jul ✓</span>
+    <span class="sessie-chip volgende">3 · 31 jul</span>
+    <span class="sessie-chip stil">peer-sessie · 14 aug</span>
+    <span class="sessie-chip stil">peer-sessie · 28 aug</span>
+    <span class="sessie-chip stil">afsluiting · 11 sep</span>
+  </div>
+  <p class="tijdlijn-uitleg">De twee augustus-vrijdagen zijn peer-sessies: de groep draait ze zelf (Stas is afwezig), met een format dat we in sessie 3 samen maken.</p>
+
+  <div class="tussenkop">Vaste links</div>
+  <div class="links">
+    <a href="https://placid-ripple-8nh2.here.now/">Starter kit (download)</a>
+    <a href="https://brisk-sonnet-2xyy.here.now/">Documentatie (install &amp; uitleg)</a>
+    <a href="https://github.com/SVPavlov/ai-second-brain-starter-kit">GitHub (kit-updates)</a>
+  </div>
+
+  <!-- SESSIE 2 -->
+  <div class="entry">
+    <div class="entry-kop">
+      <h2>Sessie 2 · Make it do your work</h2>
+      <span class="datum">vrijdag 17 juli</span>
+    </div>
+
+    <h3>Wat het plan was</h3>
+    <p>Sessie 1 ging over het bouwen van je brein: de structuur neerzetten en er kennis in krijgen. Sessie 2 zou de stap maken van archiveren naar werken: ieder legt in het eigen brein een <strong>klantenoverzicht</strong> aan (per klant: wat loopt er, wat is de status, wat is de volgende stap), voedt dat overzicht vanuit echte mail en een echte meeting, en leert de <strong>dagelijkse routine van vijf minuten</strong> die alles actueel houdt. Die routine staat op de uitgedeelde kaart: overzicht opvragen, vragen van je brein beantwoorden, je volgende meeting voorbereiden, één ding invoeren, controleren wat het brein ervan maakte.</p>
+
+    <h3>Wat er werkelijk gebeurde</h3>
+    <p>De sessie opende met show-and-tell, en die was zo goed dat hij het programma overnam. We zijn er eerlijk over in dit log: de bouwopdrachten en de afsluitende routine-test zijn er daardoor bij ingeschoten, en die halen we in sessie 3 in. Maar wat ervoor in de plaats kwam was de moeite waard. We zagen vier setups uit de groep die lieten zien hoe ver dit kan gaan:</p>
+    <ul>
+      <li><strong>Een brein dat overal meegaat.</strong> Gehost op een Mac Mini thuis, veilig bereikbaar vanaf telefoon en zelfs horloge (via een CloudFlare-tunnel, dus zonder open poorten), met een lokaal AI-model als reserve voor als de cloud eruit ligt. Dezelfde bouwer maakte een app met een "fix bugs"-knop: de AI leest zijn eigen code en repareert fouten, waarbij kleurcodes bepalen wat hij zelf mag oplossen en waarvoor eerst een mens moet tekenen.</li>
+      <li><strong>Coaching-voorbereiding uit je aantekeningen.</strong> Alle gespreksnotities in één vault, en voor elk volgend gesprek genereert de AI vragen op maat op basis van de hele geschiedenis van die persoon. Mooi detail: de AI merkte zelf op dat de coach meer praatte dan de coachee.</li>
+      <li><strong>Een trainingsworkflow vanaf één knop.</strong> Eén klik op een trainingspagina en het systeem maakt het agenda-item, haalt de deelnemers op, zet de klant in het CRM, zoekt logo en huisstijl erbij en bouwt een opgemaakte slide-deck in de kleuren van de klant. Naar schatting negentig procent van de administratie rond een training verdwijnt zo.</li>
+      <li><strong>Een aandelen-monitor die gewoon draait.</strong> Een script dat dagelijks nieuws en sentiment over een eigen portefeuille samenvat tot een rapportje. Geen demo-project: het draait al weken in productie.</li>
+    </ul>
+
+    <h3>Het gesprek dat eruit sprong: mag je alles opnemen?</h3>
+    <p>De waardevolste twintig minuten gingen niet over techniek maar over ethiek. Mag je een klantgesprek transcriberen zonder dat expliciet te vragen? De groep kwam ergens: een woordelijk opgeslagen transcript vóelt anders dan aantekeningen, ook als je bedoelingen goed zijn. Mensen vinden het niet prettig dat hun letterlijke woorden ergens liggen. De middenweg die we gaan verkennen: de AI live laten meeluisteren en samenvatten, zonder het ruwe transcript te bewaren. Dan heb je de inhoud, niet de opname.</p>
+    <p>Daaruit volgde een tweede inzicht dat de agenda van sessie 3 bepaalt: <strong>je brein heeft twee lagen</strong>. Een persoonlijke laag die van jou is en privé blijft, en een deelbare laag met kennis die het team en de klant verder helpt. Die deelbare laag hoort op een gedeelde, gestructureerde plek (OneDrive), zodat er langzaam een gezamenlijk brein ontstaat zonder dat iemand zijn persoonlijke aantekeningen hoeft prijs te geven.</p>
+
+    <h3>Kleinere lessen uit de zaal</h3>
+    <ul>
+      <li><strong>Installeer niets wat je niet vertrouwt.</strong> Skills en repos van internet kunnen kwaadaardige links of code bevatten. Even checken voor je iets in je brein hangt is geen paranoia maar hygiëne.</li>
+      <li><strong>Gebruikslimieten zijn echt.</strong> Ook met een betaald abonnement kun je tegen de limiet aanlopen en even moeten wachten. Klein werken, en samen op één scherm als het gebeurt.</li>
+      <li><strong>Een beperkte licentie is geen showstopper.</strong> Wie van de zaak geen tools mag aanpassen, bouwde er een losse HTML-applicatie naast die wél mag. Creatief binnen de regels.</li>
+    </ul>
+
+    <h3>Nieuw in de kit: twee skills</h3>
+    <p>Een skill is één markdown-bestandje met instructies dat je brein een nieuwe vaardigheid geeft. Er staan er sinds deze sessie twee nieuwe voor je klaar:</p>
+    <ul>
+      <li><strong>"Record this decision"</strong> (of typ <code>/decide</code>). Net een knoop doorgehakt? Je brein legt vast wat je koos, wat je afwees, waarom, en wanneer je erop terugkomt. Het besluit komt bij de juiste klant te staan, en over drie maanden weet je nog waarom je het zo deed.</li>
+      <li><strong>"Wrap up my session"</strong> (of typ <code>/wrap-up</code>). Klaar voor vandaag? Je brein noteert wat af is, wat de volgende stap is en wat vastzit. Morgenochtend opent je daily brief precies daar, dus je hoeft nooit meer te reconstrueren waar je gebleven was.</li>
+    </ul>
+    <p>Zo haal je ze binnen. Deze twee commando's halen alleen de skills en de spelregels op; je eigen notities blijven onaangeraakt:</p>
+    <div class="blok">git fetch kit
+git checkout kit/main -- .claude CLAUDE.md</div>
+    <p>Heb je de kit nog nooit als update-bron toegevoegd, doe dan eerst eenmalig: <code>git remote add kit https://github.com/SVPavlov/ai-second-brain-starter-kit.git</code></p>
+
+    <h3>Wat we jou vragen vóór sessie 3</h3>
+    <div class="callout"><strong>1. Post je meetregel in de groep.</strong> We willen aan het einde van de track kunnen laten zien wat dit oplevert, en daarvoor meten we elke sessie hetzelfde regeltje. Vrijdag is dat erbij ingeschoten, dus post hem alsnog, één regel, eigen schatting is prima:<br><br><code>S2 | skills die echt draaien: ... | uur bespaard deze week (schatting): ... | synthese-vragen beantwoord &lt;48u: n/m</code><br><br>Ofwel: welke skills gebruik je nu echt, hoeveel uur bespaarde je deze week naar eigen schatting, en hoeveel van de vragen die je brein je stelde beantwoordde je binnen twee dagen.</div>
+    <ul>
+      <li><strong>2. Haal de twee nieuwe skills binnen</strong> met de commando's hierboven.</li>
+      <li><strong>3. Nog geen werkend brein?</strong> De installatie is inmiddels één regel (zie de documentatie hierboven), en de groep helpt. Kom desnoods een kwartier eerder op de 31e.</li>
+    </ul>
+
+    <h3>Volgende sessie · vrijdag 31 juli</h3>
+    <ul>
+      <li>We <strong>openen</strong> met de meetregel in plaats van ermee af te sluiten, dan kan hij er niet meer bij inschieten</li>
+      <li>De vijf-minuten-routine krijgt zijn echte test: de hele zaal draait hem tegelijk, tegen de klok, op het eigen werk. Neem je routine-kaart mee</li>
+      <li>Hoofdthema: <strong>de gedeelde laag</strong>. Welke architectuur, wat is deelbaar en wat blijft privé, en hoe iedereen kan aanhaken, wat je eigen setup ook is</li>
+      <li>En natuurlijk show-and-tell, maar dit keer met een timer erop</li>
+    </ul>
+  </div>
+
+  <!-- SESSIE 1 -->
+  <div class="entry">
+    <div class="entry-kop">
+      <h2>Sessie 1 · Bouw je brein</h2>
+      <span class="datum">vrijdag 19 juni</span>
+    </div>
+
+    <h3>Wat het plan was</h3>
+    <p>De eerste sessie had één doel: iedereen vertrekt met begrip van wat een second brain is, wie kon bouwen heeft er een gebouwd, en wie vastliep vertrekt met een duidelijk pad in plaats van een achterstand.</p>
+
+    <h3>Wat we deden</h3>
+    <p>We begonnen met sorteren: wat kan elke laptop aan? Daarna benoemde ieder zijn wekelijkse administratie-tijdvreters, want dat zijn de dingen die je brein in de loop van de track van je gaat overnemen. Vervolgens vooral gebouwd in plaats van geluisterd: de starter kit geïnstalleerd, het eigen brein opgezet en gevuld, en de eerste skills gedraaid.</p>
+
+    <h3>Wat we leerden</h3>
+    <ul>
+      <li><strong>De werklaptop-muur is echt.</strong> Vergrendelde laptops en geblokkeerde installaties waren de grootste blokkade van de dag. Vervelend, maar precies het signaal waarvoor deze pilot bestaat: als wij hier tegenaan lopen, lopen straks 55 collega's er ook tegenaan, en dan willen we het antwoord al hebben.</li>
+      <li><strong>En hij is oplosbaar gebleken.</strong> Na de sessie kwam er een installer van één regel (geen Node.js meer nodig) en vond een van ons de PATH-fix voor werklaptops die inmiddels als officiële stap in de documentatie staat. Resultaat bij de peiling twee weken later: acht van de negen breinen draaiden.</li>
+      <li><strong>De bestanden zijn het brein, de AI is de motor.</strong> Alles staat in gewone tekstbestanden. Wie de structuur eenmaal heeft kan op elk moment afbouwen, zonder iets opnieuw te doen. Vastlopen op de techniek is dus vertraging, geen verlies.</li>
+    </ul>
+
+    <h3>De gewoonte die toen is afgesproken</h3>
+    <ul>
+      <li>Voer je brein terwijl je werkt: gooi er mails, notities en documenten in en laat het filen</li>
+      <li>Draai af en toe <code>run synthesis</code>: de kwaliteitscheck waarbij je brein zijn eigen twijfels aan jou voorlegt in een paar korte vragen</li>
+      <li>Wat stukgaat noteer je en deel je in de groep. Die frictie-meldingen zijn letterlijk hoe het framework beter wordt</li>
+    </ul>
+  </div>
+
+  <footer>AI Second Brain Track · proeftuin voor de bredere uitrol · vragen en fricties in de WhatsApp-groep</footer>
+</div>
+</body>
+</html>

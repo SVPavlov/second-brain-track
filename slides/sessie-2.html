@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sessie 2: Je brein als collega</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --em-ink: #383D38; --em-white: #FFFFFF; --em-cream: #F3F3F1; --em-line: #CAC9C4;
+      --em-grey: #686861; --em-mute: #9A9990; --em-lime: #D4FF52; --em-lime-tint: #F6FFDB;
+      --em-lime-tint-50: #E4FF99; --em-coral: #F0787D;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter Tight', -apple-system, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { background: var(--em-cream); color: var(--em-ink); font-family: var(--font-body); overflow: hidden; }
+    .deck { height: 100vh; display: flex; flex-direction: column; }
+    .stage { flex: 1; display: flex; justify-content: center; padding: 22px; min-height: 0; }
+    .slide { display: none; width: 100%; max-width: 1120px; flex-direction: column; min-height: 0; }
+    .slide.active { display: flex; }
+
+    .canvas {
+      flex: 1; background: var(--em-white); border: 1px solid var(--em-line);
+      padding: 48px 60px; display: flex; flex-direction: column;
+      justify-content: flex-start; position: relative; overflow-y: auto;
+    }
+    .canvas.center { justify-content: center; }
+    .canvas::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--em-lime); }
+
+    .eyebrow { display: inline-block; align-self: flex-start; background: var(--em-lime); color: var(--em-ink); font-family: var(--font-heading); font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 12px; margin-bottom: 24px; }
+    .idea { font-family: var(--font-heading); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12; color: var(--em-ink); font-size: 50px; max-width: 24ch; }
+    .idea .accent { background: var(--em-lime); padding: 0 8px; }
+    .slide-h { font-family: var(--font-heading); font-weight: 400; letter-spacing: -0.01em; line-height: 1.12; color: var(--em-ink); font-size: 36px; margin-bottom: 10px; }
+    .slide-sub { font-size: 18px; color: var(--em-grey); margin-bottom: 26px; max-width: 56ch; line-height: 1.5; }
+
+    .points { list-style: none; }
+    .points li { position: relative; padding-left: 30px; font-size: 22px; color: var(--em-ink); margin-bottom: 15px; line-height: 1.4; max-width: 60ch; }
+    .points li::before { content: ''; position: absolute; left: 0; top: 10px; width: 14px; height: 14px; background: var(--em-lime); }
+    .points li .muted { color: var(--em-grey); font-size: 18px; }
+
+    .qlist, .steps { list-style: none; counter-reset: item; }
+    .qlist li, .steps li { counter-increment: item; position: relative; padding-left: 52px; font-size: 21px; color: var(--em-ink); margin-bottom: 18px; line-height: 1.4; max-width: 60ch; }
+    .qlist li::before, .steps li::before {
+      content: counter(item); position: absolute; left: 0; top: -2px; width: 36px; height: 36px;
+      background: var(--em-lime); color: var(--em-ink);
+      font-family: var(--font-heading); font-weight: 500; font-size: 17px; display: flex; align-items: center; justify-content: center;
+    }
+    .steps li .trig { font-family: var(--font-mono); font-size: 15px; color: var(--em-ink); background: var(--em-lime-tint); border: 1px solid var(--em-lime-tint-50); padding: 1px 8px; }
+    .steps li .why { color: var(--em-grey); font-size: 16px; display: block; }
+
+    .frame { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    .frame span { font-family: var(--font-heading); font-size: 13px; font-weight: 500; color: var(--em-grey); background: var(--em-cream); border: 1px solid var(--em-line); padding: 6px 14px; }
+    .frame span b { color: var(--em-ink); font-weight: 500; }
+
+    code { font-family: var(--font-mono); font-size: 0.82em; color: var(--em-ink); background: var(--em-lime-tint); padding: 1px 7px; border: 1px solid var(--em-lime-tint-50); }
+    .oneliner { font-family: var(--font-mono); font-size: 16px; color: var(--em-ink); background: var(--em-cream); border: 1px solid var(--em-line); border-left: 4px solid var(--em-lime); padding: 14px 16px; margin: 14px 0; line-height: 1.6; overflow-x: auto; white-space: nowrap; }
+    .legend { list-style: none; margin-top: 4px; }
+    .legend li { font-size: 16px; color: var(--em-grey); margin-bottom: 6px; padding-left: 18px; position: relative; }
+    .legend li::before { content: ''; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; background: var(--em-lime); }
+
+    /* Timer (drill slide) */
+    .timer { font-family: var(--font-mono); font-weight: 700; font-size: 150px; letter-spacing: -0.02em; color: var(--em-ink); text-align: center; line-height: 1; margin: 10px 0 18px; font-variant-numeric: tabular-nums; }
+    .timer.warn { color: var(--em-coral); }
+    .timer.done { color: var(--em-coral); animation: blink 0.8s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0.25; } }
+    .timer-ctl { text-align: center; }
+    .timer-ctl button { background: var(--em-ink); color: var(--em-white); border: none; padding: 12px 28px; font-family: var(--font-heading); font-size: 16px; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 6px; }
+    .timer-ctl button:hover { background: #000; }
+    .timer-ctl button.ghost { background: var(--em-white); color: var(--em-grey); border: 1px solid var(--em-line); }
+    .drill-steps { display: flex; gap: 10px; justify-content: center; margin-top: 26px; flex-wrap: wrap; }
+    .drill-steps span { font-family: var(--font-heading); font-size: 15px; font-weight: 500; color: var(--em-ink); background: var(--em-cream); border: 1px solid var(--em-line); padding: 10px 16px; }
+    .drill-steps b { color: var(--em-ink); background: var(--em-lime); font-family: var(--font-mono); font-weight: 700; margin-right: 8px; padding: 0 6px; }
+
+
+    .bar { height: 46px; background: var(--em-white); border-top: 1px solid var(--em-line); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-family: var(--font-heading); font-size: 11px; }
+    .bar .brand { color: var(--em-ink); background: var(--em-lime); text-transform: uppercase; font-weight: 500; letter-spacing: 0.06em; padding: 3px 8px; }
+    .bar .mid { display: flex; gap: 14px; align-items: center; color: var(--em-mute); }
+    .bar button { background: var(--em-white); color: var(--em-grey); border: 1px solid var(--em-line); padding: 6px 12px; font-family: var(--font-heading); font-size: 11px; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; }
+    .bar button:hover { color: var(--em-ink); border-color: var(--em-ink); }
+    .counter { font-family: var(--font-mono); color: var(--em-ink); }
+    .dots { display: flex; gap: 6px; flex-wrap: wrap; max-width: 220px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--em-line); cursor: pointer; }
+    .dot.on { background: var(--em-ink); }
+    .hint { color: var(--em-mute); font-size: 10px; }
+    .qr{width:190px;height:190px;display:block;margin:0 auto}
+    .skillcard{background:var(--em-cream);border:1px solid var(--em-line);border-left:4px solid var(--em-lime);padding:14px 18px;margin-bottom:12px}
+    .skillcard .sk-naam{font-family:var(--font-heading);font-size:19px;margin-bottom:4px}
+    .skillcard .sk-uitleg{font-size:16.5px;line-height:1.45;color:var(--em-ink)}
+    .skillcard .sk-uitleg em{font-style:normal;color:var(--em-grey)}
+    @media (max-width: 760px) { .idea { font-size: 32px; } .slide-h { font-size: 26px; } .canvas { padding: 28px; } .timer { font-size: 80px; } }
+  </style>
+</head>
+<body>
+<div class="deck">
+  <div class="stage">
+
+    <!-- 1 TITEL -->
+    <div class="slide active">
+      <div class="canvas center">
+        <div class="eyebrow">Sessie 2 · 17 juli</div>
+        <div class="idea">Vandaag bouw je <span class="accent">je klantenoverzicht</span> in je brein</div>
+        <div class="slide-sub" style="margin-top:24px;">Wat loopt er bij welke klant, wat komt eraan, en de dagelijkse routine van 5 minuten die het actueel houdt.</div>
+      </div>
+    </div>
+
+    <!-- 2 RONDJE -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Rondje · iedereen</div>
+        <div class="slide-h">Hoe ging het de afgelopen twee weken?</div>
+        <ul class="qlist" style="margin-top:18px;">
+          <li>Noem één ding dat je brein <strong>voor je heeft gedaan</strong></li>
+          <li>Noem één ding dat je <strong>zelf moest doen, maar dat je brein had kunnen doen</strong></li>
+        </ul>
+        <div class="slide-sub" style="margin-top:14px;">Dat tweede antwoord schrijven we op. Daar gaan we vandaag aan bouwen.</div>
+      </div>
+    </div>
+
+    <!-- 3 SHOW AND TELL -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Demo's</div>
+        <div class="slide-h">Show and Tell. Laat je brein zien</div>
+        <ul class="points" style="margin-top:14px;">
+          <li>Eigen scherm, echte voorbeelden, kort</li>
+          <li>Eén ding dat goed werkt en één ding dat niet goed ging</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4 WAAR WE NAARTOE WERKEN (demo) -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Waar we naartoe werken</div>
+        <div class="slide-h">Eén overzicht: wat loopt er bij welke klant</div>
+        <ul class="points" style="margin-top:14px;">
+          <li>Per klant: welke trajecten en trainingen lopen er, wat is de status, wat is de volgende stap</li>
+          <li>Plus: wat staat er gepland <span class="muted">(bijvoorbeeld open trainingen)</span></li>
+          <li>Dit overzicht komt <strong>uit je brein zelf</strong>. Je houdt het niet met de hand bij</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 5 OPDRACHT 1 -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Opdracht 1</div>
+        <div class="slide-h">Leg je eigen klantenoverzicht aan</div>
+        <div class="frame"><span>Resultaat: <b>2 of 3 klanten in je brein, met status</b></span><span>Werkvorm: <b>zelf bouwen, buddy naast je</b></span></div>
+        <ul class="qlist">
+          <li>Kies 2 of 3 echte klanten of projecten waar je nu voor werkt</li>
+          <li>Vertel je brein per klant wat er loopt: plak wat je hebt (mails, notities, documenten) en zeg <code>process my inbox</code>. Of typ het gewoon: wat loopt er, wat is de status, wat is de volgende stap</li>
+          <li>Stel daarna de controlevraag: <strong>"Wat heb ik op dit moment lopen en bij wie?"</strong> Klopt het antwoord? Laat je buddy meekijken</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 6 PAUZE -->
+    <div class="slide">
+      <div class="canvas center">
+        <div class="eyebrow">Pauze</div>
+        <div class="idea">Koffie. Installatieproblemen? <span class="accent">Kom even langs.</span></div>
+      </div>
+    </div>
+
+    <!-- 7 UITLEG OPDRACHT 2 -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Hoe je overzicht actueel blijft</div>
+        <div class="slide-h">Nieuwe informatie komt uit je mail en je meetings</div>
+        <ul class="points" style="margin-top:14px;">
+          <li>Plak een mailthread in je brein en vraag om de acties. Die komen op je takenlijst én bij de juiste klant terecht</li>
+          <li>Plak je meetingnotities. Het brein maakt er een verslag van bij die klant: <strong>besluiten, wie doet wat, open punten</strong></li>
+          <li>De kwaliteitsregel: <strong>elke actie heeft een eigenaar en een datum.</strong> Anders stuur je hem terug</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 8 OPDRACHT 2 -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Opdracht 2</div>
+        <div class="slide-h">Voed je overzicht met echte mail en een echte meeting</div>
+        <div class="frame"><span>Resultaat: <b>acties met eigenaar en datum + 1 meetingverslag</b></span><span>Werkvorm: <b>zelf bouwen, controle in duo</b></span></div>
+        <ul class="qlist">
+          <li>Pak één echte mailthread waar acties in verstopt zitten. Plak hem in je brein en vraag om de acties</li>
+          <li>Plak de notities van een meeting van deze week. Kijk of het verslag bij de juiste klant terechtkomt</li>
+          <li>Controle: je buddy speelt de afzender van jouw mail en leest je actielijst hardop voor. Mist er iets? Heeft elke actie een eigenaar en een datum?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 9 UITLEG ROUTINE -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">De dagelijkse routine</div>
+        <div class="slide-h">Vijf minuten per ochtend houden alles actueel</div>
+        <ol class="steps" style="margin-top:16px;">
+          <li><strong>Overzicht opvragen</strong> <span class="trig">daily brief</span> <span class="why">je brein vertelt wat er speelt, wat er vandaag moet, wat aandacht vraagt</span></li>
+          <li><strong>Vragen van je brein beantwoorden</strong> <span class="why">het brein stelt maximaal 3 vragen over dingen die het niet zeker weet. Kort antwoorden is genoeg</span></li>
+          <li><strong>Volgende meeting voorbereiden</strong> <span class="trig">brief me on [klant]</span> <span class="why">alles wat je brein over die klant weet, in één briefing</span></li>
+          <li><strong>Eén ding invoeren</strong> <span class="why">de meeting of mail van gisteren erin. Zonder voeding veroudert je overzicht</span></li>
+          <li><strong>Controleren</strong> <span class="why">klopt wat het brein ervan maakte? Fouten meteen terugsturen</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 10 OPDRACHT 3 -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Opdracht 3</div>
+        <div class="slide-h">Draai de routine op je eigen werk</div>
+        <div class="frame"><span>Resultaat: <b>je ochtendoverzicht gelezen + 1 meeting voorbereid</b></span><span>Werkvorm: <b>zelf</b></span></div>
+        <ul class="qlist">
+          <li>Zeg <code>daily brief</code> en lees wat je brein je vertelt. Wees kritisch: klopt het, mist er iets?</li>
+          <li>Bereid één echte meeting van volgende week voor: <code>brief me on [klant]</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 11 EINDTEST (timer) -->
+    <div class="slide">
+      <div class="canvas center">
+        <div class="eyebrow">De eindtest · allemaal tegelijk · één keer</div>
+        <div class="timer" id="clock">5:00</div>
+        <div class="timer-ctl">
+          <button onclick="startTimer()">Start</button>
+          <button class="ghost" onclick="resetTimer()">Reset</button>
+        </div>
+        <div class="drill-steps">
+          <span><b>1</b>Overzicht</span><span><b>2</b>Vragen</span><span><b>3</b>Voorbereiden</span><span><b>4</b>Invoeren</span><span><b>5</b>Controleren</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12 AFSLUITING -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Afsluiting</div>
+        <div class="slide-h">Wat ging er niet goed, en hoe meten we de winst</div>
+        <ul class="points" style="margin-top:14px;">
+          <li>Schrijf op wat vandaag niet werkte: in je brein én in de WhatsApp-groep</li>
+          <li>En post daarna dit ene regeltje in de groep, iedereen, nu:</li>
+        </ul>
+        <div class="oneliner">S2 | skills die echt draaien: ... | uur bespaard deze week (schatting): ... | synthese-vragen beantwoord &lt;48u: n/m</div>
+        <ul class="legend">
+          <li><strong>skills die echt draaien</strong>: welke functies van je brein je deze week werkelijk gebruikte</li>
+          <li><strong>uur bespaard</strong>: je eigen schatting, geen wetenschap</li>
+          <li><strong>synthese-vragen</strong>: hoeveel van de vragen van je brein je binnen 2 dagen beantwoordde</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 13 NIEUWE SKILL + QR -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Cadeautje · alvast een voorproefje van sessie 3</div>
+        <div class="slide-h">Er staan twee nieuwe skills voor je klaar</div>
+        <div style="display:flex;gap:36px;align-items:flex-start;margin-top:10px;">
+          <div style="flex:1;">
+            <div class="skillcard">
+              <div class="sk-naam">"Record this decision"</div>
+              <div class="sk-uitleg">Net een knoop doorgehakt? Zeg dit, en je brein legt vast wat je koos, wat je afwees, waarom, en wanneer je erop terugkomt. Het besluit komt bij de juiste klant te staan. <em>Over drie maanden weet je nog waarom.</em></div>
+            </div>
+            <div class="skillcard">
+              <div class="sk-naam">"Wrap up my session"</div>
+              <div class="sk-uitleg">Klaar voor vandaag? Je brein noteert wat af is, wat de volgende stap is en wat vastzit. <em>Morgenochtend opent je daily brief precies daar.</em></div>
+            </div>
+            <div class="slide-sub" style="margin-bottom:8px;">Binnenhalen (je notities blijven onaangeraakt):</div>
+            <div class="oneliner" style="white-space:pre;">git fetch kit
+git checkout kit/main -- .claude CLAUDE.md</div>
+            <div class="slide-sub">Zeggen kan, typen ook: <code>/decide</code> en <code>/wrap-up</code> doen hetzelfde. Een skill is één markdown-bestand; vanaf sessie 3 delen we ze structureel.</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--em-line);padding:16px;flex-shrink:0;text-align:center;">
+            <svg class="qr" viewBox="0 0 164 164"><path transform="scale(4)" class="qrline" stroke="#141914" d="M4 4.5h7m1 0h1m1 0h4m2 0h2m2 0h2m1 0h1m2 0h7m-33 1h1m5 0h1m1 0h1m1 0h4m2 0h1m3 0h2m1 0h2m1 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m3 0h3m3 0h1m1 0h1m1 0h1m3 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h4m2 0h4m4 0h1m3 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m4 0h1m1 0h2m2 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m2 0h1m3 0h1m5 0h4m1 0h1m1 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h1m3 0h1m4 0h1m5 0h2m-25 1h1m1 0h2m1 0h3m1 0h1m6 0h3m1 0h5m1 0h1m2 0h1m1 0h2m-32 1h1m1 0h2m2 0h1m1 0h1m6 0h3m1 0h2m1 0h1m2 0h2m1 0h2m1 0h1m-33 1h2m1 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h2m4 0h2m2 0h4m1 0h2m-33 1h1m1 0h4m1 0h1m1 0h7m2 0h1m3 0h1m2 0h3m1 0h1m-29 1h1m3 0h2m2 0h1m1 0h2m4 0h1m4 0h4m1 0h3m1 0h1m-31 1h2m1 0h1m2 0h1m2 0h1m5 0h6m3 0h1m1 0h1m1 0h1m1 0h1m-29 1h1m1 0h2m4 0h3m1 0h2m2 0h1m1 0h1m4 0h5m-30 1h2m2 0h1m3 0h1m1 0h3m2 0h1m2 0h1m1 0h1m1 0h1m1 0h2m1 0h3m-28 1h2m1 0h1m1 0h3m1 0h4m2 0h1m2 0h2m2 0h2m1 0h3m-31 1h1m1 0h4m1 0h1m4 0h2m1 0h2m1 0h3m1 0h5m1 0h2m1 0h2m-27 1h1m1 0h1m2 0h1m3 0h1m4 0h2m2 0h1m2 0h2m1 0h2m-31 1h3m5 0h2m2 0h1m1 0h3m1 0h1m2 0h3m3 0h1m2 0h1m-32 1h1m4 0h2m2 0h4m7 0h2m7 0h3m-32 1h2m2 0h1m2 0h2m1 0h1m1 0h2m1 0h1m2 0h6m2 0h2m1 0h1m2 0h1m-31 1h2m2 0h3m3 0h3m1 0h1m1 0h1m2 0h1m1 0h4m3 0h3m-32 1h1m1 0h3m2 0h1m3 0h2m2 0h1m2 0h2m5 0h4m2 0h1m-33 1h1m1 0h1m3 0h1m1 0h4m1 0h1m1 0h3m4 0h7m2 0h1m-24 1h1m1 0h3m2 0h3m1 0h2m3 0h1m3 0h2m1 0h1m-32 1h7m1 0h3m3 0h1m4 0h6m1 0h1m1 0h1m-29 1h1m5 0h1m1 0h3m2 0h2m1 0h1m1 0h1m1 0h2m1 0h2m3 0h4m-32 1h1m1 0h3m1 0h1m4 0h1m3 0h1m1 0h1m1 0h10m1 0h2m-32 1h1m1 0h3m1 0h1m1 0h1m3 0h2m3 0h1m2 0h2m1 0h1m3 0h1m1 0h2m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h3m7 0h1m3 0h2m-28 1h1m5 0h1m3 0h1m1 0h2m1 0h3m4 0h3m1 0h3m3 0h1m-33 1h7m1 0h2m1 0h9m1 0h1m1 0h1m4 0h1m1 0h1"/></svg>
+            <div style="font-family:var(--font-heading);font-size:12px;margin-top:10px;color:var(--em-grey);">github.com/SVPavlov/<br>ai-second-brain-starter-kit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14 SLOT -->
+    <div class="slide">
+      <div class="canvas center">
+        <div class="eyebrow">Tot 31 juli</div>
+        <div class="idea">Pak je telefoon. <span class="accent">Zet de routine van morgen in je agenda.</span></div>
+        <ul class="points" style="margin-top:26px;">
+          <li>Nu, met z'n allen: morgenochtend 5 minuten, "dagelijkse routine"</li>
+          <li>Elke werkdag de routine, en één keer <code>run synthesis</code> vóór de volgende sessie</li>
+          <li>Sessie 3 op 31 juli: de kwaliteitscheck de baas, en we gaan kennis delen tussen breinen</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bar">
+    <span class="brand">stas.brain · sessie 2</span>
+    <div class="mid">
+      <button onclick="prev()">Vorige</button>
+      <span class="counter"><span id="cur">1</span> / <span id="tot">14</span></span>
+      <button onclick="next()">Volgende</button>
+      <div class="dots" id="dots"></div>
+    </div>
+    <span class="hint">pijltjes om te bladeren</span>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let i = 0;
+  const dotsWrap = document.getElementById('dots');
+  slides.forEach((_, n) => { const d = document.createElement('div'); d.className = 'dot' + (n===0?' on':''); d.onclick = () => go(n); dotsWrap.appendChild(d); });
+  document.getElementById('tot').textContent = slides.length;
+  function render() {
+    slides.forEach((s, n) => s.classList.toggle('active', n===i));
+    Array.from(dotsWrap.children).forEach((d, n) => d.classList.toggle('on', n===i));
+    document.getElementById('cur').textContent = i+1;
+    slides[i].querySelector('.canvas').scrollTop = 0;
+  }
+  function go(n){ i = Math.max(0, Math.min(slides.length-1, n)); render(); }
+  function next(){ go(i+1); } function prev(){ go(i-1); }
+  document.addEventListener('keydown', e => {
+    if (e.key==='ArrowRight'||e.key===' ') next();
+    else if (e.key==='ArrowLeft') prev();
+  });
+  render();
+
+  // Timer eindtest (slide 11)
+  let t = 300, tick = null;
+  const clock = document.getElementById('clock');
+  function paint() {
+    const m = Math.floor(t/60), s = t%60;
+    clock.textContent = m + ':' + String(s).padStart(2,'0');
+    clock.className = 'timer' + (t===0 ? ' done' : (t<=60 ? ' warn' : ''));
+  }
+  function startTimer() {
+    if (tick) return;
+    tick = setInterval(() => { if (t>0) { t--; paint(); } if (t===0) { clearInterval(tick); tick=null; } }, 1000);
+  }
+  function resetTimer() { if (tick) { clearInterval(tick); tick=null; } t = 300; paint(); }
+</script>
+</body>
+</html>

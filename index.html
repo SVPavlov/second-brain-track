@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Second Brain Track</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#383D38;--white:#FFFFFF;--cream:#F3F3F1;--line:#CAC9C4;--grey:#686861;--mute:#9A9990;--lime:#D4FF52;--limetint:#F6FFDB;
+    --fh:'Space Grotesk',sans-serif;--fb:'Inter Tight',sans-serif;--fm:'JetBrains Mono','SF Mono',ui-monospace,monospace}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--cream);color:var(--ink);font-family:var(--fb);line-height:1.6}
+  nav{background:var(--ink);padding:0 20px;font-family:var(--fh)}
+  nav .n{max-width:820px;margin:0 auto;display:flex;gap:4px;align-items:center;flex-wrap:wrap;min-height:48px}
+  nav .logo{background:var(--lime);color:var(--ink);font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;text-decoration:none;margin-right:12px}
+  nav a{color:var(--cream);font-size:13px;text-decoration:none;padding:14px 10px}
+  nav a:hover{color:var(--lime)}
+  .wrap{max-width:820px;margin:0 auto;padding:36px 20px}
+  .kicker{display:inline-block;background:var(--lime);font-family:var(--fh);font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;margin-bottom:14px}
+  h1{font-family:var(--fh);font-weight:400;font-size:clamp(32px,5vw,44px);line-height:1.1;margin-bottom:10px}
+  .lead{color:var(--grey);font-size:17px;max-width:58ch;margin-bottom:26px}
+  .kaarten{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:26px 0}
+  a.kaart{display:block;background:var(--white);border:1px solid var(--line);padding:20px 22px;text-decoration:none;color:var(--ink)}
+  a.kaart:hover{border-color:var(--ink)}
+  .kaart h2{font-family:var(--fh);font-weight:400;font-size:20px;margin-bottom:6px}
+  .kaart p{font-size:14px;color:var(--grey)}
+  .entry{background:var(--white);border:1px solid var(--line);padding:26px 30px;margin-bottom:20px}
+  .entry h2{font-family:var(--fh);font-weight:400;font-size:24px;margin-bottom:4px}
+  .datum{font-family:var(--fm);font-size:13px;color:var(--mute)}
+  .entry p{font-size:15px;margin:10px 0;max-width:64ch}
+  .knoppen{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .knoppen a{font-family:var(--fh);font-size:13px;color:var(--ink);background:var(--limetint);border:1px solid var(--line);padding:8px 13px;text-decoration:none}
+  .knoppen a:hover{border-color:var(--ink)}
+  .tijdlijn{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 26px}
+  .chip{font-family:var(--fh);font-size:13px;padding:8px 13px;border:1px solid var(--line);background:var(--white)}
+  .chip.gedaan{background:var(--lime);border-color:var(--lime)}
+  .chip.volgende{border:2px solid var(--ink);font-weight:500}
+  .chip.stil{color:var(--mute)}
+  footer{color:var(--mute);font-size:13px;text-align:center;margin:30px 0 16px}
+</style>
+</head>
+<body>
+<nav><div class="n">
+  <a class="logo" href="index.html">Second Brain Track</a>
+  <a href="index.html">Home</a>
+  <a href="log/index.html">Track log</a>
+  <a href="sessies/index.html">Sessies</a>
+  <a href="docs/index.html">Docs</a>
+  <a href="https://github.com/SVPavlov/ai-second-brain-starter-kit">Kit op GitHub</a>
+</div></nav>
+
+<div class="wrap">
+  <span class="kicker">emagine · NL pilot · jun t/m sep 2026</span>
+  <h1>AI Second Brain Track</h1>
+  <p class="lead">Ieder van ons bouwt een eigen second brain: een persoonlijk kennissysteem in gewone tekstbestanden, met AI als motor. Het brein onthoudt je klantcontext, doet je terugkerende administratie en wint je dagelijks tijd terug. Deze track is de proeftuin voor de bredere emagine-uitrol vanaf september.</p>
+
+  <div class="tijdlijn">
+    <span class="chip gedaan">1 · 19 jun ✓</span>
+    <span class="chip gedaan">2 · 17 jul ✓</span>
+    <span class="chip volgende">3 · 31 jul</span>
+    <span class="chip stil">peer · 14 aug</span>
+    <span class="chip stil">peer · 28 aug</span>
+    <span class="chip stil">slot · 11 sep</span>
+  </div>
+
+  <div class="kaarten">
+    <a class="kaart" href="log/index.html"><h2>Track log</h2><p>Per sessie wat we deden, wat we leerden en wat de volgende stap is. Nieuwste bovenaan.</p></a>
+    <a class="kaart" href="sessies/index.html"><h2>Sessies &amp; materialen</h2><p>De slides en hand-outs per sessie, om terug te kijken of in te halen.</p></a>
+    <a class="kaart" href="docs/index.html"><h2>Documentatie</h2><p>Installatie (Windows en Mac), de structuur, alle skills, synthese, backup en updates.</p></a>
+    <a class="kaart" href="https://placid-ripple-8nh2.here.now/"><h2>Starter kit downloaden</h2><p>Download, uitpakken, GETTING-STARTED.md volgen. Werkend brein in een kwartier.</p></a>
+  </div>
+  <footer>Vragen en fricties in de WhatsApp-groep "Learning Track: AI Second Brain"</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sessie 1: Bouw je eigen AI Second Brain</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #141914; --bg-panel: #1C211C; --bg-inset: #111411; --bg-deep: #0D100D;
+      --fg: #F2F2F2; --fg-bright: #FFFFFF; --fg-muted: #9DA19B; --fg-dim: #5C5C55;
+      --accent: #C4FF57; --accent-soft: rgba(196,255,87,0.12);
+      --info: #7FB3FF; --info-soft: rgba(127,179,255,0.12);
+      --border: #2A302A;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { background: var(--bg-deep); color: var(--fg); font-family: var(--font-body); overflow: hidden; }
+    .deck { height: 100vh; display: flex; flex-direction: column; }
+    .stage { flex: 1; display: flex; justify-content: center; padding: 22px; min-height: 0; }
+    .slide { display: none; width: 100%; max-width: 1120px; flex-direction: column; min-height: 0; }
+    .slide.active { display: flex; }
+
+    .canvas {
+      flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6); padding: 48px 60px; display: flex; flex-direction: column;
+      justify-content: flex-start; position: relative; overflow-y: auto;
+    }
+    .canvas.center { justify-content: center; }
+    .canvas::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
+
+    .eyebrow { font-family: var(--font-heading); font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+    .idea { font-family: var(--font-heading); font-weight: 700; letter-spacing: -0.02em; line-height: 1.06; color: var(--fg-bright); font-size: 52px; max-width: 20ch; }
+    .idea .accent { color: var(--accent); }
+    .slide-h { font-family: var(--font-heading); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; color: var(--fg-bright); font-size: 34px; margin-bottom: 10px; }
+    .slide-sub { font-size: 18px; color: var(--fg-muted); margin-bottom: 26px; max-width: 54ch; line-height: 1.5; }
+    .big-after { font-family: var(--font-heading); font-weight: 600; font-size: 24px; color: var(--fg-bright); margin-top: 22px; }
+    .big-after .accent { color: var(--accent); }
+
+    .points { list-style: none; }
+    .points li { position: relative; padding-left: 30px; font-size: 22px; color: var(--fg); margin-bottom: 15px; line-height: 1.4; max-width: 60ch; }
+    .points li::before { content: '▸'; color: var(--accent); position: absolute; left: 0; }
+    .points li .muted { color: var(--fg-muted); font-size: 18px; }
+
+    .qlist, .steps { list-style: none; counter-reset: item; }
+    .qlist li, .steps li { counter-increment: item; position: relative; padding-left: 50px; font-size: 22px; color: var(--fg); margin-bottom: 18px; line-height: 1.4; max-width: 58ch; }
+    .qlist li::before, .steps li::before {
+      content: counter(item); position: absolute; left: 0; top: -2px; width: 34px; height: 34px; border-radius: 50%;
+      background: var(--accent-soft); border: 1px solid rgba(196,255,87,0.45); color: var(--accent);
+      font-family: var(--font-heading); font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Architecture */
+    .arch-top { display: flex; gap: 14px; margin-bottom: 20px; }
+    .arch-card { flex: 1; background: var(--bg-inset); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+    .arch-card .fname { font-family: var(--font-mono); color: var(--accent); font-size: 14px; }
+    .arch-card .fdesc { color: var(--fg-muted); font-size: 13px; margin-top: 4px; }
+    .arch-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .arch-col h4 { font-family: var(--font-heading); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 12px; }
+    .arch-col ul { list-style: none; }
+    .arch-col li { margin-bottom: 9px; font-size: 14px; line-height: 1.3; }
+    .arch-col .fname { font-family: var(--font-mono); }
+    .arch-col.work .fname { color: var(--accent); }
+    .arch-col.long .fname { color: var(--info); }
+    .arch-col .fdesc { color: var(--fg-muted); }
+
+    /* Start options */
+    .opt { background: var(--bg-inset); border: 1px solid var(--border); border-left: 3px solid var(--fg-dim); border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; }
+    .opt.full { border-left-color: var(--accent); }
+    .opt .ot { font-family: var(--font-heading); font-weight: 600; font-size: 17px; color: var(--fg-bright); }
+    .opt .od { color: var(--fg-muted); font-size: 15px; margin-top: 3px; }
+    .qr-card { background: #fff; border-radius: 12px; padding: 14px 14px 12px; text-align: center; flex-shrink: 0; box-shadow: 0 6px 24px rgba(0,0,0,0.45); align-self: flex-start; }
+    .qr-card svg { width: 150px; height: 150px; display: block; }
+    .qr-label { font-family: var(--font-heading); font-weight: 600; font-size: 12px; color: #141914; margin-top: 10px; letter-spacing: 0.02em; }
+    .qr-url { font-family: var(--font-mono); font-size: 11px; color: #5C5C55; margin-top: 2px; }
+    code { font-family: var(--font-mono); font-size: 0.9em; color: var(--accent); background: var(--bg-inset); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+    .step-h { font-family: var(--font-heading); font-weight: 600; font-size: 16px; color: var(--fg-bright); margin-top: 14px; }
+    .cmd { font-family: var(--font-mono); font-size: 14px; color: var(--accent); background: var(--bg-inset); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin: 8px 0 4px; white-space: pre; overflow-x: auto; line-height: 1.7; }
+
+    /* Notes */
+    .notes { background: var(--bg-panel); border-top: 1px solid var(--border); padding: 16px 26px; max-height: 24vh; overflow-y: auto; display: flex; gap: 22px; align-items: flex-start; }
+    .notes-label { font-family: var(--font-heading); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--fg-dim); white-space: nowrap; padding-top: 3px; min-width: 92px; }
+    .notes-body { font-size: 14px; color: var(--fg-muted); line-height: 1.6; }
+    .notes-body strong { color: var(--fg-bright); font-weight: 600; }
+    .notes-body .say { color: var(--accent); font-style: italic; }
+    .notes.hidden { display: none; }
+
+    .bar { height: 46px; background: var(--bg-inset); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-family: var(--font-heading); font-size: 11px; }
+    .bar .brand { color: var(--accent); text-transform: uppercase; font-weight: 600; letter-spacing: 0.06em; }
+    .bar .mid { display: flex; gap: 14px; align-items: center; color: var(--fg-dim); }
+    .bar button { background: var(--bg-panel); color: var(--fg-muted); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-family: var(--font-heading); font-size: 11px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; }
+    .bar button:hover { color: var(--accent); border-color: rgba(196,255,87,0.4); }
+    .counter { font-family: var(--font-mono); color: var(--fg); }
+    .dots { display: flex; gap: 6px; flex-wrap: wrap; max-width: 220px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; }
+    .dot.on { background: var(--accent); }
+    .hint { color: var(--fg-dim); font-size: 10px; }
+    @media (max-width: 760px) { .idea { font-size: 34px; } .slide-h { font-size: 26px; } .canvas { padding: 28px; } .arch-cols { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="deck">
+  <div class="stage">
+
+    <!-- 1 TITLE -->
+    <div class="slide active">
+      <div class="canvas center">
+        <div class="eyebrow">Sessie 1</div>
+        <div class="idea">Bouw je eigen <span class="accent">AI Second Brain</span></div>
+        <div class="slide-sub" style="margin-top:24px;">Van niets naar een werkende brain. In twee uur, op je eigen werk.</div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Geen lange intro. <span class="say">"We gaan vandaag niet praten over second brains, we gaan er een bouwen."</span> Daarna meteen de zaal scannen (volgende slide).</div></div>
+    </div>
+
+    <!-- 2 ROOM CHECK -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Even kijken waar we staan</div>
+        <div class="slide-h">Drie vragen, handen omhoog</div>
+        <ol class="qlist" style="margin-top:18px;">
+          <li>Wie kan op deze laptop een <strong>terminal of PowerShell</strong> openen?</li>
+          <li>Wie heeft <strong>Claude Code</strong> geïnstalleerd, met een Pro- of Max-abonnement?</li>
+          <li>Wie heeft al een eigen <strong>kennissysteem of second brain</strong>?</li>
+        </ol>
+        <div class="slide-sub" style="margin-top:8px;">Op basis hiervan weet je wie vandaag de volledige brain bouwt, wie in de browser start, en wie het met de hand opzet. Niemand valt buiten de boot.</div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Tel hardop, schrijf de aantallen op het bord. <strong>Geen terminal en geen Claude?</strong> Dan vandaag de map met de hand plus een ticket voor IT, en bouwen met een buddy. <strong>Wel browser, geen Claude Code?</strong> Start via claude.ai. Dit aantal is meteen onze belangrijkste meting voor de uitrol in september.</div></div>
+    </div>
+
+    <!-- 3 WHAT WE DO -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Wat je vandaag meeneemt</div>
+        <div class="slide-h">Iedereen gaat met iets naar huis</div>
+        <ul class="points" style="margin-top:18px;">
+          <li><strong>Iedereen</strong> snapt wat een second brain is en wat het voor je doet.</li>
+          <li><strong>Kun je bouwen?</strong> Dan heb je aan het eind een werkende brain.</li>
+          <li><strong>Kun je vandaag niet bouwen?</strong> Dan ontwerp je de jouwe, klaar om te bouwen zodra je kunt.</li>
+        </ul>
+        <div class="big-after">Niemand kijkt alleen toe.</div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">De belofte: <strong>een uur administratie per week terug</strong>, als je het gebruikt. Eerlijk zijn: dit is de proeftuin voor september, dingen gaan stuk, dat is de opdracht. Jij bent mede-bouwer, geen gebruiker. De kit is versie 0.2. Maak het drieledige punt expliciet: snappen (iedereen), bouwen (wie kan), ontwerpen (wie nu niet kan).</div></div>
+    </div>
+
+    <!-- 4 TIME SINKS -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Eerst dit</div>
+        <div class="slide-h">Waar gaat jouw tijd elke week heen?</div>
+        <ul class="points" style="margin-top:18px;">
+          <li>Schrijf voor jezelf je <strong>top 3 admin-tijdvreters</strong> op.</li>
+          <li>De terugkerende dingen waar je tijd aan kwijt bent en die je liever niet doet.</li>
+          <li>Zet er per stuk <strong>uren per week</strong> bij.</li>
+        </ul>
+        <div class="big-after">Dit is je <span class="accent">bouwdoel</span> voor de hele track.</div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Eerst 30 seconden stil, iedereen schrijft voor zichzelf. Daarna de ronde, verbatim op het bord, niet opschonen. Maak een foto. In september leggen we hier de uren-bespaard naast.</div></div>
+    </div>
+
+    <!-- 5 WHAT IS A SECOND BRAIN -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Het idee</div>
+        <div class="slide-h">Wat is een second brain?</div>
+        <ul class="points" style="margin-top:18px;">
+          <li>Een gestructureerde plek voor alles wat jij weet en doet.</li>
+          <li>Gewoon tekstbestanden op je laptop. Geen magie.</li>
+          <li>Een AI leest erin en schrijft erin, voor jou.</li>
+          <li>Geen chatbot met geheugen. <strong>Jij bezit de bestanden.</strong></li>
+        </ul>
+        <div class="big-after">De bestanden zijn de brain. <span class="accent">De AI is de motor.</span></div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Dit is de kern. Het verschil met een chatbot: jij bezit de bestanden, ze blijven van jou, en ze zijn overdraagbaar. Daarom kun je vandaag al beginnen, ook zonder dat alles geïnstalleerd is.</div></div>
+    </div>
+
+    <!-- 5b LIVE DEMO -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Even kijken</div>
+        <div class="slide-h">Zo ziet dat er in het echt uit</div>
+        <ul class="points" style="margin-top:18px;">
+          <li>Ik gooi er een (verzonnen) meeting in.</li>
+          <li>Het maakt er een nette notitie van, met de acties eruit gehaald.</li>
+          <li>Het linkt de mensen en onthoudt de context voor de volgende keer.</li>
+        </ul>
+        <div class="big-after">Geen magie. <span class="accent">Je werk, geordend.</span></div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Draai dit <strong>live</strong>: de gesaneerde demo-meeting (Vondelbike) of je eigen brain. Dit is het moment dat ook de mensen die vandaag niet bouwen, snappen wat het is. Laten zien, niet alleen vertellen. Hou het kort, een minuut of drie.</div></div>
+    </div>
+
+    <!-- 6 ARCHITECTURE -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Zo is het opgebouwd</div>
+        <div class="slide-h">De architectuur</div>
+        <div class="slide-sub" style="margin-bottom:18px;">Saai met opzet. Die saaiheid is precies wat het betrouwbaar maakt.</div>
+        <div class="arch-top">
+          <div class="arch-card"><div class="fname">CLAUDE.md</div><div class="fdesc">de handleiding die de AI volgt</div></div>
+          <div class="arch-card"><div class="fname">00-START-HERE.md</div><div class="fdesc">de kaart en de inhoudsopgave</div></div>
+        </div>
+        <div class="arch-cols">
+          <div class="arch-col work">
+            <h4>Werkgeheugen · de genummerde bestanden</h4>
+            <ul>
+              <li><span class="fname">01-me.md</span> <span class="fdesc">wie je bent</span></li>
+              <li><span class="fname">02-command-center.md</span> <span class="fdesc">je dagelijkse overzicht</span></li>
+              <li><span class="fname">03-tasks.md</span> <span class="fdesc">je openstaande acties</span></li>
+              <li><span class="fname">04-log.md</span> <span class="fdesc">wat de brain deed</span></li>
+              <li><span class="fname">05-synthesis.md</span> <span class="fdesc">de kwaliteitscheck</span></li>
+            </ul>
+          </div>
+          <div class="arch-col long">
+            <h4>Langetermijngeheugen · de mappen</h4>
+            <ul>
+              <li><span class="fname">Meetings/</span> <span class="fdesc">per meeting een notitie</span></li>
+              <li><span class="fname">People/</span> <span class="fdesc">per persoon</span></li>
+              <li><span class="fname">Clients/</span> <span class="fdesc">per klant een map</span></li>
+              <li><span class="fname">Projects/</span> <span class="fdesc">je projecten</span></li>
+              <li><span class="fname">Patterns/  Sources/</span> <span class="fdesc">wat werkte · bronnen</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Dit is de rondleiding, in een keer. Wijs het aan op het scherm. Bovenaan staan de twee bestanden die de AI als eerste leest: de handleiding en de kaart. De genummerde bestanden zijn je werkgeheugen (altijd open), de mappen zijn je langetermijngeheugen. Meer is het niet.</div></div>
+    </div>
+
+    <!-- 7 HOW IT STAYS TRUE -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Vertrouwen</div>
+        <div class="slide-h">Hoe blijft het kloppen als het groeit?</div>
+        <ul class="points" style="margin-top:18px;">
+          <li>De AI checkt regelmatig op tegenstrijdigheden, gaten en verouderde info.</li>
+          <li>Hij stelt jou een paar korte vragen.</li>
+          <li>Jij beslist wat klopt. Niets lost zichzelf stilletjes op.</li>
+        </ul>
+        <div class="big-after">De AI vlagt. <span class="accent">Jij beslist.</span></div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Dit heet de kwaliteitscheck, en we doen het straks live op je eigen brain. Dit is waar vertrouwen vandaan komt: een brain die alles klakkeloos aanneemt, vertrouw je niet. Een wrong antwoord dat jij gelooft is erger dan een vraag die je in tien seconden beantwoordt.</div></div>
+    </div>
+
+    <!-- 8 HOW THE BUILD WORKS -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Voor wie bouwt · deel 1</div>
+        <div class="slide-h">Zet je brain klaar</div>
+        <div style="display:flex; gap:36px; align-items:flex-start; margin-top:18px;">
+        <div style="flex:1;">
+          <div class="step-h">1 · Pak de kit</div>
+          <p class="text-muted" style="font-size:15px; margin-top:4px;">Download via de QR of <span style="color:var(--accent)">placid-ripple-8nh2.here.now</span> (of de USB-stick) en pak hem uit (rechtsklik, uitpakken). Je krijgt een map met <code>vault-template</code>.</p>
+          <div class="step-h">2 · Zet je brain neer als git-repo</div>
+          <div class="cmd">cp -r vault-template ~/my-brain
+cd ~/my-brain
+git init &amp;&amp; git add -A &amp;&amp; git commit -m "my brain"</div>
+          <div class="step-h">3 · Start Claude Code in die map</div>
+          <div class="cmd">claude</div>
+          <p class="text-muted" style="font-size:14px; margin-top:6px;">Backup mag later: maak een prive repo en <code>git push</code>. Je lokale git beschermt je nu al.</p>
+        </div>
+          <div class="qr-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="350" height="350" class="segno"><g transform="scale(10)"><path fill="#fff" d="M0 0h35v35h-35z"/><path class="qrline" stroke="#141914" d="M3 3.5h7m1 0h3m1 0h3m2 0h1m2 0h1m1 0h7m-29 1h1m5 0h1m2 0h1m1 0h1m1 0h2m1 0h1m1 0h2m2 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m1 0h1m5 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m2 0h1m3 0h1m1 0h2m2 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m5 0h2m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h4m4 0h2m1 0h1m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-21 1h3m2 0h1m3 0h1m2 0h1m-21 1h1m3 0h1m1 0h5m1 0h2m2 0h2m1 0h7m2 0h1m-28 1h3m1 0h1m3 0h1m1 0h1m1 0h6m3 0h7m-29 1h7m4 0h1m3 0h1m1 0h1m3 0h1m2 0h1m3 0h1m-29 1h1m1 0h1m1 0h1m3 0h1m2 0h1m2 0h1m2 0h1m2 0h1m1 0h2m1 0h1m1 0h2m-29 1h2m1 0h2m1 0h1m2 0h1m1 0h1m1 0h3m1 0h2m1 0h2m5 0h1m-26 1h2m3 0h2m6 0h2m5 0h7m-29 1h3m1 0h1m1 0h1m3 0h1m1 0h5m5 0h1m2 0h2m1 0h1m-28 1h1m1 0h2m2 0h2m1 0h1m1 0h2m3 0h1m3 0h3m3 0h2m-26 1h1m1 0h3m2 0h4m1 0h1m1 0h3m7 0h1m-28 1h5m2 0h1m2 0h1m1 0h7m3 0h4m1 0h2m-25 1h1m1 0h2m1 0h1m1 0h2m2 0h2m1 0h1m4 0h1m2 0h1m1 0h1m-27 1h2m1 0h1m3 0h1m1 0h1m2 0h1m2 0h1m4 0h1m1 0h1m2 0h2m-29 1h3m2 0h2m1 0h4m1 0h3m1 0h1m1 0h7m2 0h1m-21 1h1m2 0h2m2 0h1m1 0h2m1 0h1m3 0h1m3 0h1m-29 1h7m1 0h1m2 0h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m6 0h1m1 0h1m1 0h1m1 0h2m3 0h1m2 0h2m-29 1h1m1 0h3m1 0h1m1 0h1m2 0h3m3 0h1m1 0h7m1 0h1m-28 1h1m1 0h3m1 0h1m2 0h2m2 0h4m1 0h1m1 0h2m6 0h1m-29 1h1m1 0h3m1 0h1m3 0h9m1 0h1m4 0h4m-29 1h1m5 0h1m2 0h1m2 0h1m3 0h3m1 0h4m1 0h1m1 0h2m-29 1h7m1 0h2m1 0h1m1 0h1m2 0h2m2 0h1m1 0h1m1 0h1m2 0h1"/></g></svg>
+            <div class="qr-label">Scan voor de kit</div>
+            <div class="qr-url">placid-ripple-8nh2.here.now</div>
+          </div>
+        </div>
+        <div class="big-after">Je brain staat. <span class="accent">Hierna vul je hem.</span></div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Laat deze slide staan terwijl ze installeren, dit zijn de exacte commando's. Geen terminal? Ga naar de ontwerp-route verderop. Claude Code ontbreekt of de installer lukt niet? Even helpen, of naar de browser. De commando's staan ook in de README en QUICKSTART in de kit.</div></div>
+    </div>
+
+    <!-- 8a BUILD PART 2 -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Voor wie bouwt · deel 2</div>
+        <div class="slide-h">Vul en gebruik je brain, in gewone taal</div>
+        <div class="slide-sub" style="margin-bottom:14px;">Geen commando's meer. Je zegt gewoon wat je wilt. Dit zeg je, en dit gebeurt er:</div>
+        <ul class="points" style="margin-top:0;">
+          <li><span style="color:var(--accent)">"zet mijn second brain op"</span>: de AI interviewt je (naam, rol, klanten, terugkerend werk, je tijdvreters) en vult <code>01-me.md</code>.</li>
+          <li><span style="color:var(--accent)">"verwerk dit"</span> met een echt document (sleep het in <code>Inbox/</code> of plak het): het leest, plaatst en linkt het, en werkt <code>00-START-HERE.md</code> bij. Check waar het landde.</li>
+          <li><span style="color:var(--accent)">"ik had net een meeting"</span> met je notities: een nette meetingnotitie met de acties eruit. Of <span style="color:var(--accent)">"brief me over [klant]"</span> voor alles wat je brain over die klant weet.</li>
+          <li><span style="color:var(--accent)">"draai synthese"</span>: de kwaliteitscheck. Beantwoord de paar vragen (TAP, CTX, IDK of SKIP).</li>
+        </ul>
+        <div class="big-after">Klaar: een <span class="accent">werkende brain</span> die je eigen werk kent.</div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Dit is het hart van het bouwblok. Iedereen draait minstens een skill op eigen werk en een keer synthese. Verse brains zijn stil bij synthese, zeg dat vooraf. De triggerzinnen staan ook in de QUICKSTART, dus niemand hoeft ze te onthouden.</div></div>
+    </div>
+
+    <!-- 8b WHERE IT LIVES -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Waar het woont</div>
+        <div class="slide-h">Je brain is een eigen prive git-repo</div>
+        <ul class="points" style="margin-top:18px;">
+          <li>Van jou en prive. Niemand anders kijkt erin.</li>
+          <li>Vanaf dag een: <strong>backup, geschiedenis, en terug kunnen</strong> als er iets misgaat.</li>
+          <li>Dezelfde vorm als de gedeelde hub, en straks Cowork. Verhuizen is dan een mapverplaatsing, geen project.</li>
+        </ul>
+        <div class="big-after">Lokaal vandaag. <span class="accent">Naar je prive-remote zodra je account klaar is.</span></div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Claude kan de repo opzetten: <span class="say">"maak hier een git-repo van en commit"</span>. Push naar een prive repo op je eigen git-host (GitHub prive, of waar emagine de hub zet). Let op: het staat dan in de cloud, dus "geen vertrouwelijk klantmateriaal" telt hier dubbel.</div></div>
+    </div>
+
+    <!-- 9 WHERE YOU START -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Twee manieren om vandaag te starten</div>
+        <div class="slide-h">Bouwen, of ontwerpen</div>
+        <div style="margin-top:18px;">
+          <div class="opt full"><div class="ot">Bouwen, als je een terminal en Claude hebt</div><div class="od">Je zet de echte brain op, met de stappen hiervoor. Aan het eind werkt hij.</div></div>
+          <div class="opt"><div class="ot">Ontwerpen, als dat vandaag niet kan</div><div class="od">Je vult je profiel in, bepaalt waar je werk hoort, kiest per tijdvreter een skill, en proeft het in de browser (gratis claude.ai-account kan). Je loopt weg met een ontwerp en een ticket voor IT. Bouwen is dan nog tien minuten.</div></div>
+        </div>
+        <div class="big-after">Allebei is een goede vrijdag. <span class="accent">Niemand kijkt alleen toe.</span></div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Koppel aan de handen van het begin. De bestanden zijn overal hetzelfde, dus de dag dat IT je deblokkeert of je Claude Code installeert, ga je verder waar je was. Geblokkeerde laptop = ontwerpen + ticket + buddy. Git en de echte build komen zodra de terminal er is.</div></div>
+    </div>
+
+    <!-- 9b DESIGN PATH (comprehensive) -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Voor wie vandaag niet kan bouwen</div>
+        <div class="slide-h">Ontwerpen: zo doe je dat</div>
+        <ol class="steps" style="margin-top:18px;">
+          <li>Pak de kit en pak hem uit. Geen terminal nodig: rechtsklik, uitpakken.</li>
+          <li>Open <code>01-me.md</code> in een teksteditor en vul je profiel in. Of doe het interview in claude.ai (gratis account kan) en plak het antwoord erin.</li>
+          <li>Pak 3 echte dingen (een meeting, een klant, een project) en bepaal waar ze horen: Meetings, People, Clients, Projects.</li>
+          <li>Kies per tijdvreter welke skill hem aanpakt.</li>
+          <li>Proef het: draai een skill in claude.ai en kijk wat het doet.</li>
+          <li>Vul het IT-ticket in: terminal en git, en de Claude Code-installer laten toestaan.</li>
+        </ol>
+        <div class="big-after">Je loopt weg met een ontwerp. <span class="accent">Bouwen is dan tien minuten.</span></div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Dit is echt werk, geen wachtkamer. Het staat ook in het werkboek onder "If you cannot build today". Het denkwerk dat ze nu doen, hoeven ze straks niet meer te doen.</div></div>
+    </div>
+
+    <!-- 10 THE ONE RULE -->
+    <div class="slide">
+      <div class="canvas center">
+        <div class="eyebrow">Veilig werken · de ene regel</div>
+        <div class="idea">Nog geen <span class="accent">vertrouwelijk klantmateriaal</span> in je brain.</div>
+        <div class="slide-sub" style="margin-top:22px;">Je eigen aantekeningen: prima. Klantdocumenten, persoonsgegevens van anderen, alles onder NDA: nog niet.</div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Waarom: je brain staat nu nog buiten de governance van emagine. De grens zit in het ontwerp, niet in je goede bedoelingen. Geldt ook in de browser. Zodra de beveiligde stack live is, gaat de regel eraf, en dan heb je de discipline al.</div></div>
+    </div>
+
+    <!-- 11 WORKING SAFELY -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Veilig werken</div>
+        <div class="slide-h">Twee dingen die je niet vergeet</div>
+        <ul class="points" style="margin-top:18px;">
+          <li><strong>Klinkt zeker, maar geen bron?</strong> Checken. De brain hoort alleen te zeggen wat zijn bestanden ondersteunen.</li>
+          <li><strong>Je brain is van jou.</strong> Alleen gesaneerde patronen en skills gaan naar de gedeelde hub. Je klantcontext blijft lokaal.</li>
+        </ul>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Koppel het eerste punt aan de tegenstrijdigheid die de kwaliteitscheck net ophaalde. Dat maakt het concreet in plaats van abstract.</div></div>
+    </div>
+
+    <!-- 11b TRACK ROADMAP -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">De route</div>
+        <div class="slide-h">De hele track: zes vrijdagen</div>
+        <div class="slide-sub" style="margin-bottom:16px;">Dit is sessie 1. Zo ziet de rest eruit. Om de week, augustus is peer-sessie.</div>
+        <div>
+          <div class="opt full"><div class="ot">19 jun · Bouw je brain</div><div class="od">Vandaag. Van niets naar een werkende brain.</div></div>
+          <div class="opt"><div class="ot">17 jul · Laat het je werk doen</div><div class="od">De dagelijkse loop van vijf minuten: dagelijkse brief en mail naar acties.</div></div>
+          <div class="opt"><div class="ot">31 jul · Houd het kloppend</div><div class="od">Synthese in de diepte, en meten wat het oplevert.</div></div>
+          <div class="opt"><div class="ot">14 aug · Power moves (peer-sessie)</div><div class="od">Rehearsal voor een spannend moment, en op schaal verwerken.</div></div>
+          <div class="opt"><div class="ot">28 aug · Power moves (peer-sessie)</div><div class="od">Veilig werken over meerdere klanten heen.</div></div>
+          <div class="opt"><div class="ot">11 sep · Oogsten en afsluiten</div><div class="od">Bewijs de tijd die je bespaarde, en word ambassadeur voor de uitrol.</div></div>
+        </div>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">3 juli is de company Quarterly, geen trackdag, vandaar de vier weken tot 17 juli. Augustus (14 en 28) zijn peer-sessies omdat ik weg ben; de groep runt ze met het format uit sessie 3. Elke sessie bouwt op de vorige. Sessie 5 is de oogst: bewezen tijdwinst, en jullie worden de ambassadeurs voor de september-uitrol.</div></div>
+    </div>
+
+    <!-- 12 CLOSE -->
+    <div class="slide">
+      <div class="canvas center">
+        <div class="eyebrow">De gewoonte · en volgende keer</div>
+        <div class="idea">Voer je brain. <span class="accent">17 juli zien we wat hij deed.</span></div>
+        <ul class="points" style="margin-top:26px;">
+          <li>Stop er dingen in terwijl je werkt.</li>
+          <li>Draai de kwaliteitscheck een keer voor de volgende sessie.</li>
+          <li>Wat stuk gaat: noteren en meenemen.</li>
+        </ul>
+      </div>
+      <div class="notes"><div class="notes-label">Notes</div><div class="notes-body">Niet "dat waren de slides". De push: <span class="say">"De eerste keer dat hij iets terugbrengt wat jij was vergeten, snap je waarom we dit doen."</span> Sessie 2 op 17 juli: de dagelijkse loop van vijf minuten, en de eerste show-and-tell, dan laat je zien wat je gebouwd hebt.</div></div>
+    </div>
+
+  </div>
+
+  <div class="bar">
+    <span class="brand">// stas.brain · sessie 1</span>
+    <div class="mid">
+      <button onclick="prev()">Vorige</button>
+      <span class="counter"><span id="cur">1</span> / <span id="tot">17</span></span>
+      <button onclick="next()">Volgende</button>
+      <button onclick="toggleNotes()">Notes</button>
+      <div class="dots" id="dots"></div>
+    </div>
+    <span class="hint">pijltjes · N voor notes</span>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let i = 0; let notesOn = true;
+  const dotsWrap = document.getElementById('dots');
+  slides.forEach((_, n) => { const d = document.createElement('div'); d.className = 'dot' + (n===0?' on':''); d.onclick = () => go(n); dotsWrap.appendChild(d); });
+  document.getElementById('tot').textContent = slides.length;
+  function render() {
+    slides.forEach((s, n) => s.classList.toggle('active', n===i));
+    Array.from(dotsWrap.children).forEach((d, n) => d.classList.toggle('on', n===i));
+    document.getElementById('cur').textContent = i+1;
+    document.querySelectorAll('.notes').forEach(nt => nt.classList.toggle('hidden', !notesOn));
+    slides[i].querySelector('.canvas').scrollTop = 0;
+  }
+  function go(n){ i = Math.max(0, Math.min(slides.length-1, n)); render(); }
+  function next(){ go(i+1); } function prev(){ go(i-1); }
+  function toggleNotes(){ notesOn = !notesOn; render(); }
+  document.addEventListener('keydown', e => {
+    if (e.key==='ArrowRight'||e.key===' ') next();
+    else if (e.key==='ArrowLeft') prev();
+    else if (e.key.toLowerCase()==='n') toggleNotes();
+  });
+  render();
+</script>
+</body>
+</html>
