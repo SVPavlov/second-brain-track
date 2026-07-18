@@ -137,7 +137,7 @@
         <h3>What the kit gives you</h3>
         <ul>
           <li>A <strong>vault template</strong>: the folder structure, an operating manual, and a catalog.</li>
-          <li><strong>Fourteen skills</strong> you trigger in plain words (meeting notes, client prep, inbox to actions, and more).</li>
+          <li><strong>Nineteen skills</strong> you trigger in plain words (meeting notes, client prep, inbox to actions, and more).</li>
           <li>A <strong>quality discipline</strong> (synthesis) that keeps the brain trustworthy as it grows.</li>
           <li>A <strong>data rule</strong> and trust rules so it stays safe.</li>
         </ul>
@@ -240,10 +240,15 @@ git commit -m "my brain"</code></pre>
             <tr><td><code>read this book</code> (or <code>/ingest-book</code>)</td><td>Deep-reads a book PDF into reading notes, a pattern card and applications</td></tr>
             <tr><td><code>update my kit</code> (or <code>/update-kit</code>)</td><td>Pulls the newest shared skills and manual, shows the changelog, never touches notes</td></tr>
             <tr><td><code>track stats</code> (or <code>/stats</code>)</td><td>Computes usage stats from the vault logs and produces the measurement one-liner</td></tr>
+            <tr><td><code>research [X]</code></td><td>Quick sourced web background on a client or topic</td></tr>
+            <tr><td><code>deep research [X]</code></td><td>Thorough multi-angle research with adversarial verification and citations (asks before spending your usage cap)</td></tr>
+            <tr><td><code>what did we learn?</code></td><td>Extracts lessons and patterns from recent work, you confirm what is real</td></tr>
+            <tr><td><code>idea: ...</code></td><td>Captures an idea in seconds, filed where it resurfaces</td></tr>
+            <tr><td><code>import my chat history</code></td><td>Turns a ChatGPT/Claude export into a populated brain</td></tr>
             <tr><td>paste an email</td><td>Extracts actions and drafts a reply in your voice</td></tr>
           </tbody>
         </table>
-        <p>Skills are maintained centrally and shipped in the kit at <code>.claude/skills/</code>. You report problems; fixes reach you through <a href="#backup">updates</a>.</p>
+        <p>Skills ship in the kit at <code>.claude/skills/</code> — edit them freely; updates show you diffs first. Optional connector <strong>modules</strong> live in <code>.claude/modules/</code>, inactive until you install them (first: the browser module, Claude in Chrome). There is also a first read-only <strong>agent</strong>, client-research, that does research legwork without cluttering your conversation.</p>
       </section>
 
       <section id="memory">
