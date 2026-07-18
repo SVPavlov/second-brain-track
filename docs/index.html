@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Second Brain Starter Kit Docs</title>
   <meta name="description" content="Documentation for the AI Second Brain starter kit: a folder of markdown that an AI reads and writes for you.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#141914;--bg-panel:#1C211C;--bg-elevated:#252B25;--bg-inset:#111411;--bg-deep:#0D100D;
-      --fg:#F2F2F2;--fg-bright:#FFFFFF;--fg-muted:#9DA19B;--fg-dim:#5C5C55;
-      --accent:#C4FF57;--accent-soft:rgba(196,255,87,0.12);--accent-text:#111411;
+      --bg:#F3F3F1;--bg-panel:#FFFFFF;--bg-elevated:#EBEBE8;--bg-inset:#FFFFFF;--bg-deep:#F3F3F1;
+      --fg:#383D38;--fg-bright:#383D38;--fg-muted:#686861;--fg-dim:#9A9990;
+      --accent:#383D38;--accent-soft:#F6FFDB;--accent-text:#383D38;
       --warning:#FACC15;--danger:#F0787D;--info:#7FB3FF;--success:#6BDB6B;
-      --border:#2A302A;--border-hover:#3A423A;
-      --font-h:'Space Grotesk',sans-serif;--font-b:'Inter',-apple-system,system-ui,sans-serif;--font-m:'JetBrains Mono',ui-monospace,monospace;
+      --border:#CAC9C4;--border-hover:#9A9990;
+      --font-h:'Space Grotesk',sans-serif;--font-b:'Inter Tight','Inter',-apple-system,system-ui,sans-serif;--font-m:'JetBrains Mono',ui-monospace,monospace;
     }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:24px}
@@ -64,12 +64,25 @@
     @media (max-width:880px){
       .sidebar{display:none}
       .main{margin-left:0;width:100%;padding:0 20px}
-      .topbar{display:flex;align-items:center;gap:10px;position:sticky;top:0;background:rgba(17,20,17,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:12px 16px;z-index:20;font-family:var(--font-h);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+      .topbar{display:flex;align-items:center;gap:10px;position:sticky;top:0;background:rgba(243,243,241,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:12px 16px;z-index:20;font-family:var(--font-h);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
       h1{font-size:34px}
     }
+  
+    /* v3.0 light overrides (2026-07-18) */
+    a{text-decoration:underline;text-underline-offset:2px}
+    .sidebar nav a,.topbar a{text-decoration:none}
+    h1,h2,h3{font-weight:400}
+    code{background:#F6FFDB;border-color:#E4FF99;color:#383D38;border-radius:0}
+    pre{background:#F3F3F1;color:#383D38;border-color:#CAC9C4;border-left:4px solid #D4FF52;border-radius:0}
+    .brand{background:#D4FF52;color:#383D38}
+    .eyebrow{display:inline-block;background:#D4FF52;color:#383D38;padding:3px 10px}
+    .pill{background:#F6FFDB;border-color:#E4FF99;color:#383D38;border-radius:0}
+    .steps>li::before{background:#D4FF52;border-color:#D4FF52;color:#383D38;border-radius:0}
+    .sidebar nav a.active{background:#F6FFDB;color:#383D38}
+    .callout{border-left-color:#D4FF52;border-radius:0}
   </style>
 </head>
-<body style="padding:0;">
+<body>
 <nav style="background:#383D38;padding:0 20px;font-family:'Space Grotesk',sans-serif;">
   <div style="max-width:820px;margin:0 auto;display:flex;gap:4px;align-items:center;flex-wrap:wrap;height:auto;min-height:48px;">
     <a href="../index.html" style="background:#D4FF52;color:#383D38;font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;text-decoration:none;margin-right:12px;">Second Brain Track</a>
