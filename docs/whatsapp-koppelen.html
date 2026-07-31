@@ -76,7 +76,7 @@ uv --version</pre>
   <div class="stap">
     <h2><span class="nr">2</span>Het bruggetje starten + QR scannen</h2>
     <p>Plak deze drie regels één voor één in je terminal (na elke regel Enter, wacht tot hij klaar is):</p>
-    <pre>git clone https://github.com/lharries/whatsapp-mcp.git
+    <pre>git clone https://github.com/SVPavlov/whatsapp-mcp.git
 cd whatsapp-mcp/whatsapp-bridge
 go run main.go</pre>
     <div class="waarschuwing"><strong>Alleen Windows:</strong> doe vóór <code>go run main.go</code> eerst eenmalig <code>go env -w CGO_ENABLED=1</code>. Krijg je daarna een fout over "go-sqlite3 requires cgo"? Dan heb je ook een C-compiler nodig: installeer <a href="https://www.msys2.org/">MSYS2</a> en zet de map <code>ucrt64\bin</code> in je PATH. Is dat je te veel voor nu: wissel naar pad B, dit komt later wel.</div>
@@ -115,6 +115,8 @@ en vat samen wat er speelt.</pre>
     <ul>
       <li><strong>"command not found" na installeren</strong> → terminal sluiten en nieuw venster openen (echt).</li>
       <li><strong>Geen QR-code te zien</strong> → maak je terminalvenster groter en start <code>go run main.go</code> opnieuw.</li>
+      <li><strong>QR gescand maar koppelen faalt / "Client outdated (405)" of "websocket 1006" in de terminal</strong> → je hebt de originele (verouderde) repo gecloond. Verwijder de map (<code>rm -rf whatsapp-mcp</code>) en clone opnieuw met de URL uit stap 2 (de SVPavlov-versie, die is bijgewerkt).</li>
+      <li><strong>Scan lukt, daarna "pair error" (zonder 405)</strong> → halve sessie in de opslag. Bridge stoppen (Ctrl+C), dan <code>rm store/whatsapp.db store/messages.db</code> en opnieuw <code>go run main.go</code>.</li>
       <li><strong>"Device limit reached"</strong> → telefoon: Gekoppelde apparaten, verwijder een oud apparaat.</li>
       <li><strong>Fout over go-sqlite3 / cgo (Windows)</strong> → zie het rode blok bij stap 2.</li>
       <li><strong>Het werkte, maar later niet meer</strong> → de koppeling verloopt na ~20 dagen; dan opnieuw de QR scannen (stap 2).</li>
