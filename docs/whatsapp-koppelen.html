@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp aan je brein koppelen · stap voor stap</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#383D38; --white:#FFFFFF; --cream:#F3F3F1; --line:#CAC9C4;
+    --grey:#686861; --mute:#9A9990; --lime:#D4FF52; --lime-tint:#F6FFDB;
+    --lime-line:#E4FF99; --coral:#F0787D;
+    --fh:'Space Grotesk',sans-serif; --fb:'Inter Tight',sans-serif; --fm:'JetBrains Mono','SF Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--cream);color:var(--ink);font-family:var(--fb);line-height:1.55;font-size:16px;padding:28px 16px}
+  .wrap{max-width:760px;margin:0 auto}
+  .kicker{display:inline-block;background:var(--lime);font-family:var(--fh);font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;margin-bottom:12px}
+  h1{font-family:var(--fh);font-weight:400;font-size:32px;line-height:1.15;margin-bottom:8px}
+  .lead{color:var(--grey);font-size:17px;margin-bottom:22px;max-width:58ch}
+  .stap{background:var(--white);border:1px solid var(--line);padding:20px 24px;margin-bottom:16px}
+  .stap h2{font-family:var(--fh);font-weight:500;font-size:20px;margin-bottom:10px;display:flex;gap:12px;align-items:baseline}
+  .stap h2 .nr{background:var(--lime);font-size:16px;padding:2px 12px;flex-shrink:0}
+  .stap h3{font-family:var(--fh);font-weight:500;font-size:15px;text-transform:uppercase;letter-spacing:1px;margin:14px 0 6px}
+  .stap p{margin-bottom:10px;max-width:62ch}
+  .stap ul{list-style:none;margin-bottom:10px}
+  .stap li{position:relative;padding-left:20px;margin-bottom:6px}
+  .stap li::before{content:'';position:absolute;left:0;top:9px;width:9px;height:9px;background:var(--lime)}
+  code{font-family:var(--fm);font-size:.85em;background:var(--lime-tint);border:1px solid var(--lime-line);padding:1px 6px}
+  pre{font-family:var(--fm);font-size:14px;background:#26291F;color:#E8E9E4;padding:14px 16px;margin:10px 0;overflow-x:auto;line-height:1.6;border-left:4px solid var(--lime)}
+  .zie{background:var(--lime-tint);border:1px solid var(--lime-line);padding:10px 14px;margin:10px 0;font-size:15px}
+  .zie b{font-family:var(--fh);font-weight:500}
+  .waarschuwing{background:#FDECEC;border:1px solid #F5C2C4;border-left:4px solid var(--coral);padding:12px 16px;margin:10px 0;font-size:15px}
+  table{width:100%;border-collapse:collapse;margin:8px 0 4px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;font-size:14.5px;vertical-align:top}
+  th{font-family:var(--fh);font-weight:500;background:var(--cream)}
+  .check{font-family:var(--fh);font-size:15px;background:var(--white);border:1px solid var(--line);border-left:4px solid var(--lime);padding:10px 14px;margin-top:12px}
+  footer{color:var(--mute);font-size:13px;margin:26px 0 8px;text-align:center}
+  a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="kicker">Sessie 3 · pad A · uitgebreide handleiding</span>
+  <h1>WhatsApp aan je brein koppelen</h1>
+  <p class="lead">Volledige versie van slide 8, voor als je dit nog nooit gedaan hebt. Per stap: wat je typt, wáár je het typt, en wat je hoort te zien. Duurt 45 tot 60 minuten. Doe het met je buddy.</p>
+
+  <div class="stap">
+    <h2><span class="nr">0</span>Kies eerst eerlijk (30 seconden)</h2>
+    <table>
+      <tr><th>Jouw situatie</th><th>Advies</th></tr>
+      <tr><td>Mac, of eigen Linux-laptop</td><td>Prima. Begin bij stap 1.</td></tr>
+      <tr><td>Windows, eigen laptop, installatierechten</td><td>Kan, met één extra horde (zie het rode blok bij stap 2).</td></tr>
+      <tr><td>Windows-werklaptop met beperkte rechten</td><td><strong>Kies vandaag pad B.</strong> Dit lukt niet in een uur. Pad A kan thuis of in een peer-sessie alsnog.</td></tr>
+    </table>
+    <p style="margin-top:8px"><strong>Wat je gaat bouwen, in gewone taal:</strong> twee dingen. (1) Een <strong>bruggetje</strong> dat op jouw laptop draait en meeleest met jouw WhatsApp (zoals WhatsApp Web dat ook doet). Je berichten blijven op je eigen machine staan. (2) Een <strong>koppeling</strong> zodat Claude dat bruggetje vragen kan stellen.</p>
+  </div>
+
+  <div class="stap">
+    <h2><span class="nr">1</span>Gereedschap installeren</h2>
+    <p>Open je terminal. Mac: druk Cmd+spatie, typ "Terminal", Enter. Windows: startmenu, typ "PowerShell", Enter.</p>
+    <p>Check wat je al hebt. Typ deze twee regels (na elke regel Enter):</p>
+    <pre>go version
+uv --version</pre>
+    <div class="zie"><b>Wat je hoort te zien:</b> iets als <code>go version go1.22...</code> en <code>uv 0.5...</code>. Zie je dat bij allebei? Ga naar stap 2.</div>
+    <p>Krijg je <strong>"command not found"</strong> (of "niet herkend")? Installeer wat mist:</p>
+    <ul>
+      <li><strong>Go:</strong> ga naar <a href="https://go.dev/dl/">go.dev/dl</a>, download de installer voor jouw systeem, klik hem door.</li>
+      <li><strong>uv</strong> (Mac/Linux): plak in je terminal: <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></li>
+      <li><strong>uv</strong> (Windows, in PowerShell): <code>powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code></li>
+    </ul>
+    <div class="waarschuwing"><strong>Belangrijk:</strong> sluit na het installeren je terminal en open een nieuwe. Anders "ziet" je terminal de nieuwe programma's niet (dit was dé muur van sessie 1). Doe daarna de twee checks opnieuw.</div>
+    <div class="check">✅ Checkpoint 1 gehaald (beide checks geven antwoord)? Post "✅ 1" in de groep.</div>
+  </div>
+
+  <div class="stap">
+    <h2><span class="nr">2</span>Het bruggetje starten + QR scannen</h2>
+    <p>Plak deze drie regels één voor één in je terminal (na elke regel Enter, wacht tot hij klaar is):</p>
+    <pre>git clone https://github.com/lharries/whatsapp-mcp.git
+cd whatsapp-mcp/whatsapp-bridge
+go run main.go</pre>
+    <div class="waarschuwing"><strong>Alleen Windows:</strong> doe vóór <code>go run main.go</code> eerst eenmalig <code>go env -w CGO_ENABLED=1</code>. Krijg je daarna een fout over "go-sqlite3 requires cgo"? Dan heb je ook een C-compiler nodig: installeer <a href="https://www.msys2.org/">MSYS2</a> en zet de map <code>ucrt64\bin</code> in je PATH. Is dat je te veel voor nu: wissel naar pad B, dit komt later wel.</div>
+    <div class="zie"><b>Wat je hoort te zien:</b> eerst wat logregels, dan een <strong>grote QR-code van blokjes</strong> in je terminal.</div>
+    <p>Pak je telefoon: WhatsApp → Instellingen → <strong>Gekoppelde apparaten</strong> → Apparaat koppelen → scan de QR-code op je scherm.</p>
+    <div class="zie"><b>Daarna zie je:</b> "Successfully authenticated" of "Connected to WhatsApp". De eerste keer haalt hij je berichtgeschiedenis op; dat kan een paar minuten duren. <strong>Laat dit terminalvenster open staan</strong> — het bruggetje moet blijven draaien.</div>
+    <div class="check">✅ Checkpoint 2 gehaald (QR gescand, connected)? Post "✅ 2" in de groep. Koffie verdiend.</div>
+  </div>
+
+  <div class="stap">
+    <h2><span class="nr">3</span>Claude aan het bruggetje koppelen</h2>
+    <p><strong>Open een NIEUW terminalvenster</strong> (het oude blijft het bruggetje draaien). Zoek eerst uit waar de map staat. Typ:</p>
+    <pre>cd whatsapp-mcp
+pwd</pre>
+    <div class="zie"><b>Wat je hoort te zien:</b> een pad, bijvoorbeeld <code>/Users/jenaam/whatsapp-mcp</code>. Dat pad heb je zo nodig.</div>
+    <p>Ga nu naar je brein-map (bijvoorbeeld <code>cd ~/second-brain</code>, waar je normaal Claude start) en plak dit, met JOUW pad van hierboven erin:</p>
+    <pre>claude mcp add whatsapp -- uv --directory /JOUW/PAD/whatsapp-mcp/whatsapp-mcp-server run main.py</pre>
+    <p>Dus als <code>pwd</code> zei <code>/Users/anna/whatsapp-mcp</code>, dan wordt het: <code>--directory /Users/anna/whatsapp-mcp/whatsapp-mcp-server</code></p>
+    <p>Start daarna een <strong>nieuwe</strong> Claude-sessie in je brein-map (typ <code>claude</code>).</p>
+    <div class="zie"><b>Check:</b> typ in Claude <code>/mcp</code> — staat er "whatsapp" bij met een groen bolletje? Dan zit hij erop.</div>
+    <div class="check">✅ Checkpoint 3 gehaald? Post "✅ 3" in de groep.</div>
+  </div>
+
+  <div class="stap">
+    <h2><span class="nr">4</span>De eerste vraag</h2>
+    <p>Vraag in diezelfde Claude-sessie:</p>
+    <pre>Zoek in mijn WhatsApp de laatste berichten in [naam van een groep]
+en vat samen wat er speelt.</pre>
+    <div class="zie"><b>Wat je hoort te zien:</b> Claude vraagt toestemming om een whatsapp-tool te gebruiken (zeg ja), en geeft dan een samenvatting van échte berichten uit die groep.</div>
+    <p>Lege antwoorden? De eerste sync is misschien nog bezig: probeer het over een kleine, rustige groep, of wacht twee minuten.</p>
+    <div class="check">✅ Checkpoint 4 gehaald? <strong>Gefeliciteerd, je brein leest zelf.</strong> Post "✅ 4" + een screenshot in de groep!</div>
+  </div>
+
+  <div class="stap">
+    <h2><span class="nr">!</span>Als het vastloopt</h2>
+    <ul>
+      <li><strong>"command not found" na installeren</strong> → terminal sluiten en nieuw venster openen (echt).</li>
+      <li><strong>Geen QR-code te zien</strong> → maak je terminalvenster groter en start <code>go run main.go</code> opnieuw.</li>
+      <li><strong>"Device limit reached"</strong> → telefoon: Gekoppelde apparaten, verwijder een oud apparaat.</li>
+      <li><strong>Fout over go-sqlite3 / cgo (Windows)</strong> → zie het rode blok bij stap 2.</li>
+      <li><strong>Het werkte, maar later niet meer</strong> → de koppeling verloopt na ~20 dagen; dan opnieuw de QR scannen (stap 2).</li>
+      <li><strong>Halverwege het bouwuur en nog geen QR gezien?</strong> → wissel naar pad B. Geen falen; dit komt in een peer-sessie terug.</li>
+    </ul>
+    <h3>De regels</h3>
+    <ul>
+      <li>Je berichten blijven lokaal op je eigen machine; er gaat pas iets naar Claude als jij een vraag stelt.</li>
+      <li>Je appjes bevatten klantdata en privégesprekken: wat je brein ervan in notities zet valt onder de gewone data-regel (geen klantnamen in wat je deelt).</li>
+      <li>Laat je brein nooit ongezien acties uitvoeren op basis van binnenkomende berichten. Jij blijft de gate.</li>
+    </ul>
+  </div>
+
+  <footer><a href="../slides/sessie-3.html">Terug naar de slides</a> · <a href="../index.html">Second Brain Track</a></footer>
+</div>
+</body>
+</html>
