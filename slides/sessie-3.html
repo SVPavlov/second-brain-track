@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sessie 3: Je brein gaat zelf lezen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --em-ink: #383D38; --em-white: #FFFFFF; --em-cream: #F3F3F1; --em-line: #CAC9C4;
+      --em-grey: #686861; --em-mute: #9A9990; --em-lime: #D4FF52; --em-lime-tint: #F6FFDB;
+      --em-lime-tint-50: #E4FF99; --em-coral: #F0787D;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter Tight', -apple-system, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { background: var(--em-cream); color: var(--em-ink); font-family: var(--font-body); overflow: hidden; }
+    .deck { height: 100vh; display: flex; flex-direction: column; }
+    .stage { flex: 1; display: flex; justify-content: center; padding: 22px; min-height: 0; }
+    .slide { display: none; width: 100%; max-width: 1120px; flex-direction: column; min-height: 0; }
+    .slide.active { display: flex; }
+
+    .canvas {
+      flex: 1; background: var(--em-white); border: 1px solid var(--em-line);
+      padding: 48px 60px; display: flex; flex-direction: column;
+      justify-content: flex-start; position: relative; overflow-y: auto;
+    }
+    .canvas.center { justify-content: center; }
+    .canvas::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--em-lime); }
+
+    .eyebrow { display: inline-block; align-self: flex-start; background: var(--em-lime); color: var(--em-ink); font-family: var(--font-heading); font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 12px; margin-bottom: 24px; }
+    .idea { font-family: var(--font-heading); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12; color: var(--em-ink); font-size: 50px; max-width: 24ch; }
+    .idea .accent { background: var(--em-lime); padding: 0 8px; }
+    .slide-h { font-family: var(--font-heading); font-weight: 400; letter-spacing: -0.01em; line-height: 1.12; color: var(--em-ink); font-size: 36px; margin-bottom: 10px; }
+    .slide-sub { font-size: 18px; color: var(--em-grey); margin-bottom: 26px; max-width: 56ch; line-height: 1.5; }
+
+    .points { list-style: none; }
+    .points li { position: relative; padding-left: 30px; font-size: 22px; color: var(--em-ink); margin-bottom: 15px; line-height: 1.4; max-width: 60ch; }
+    .points li::before { content: ''; position: absolute; left: 0; top: 10px; width: 14px; height: 14px; background: var(--em-lime); }
+    .points li .muted { color: var(--em-grey); font-size: 18px; }
+
+    .qlist, .steps { list-style: none; counter-reset: item; }
+    .qlist li, .steps li { counter-increment: item; position: relative; padding-left: 52px; font-size: 21px; color: var(--em-ink); margin-bottom: 18px; line-height: 1.4; max-width: 62ch; }
+    .qlist li::before, .steps li::before {
+      content: counter(item); position: absolute; left: 0; top: -2px; width: 36px; height: 36px;
+      background: var(--em-lime); color: var(--em-ink);
+      font-family: var(--font-heading); font-weight: 500; font-size: 17px; display: flex; align-items: center; justify-content: center;
+    }
+    .steps li .why { color: var(--em-grey); font-size: 16px; display: block; }
+
+    .frame { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .frame span { font-family: var(--font-heading); font-size: 13px; font-weight: 500; color: var(--em-grey); background: var(--em-cream); border: 1px solid var(--em-line); padding: 6px 14px; }
+    .frame span b { color: var(--em-ink); font-weight: 500; }
+
+    code { font-family: var(--font-mono); font-size: 0.82em; color: var(--em-ink); background: var(--em-lime-tint); padding: 1px 7px; border: 1px solid var(--em-lime-tint-50); }
+    .oneliner { font-family: var(--font-mono); font-size: 16px; color: var(--em-ink); background: var(--em-cream); border: 1px solid var(--em-line); border-left: 4px solid var(--em-lime); padding: 14px 16px; margin: 14px 0; line-height: 1.6; overflow-x: auto; white-space: nowrap; }
+    .legend { list-style: none; margin-top: 4px; }
+    .legend li { font-size: 16px; color: var(--em-grey); margin-bottom: 6px; padding-left: 18px; position: relative; }
+    .legend li::before { content: ''; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; background: var(--em-lime); }
+
+    .timer { font-family: var(--font-mono); font-weight: 700; font-size: 150px; letter-spacing: -0.02em; color: var(--em-ink); text-align: center; line-height: 1; margin: 10px 0 18px; font-variant-numeric: tabular-nums; }
+    .timer.warn { color: var(--em-coral); }
+    .timer.done { color: var(--em-coral); animation: blink 0.8s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0.25; } }
+    .timer-ctl { text-align: center; }
+    .timer-ctl button { background: var(--em-ink); color: var(--em-white); border: none; padding: 12px 28px; font-family: var(--font-heading); font-size: 16px; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 6px; }
+    .timer-ctl button:hover { background: #000; }
+    .timer-ctl button.ghost { background: var(--em-white); color: var(--em-grey); border: 1px solid var(--em-line); }
+
+    .paden { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 8px; }
+    .pad { background: var(--em-cream); border: 1px solid var(--em-line); border-top: 5px solid var(--em-lime); padding: 16px 18px; }
+    .pad .pad-label { font-family: var(--font-heading); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--em-grey); }
+    .pad h3 { font-family: var(--font-heading); font-weight: 500; font-size: 21px; margin: 6px 0 10px; }
+    .pad ul { list-style: none; }
+    .pad li { position: relative; padding-left: 18px; font-size: 15px; margin-bottom: 7px; line-height: 1.4; }
+    .pad li::before { content: ''; position: absolute; left: 0; top: 7px; width: 8px; height: 8px; background: var(--em-lime); }
+    .pad .moeilijk { font-family: var(--font-heading); font-size: 12.5px; color: var(--em-grey); margin-top: 8px; }
+    @media (max-width: 900px) { .paden { grid-template-columns: 1fr; } }
+
+    .kalender { display: flex; gap: 14px; margin: 20px 0; flex-wrap: wrap; }
+    .kalender .dag { background: var(--em-cream); border: 1px solid var(--em-line); padding: 18px 22px; min-width: 190px; }
+    .kalender .dag.los { border-top: 4px solid var(--em-lime); background: var(--em-white); }
+    .kalender .dag .datum { font-family: var(--font-heading); font-size: 22px; margin-bottom: 6px; }
+    .kalender .dag .wie { font-size: 16px; color: var(--em-grey); }
+    .kalender .dag .wie b { color: var(--em-ink); font-weight: 600; }
+
+    .bar { height: 46px; background: var(--em-white); border-top: 1px solid var(--em-line); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-family: var(--font-heading); font-size: 11px; }
+    .bar .brand { color: var(--em-ink); background: var(--em-lime); text-transform: uppercase; font-weight: 500; letter-spacing: 0.06em; padding: 3px 8px; }
+    .bar .mid { display: flex; gap: 14px; align-items: center; color: var(--em-mute); }
+    .bar button { background: var(--em-white); color: var(--em-grey); border: 1px solid var(--em-line); padding: 6px 12px; font-family: var(--font-heading); font-size: 11px; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; }
+    .bar button:hover { color: var(--em-ink); border-color: var(--em-ink); }
+    .counter { font-family: var(--font-mono); color: var(--em-ink); }
+    .dots { display: flex; gap: 6px; flex-wrap: wrap; max-width: 220px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--em-line); cursor: pointer; }
+    .dot.on { background: var(--em-ink); }
+    .hint { color: var(--em-mute); font-size: 10px; }
+    @media (max-width: 760px) { .idea { font-size: 32px; } .slide-h { font-size: 26px; } .canvas { padding: 28px; } .timer { font-size: 80px; } }
+  </style>
+</head>
+<body>
+<div class="deck">
+  <div class="stage">
+
+    <!-- 1 TITEL -->
+    <div class="slide active">
+      <div class="canvas center">
+        <div class="eyebrow">Sessie 3 · 31 juli</div>
+        <div class="idea">Vandaag gaat je brein <span class="accent">zelf lezen</span></div>
+        <div class="slide-sub" style="margin-top:24px;">Tot nu toe voer je het met de hand. Vanmiddag bouw je een brein dat werkt terwijl jij iets anders doet — en spreken we af hoe augustus doorloopt zonder mij.</div>
+      </div>
+    </div>
+
+    <!-- 2 WAAR STA JE NU -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Eerst dit · 5 minuten · telefoons erbij</div>
+        <div class="slide-h">Waar sta je nu?</div>
+        <div class="slide-sub">Even kort vastleggen waar iedereen staat. Eén berichtje in de groep:</div>
+        <div class="oneliner">S3 | mijn brein doet nu zelf: ... | scheelt me per week: ... uur</div>
+        <ul class="legend">
+          <li>wat doet je brein nu al voor je (meetingverslagen, mailtriage, klantoverzicht, ...) en je eigen schatting van de tijdwinst</li>
+          <li>doet je brein nog weinig? Ook goed. Dan zie je op 11 september precies hoeveel erbij is gekomen</li>
+          <li>post het nu — daarna gaan we bouwen</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3 DEMO FRAME -->
+    <div class="slide">
+      <div class="canvas center">
+        <div class="eyebrow">Kijk mee · echt scherm</div>
+        <div class="idea">Vanochtend om 10:13 stuurde mijn brein mij <span class="accent">dit bericht</span></div>
+        <div class="slide-sub" style="margin-top:24px;">Ik heb er niet om gevraagd. Het staat er elke ochtend: wat er in mijn mail en appjes gebeurd is, wat er vandaag moet, wat aandacht vraagt. Terwijl ik sliep, heeft mijn brein gewerkt. Dát bouwen we vandaag.</div>
+      </div>
+    </div>
+
+    <!-- 4 SHOW AND TELL + TIMER -->
+    <div class="slide">
+      <div class="canvas center">
+        <div class="eyebrow">Show and tell · 2 demo's · 3 min · "wat doet je brein al zónder jou?"</div>
+        <div class="timer" id="clock">3:00</div>
+        <div class="timer-ctl">
+          <button onclick="startTimer()">Start</button>
+          <button class="ghost" onclick="resetTimer()">Reset</button>
+        </div>
+        <div class="slide-sub" style="text-align:center;margin-top:22px;">Eén ding dat je brein al zonder jou doet — of wat er kapot ging toen het dat probeerde.</div>
+      </div>
+    </div>
+
+    <!-- 5 DE BOUWSTENEN -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Eerst de woorden</div>
+        <div class="slide-h">Vijf onderdelen, elk lost één probleem op</div>
+        <ol class="steps" style="margin-top:16px;">
+          <li><strong>Skill</strong> <span class="why">Leg je Claude voor de tweede keer hetzelfde uit? Dat had een skill moeten zijn: een markdown-bestand dat Claude één keer leert hoe iets moet. Daarna past hij het zelf toe, elke keer als het van pas komt.</span></li>
+          <li><strong>/Command</strong> <span class="why">Hetzelfde bestand, ander startsignaal. Een command typ jij zelf (<code>/verslag</code>); een skill herkent Claude zelf. Wil jij bepalen wanneer het gebeurt? Command. Moet Claude het zien aankomen? Skill.</span></li>
+          <li><strong>Hook</strong> <span class="why">Instructies volgt Claude meestal. Een hook gebeurt áltijd: vast moment, vaste actie, geen uitzonderingen. Bijvoorbeeld: je werk automatisch bewaren na elke wijziging.</span></li>
+          <li><strong>MCP</strong> <span class="why">Skills gaan over kennis; MCP gaat over verbinding. Een open standaard waarmee Claude andere systemen kan lezen en bedienen: WhatsApp, je browser, een database. Claude snapt zelf wanneer hij de verbinding nodig heeft. Dit bouw je vandaag (pad A).</span></li>
+          <li><strong>Connector</strong> <span class="why">Zelfde idee als MCP, maar kant-en-klaar gehost door Anthropic: aanzetten in plaats van installeren. Zo koppel je straks je werkmail en agenda.</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 6 ZO PAK JE HET AAN -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Zo pak je het aan</div>
+        <div class="slide-h">Automatiseren, concreet</div>
+        <ol class="steps" style="margin-top:16px;">
+          <li><strong>Kies een klus die je elke week tijd kost, en weet hoeveel</strong> <span class="why">"mijn weekrapportage kost me 45 minuten" — dan weet je straks of het wat oplevert</span></li>
+          <li><strong>Vertel je brein precies hoe het resultaat eruit moet zien</strong> <span class="why">wat gaat erin (welke mails, notities), wat komt eruit (mail, tabel, verslag), en wat er nooit in mag staan</span></li>
+          <li><strong>Laat het de simpelste versie doen, op echt werk van deze week</strong> <span class="why">jij kijkt na en verbetert — nog geen toeters en bellen</span></li>
+          <li><strong>Elke fout die je ziet wordt één extra regel in je instructie</strong> <span class="why">zo wordt het elke week een beetje beter, tot jij alleen nog hoeft na te kijken</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 6 HET BOUWUUR -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Het bouwuur · 60 minuten · in duo's · kies je pad</div>
+        <div class="frame"><span>Doel: <b>iets dat draait zonder jou</b></span><span>Elk checkpoint gehaald: <b>post ✅ + welk punt in de groep</b></span><span>Half af is prima: <b>14 augustus gaat het verder</b></span></div>
+        <div class="paden">
+          <div class="pad">
+            <span class="pad-label">Pad A · het avonturenpad</span>
+            <h3>Koppel WhatsApp aan je brein</h3>
+            <ul>
+              <li>Guide in de groep. Checkpoints: gereedschap ✅ · bridge + QR ✅ · Claude ziet WhatsApp ✅ · <strong>eerste vraag beantwoord ✅</strong> (screenshot!)</li>
+              <li>Eindtest: <em>"wat is er gisteren in [groep] besproken?"</em> — en je brein antwoordt</li>
+            </ul>
+            <div class="moeilijk">Mac/eigen laptop = groen · Windows-werklaptop: kies B of C (guide legt uit waarom) · om T+66 nog geen QR? wissel naar B, geen discussie</div>
+          </div>
+          <div class="pad">
+            <span class="pad-label">Pad B · het zekere pad</span>
+            <h3>Automatiseer één taak</h3>
+            <ul>
+              <li>Invulblad in de groep. Checkpoints: klus + getal ✅ · beschrijving van het resultaat ✅ · <strong>eerste run op echt werk ✅</strong></li>
+              <li>De vier stappen van de vorige slide, op jouw eigen week</li>
+            </ul>
+            <div class="moeilijk">werkt op elke laptop, geen installatie</div>
+          </div>
+          <div class="pad">
+            <span class="pad-label">Pad C · voor de gevorderden</span>
+            <h3>Verbind twee breinen</h3>
+            <ul>
+              <li>Met je buddy: één gedeelde map (of repo) waar allebei jullie breinen in lezen. Checkpoints: map staat ✅ · ieder één stuk kennis erin (schoon!) ✅ · <strong>kruisvraag beantwoord ✅</strong></li>
+              <li>Eindtest: jouw brein antwoordt met kennis uit het brein van de ander</li>
+            </ul>
+            <div class="moeilijk">voor wie z'n brein al draait — hier begint de gedeelde kennislaag</div>
+          </div>
+        </div>
+        <div class="slide-sub" style="margin-top:16px;"><strong>De data-regel geldt dubbel:</strong> appjes en mail zitten vol klantdata. En een gekoppelde bron kan rommel binnenbrengen — jij blijft zelf de gate.</div>
+      </div>
+    </div>
+
+    <!-- 7b PAD A STAP VOOR STAP -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Pad A · stap voor stap · open deze slide op je eigen scherm</div>
+        <div class="slide-h">WhatsApp koppelen in vier stappen</div>
+        <ol class="steps" style="margin-top:10px;">
+          <li><strong>Gereedschap</strong> <span class="why">check: <code>go version</code> en <code>uv --version</code>. Mist er één? Go: go.dev/dl · uv: <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code> · daarna je terminal opnieuw starten. Post ✅ 1</span></li>
+          <li><strong>Bridge starten + QR scannen</strong> <span class="why">commando's hieronder. Telefoon: WhatsApp → Instellingen → Gekoppelde apparaten → Apparaat koppelen. Eerste sync duurt een paar minuten; laat het venster open. Post ✅ 2</span></li>
+          <li><strong>Claude koppelen</strong> <span class="why">tweede commandoblok, vanuit je brein-map (vervang het pad; <code>pwd</code> in de whatsapp-mcp-map vertelt je waar hij staat). Nieuwe Claude-sessie; zie je de whatsapp-tools: post ✅ 3</span></li>
+          <li><strong>De eerste vraag</strong> <span class="why">"Zoek in mijn WhatsApp de laatste berichten in [groepsnaam] en vat samen wat er speelt." Komt er antwoord: post ✅ 4 + screenshot!</span></li>
+        </ol>
+        <div class="oneliner" style="white-space:pre;">git clone https://github.com/lharries/whatsapp-mcp.git
+cd whatsapp-mcp/whatsapp-bridge
+go run main.go</div>
+        <div class="oneliner" style="white-space:pre;">claude mcp add whatsapp -- uv --directory /PAD/NAAR/whatsapp-mcp/whatsapp-mcp-server run main.py</div>
+        <div class="slide-sub" style="margin-top:8px;"><strong>Windows:</strong> eerst een C-compiler (MSYS2, msys2.org) + eenmalig <code>go env -w CGO_ENABLED=1</code>, anders faalt de bridge op go-sqlite3. Werklaptop zonder rechten? Kies pad B. · <strong>Goed om te weten:</strong> je berichten blijven lokaal op je eigen machine; de koppeling verloopt na ~20 dagen (dan opnieuw QR scannen).</div>
+      </div>
+    </div>
+
+    <!-- 7 OOGST -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Oogst · per duo · 1 minuut · eigen scherm</div>
+        <div class="slide-h">Laat je beste moment zien</div>
+        <ul class="points" style="margin-top:14px;">
+          <li>Het moment dat het werkte — of het moment dat het stukging. <strong>Allebei even waardevol</strong></li>
+          <li>Ging het stuk: vertel welke regel je gaat toevoegen</li>
+          <li>Nog geen berichtje van het begin gepost? Nu even doen</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 8 AUGUSTUS -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Augustus · kort</div>
+        <div class="slide-h">Twee middagen zonder mij — zo werkt het</div>
+        <div class="kalender">
+          <div class="dag los"><div class="datum">vr 14 aug</div><div class="wie"><b>Afmaken wat je vandaag begon</b></div></div>
+          <div class="dag los"><div class="datum">vr 28 aug</div><div class="wie"><b>Verbeteren + je demo voorbereiden</b></div></div>
+          <div class="dag"><div class="datum">vr 11 sep</div><div class="wie">Iedereen laat zien wat z'n brein nu zelf doet</div></div>
+        </div>
+        <ul class="points">
+          <li>De agenda voor die middagen staat op één pagina in de groep: berichtje posten, korte demo's, bouwen, afsluiten</li>
+          <li>Er hoeft alleen iemand de tijd te bewaken en na afloop te posten wat er gebouwd is. <strong>Dus: wie doet 14 augustus, wie doet 28 augustus?</strong> (+ een reserve per datum)</li>
+          <li>Zelfde tijd, zelfde plek als vandaag</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 10 SLOT -->
+    <div class="slide">
+      <div class="canvas">
+        <div class="eyebrow">Voor je weggaat · 3 dingen</div>
+        <div class="slide-h">Vanochtend kreeg ik die briefing ongevraagd. Over zes weken krijg jij de jouwe.</div>
+        <ol class="steps" style="margin-top:16px;">
+          <li><strong>Zet nu 14 en 28 augustus in je agenda</strong> <span class="why">telefoon erbij, zelfde tijd, zelfde plek — nu, niet straks</span></li>
+          <li><strong>Maak in augustus af wat je vandaag begon</strong> <span class="why">half af is prima: de sessie van 14 augustus gaat er precies mee verder</span></li>
+          <li><strong>11 september: 5 minuten per persoon</strong> <span class="why">je laat zien wat je brein inmiddels zelf doet — wat je in augustus bouwt telt mee</span></li>
+        </ol>
+        <div class="slide-sub" style="margin-top:14px;">En zodra de toegang geregeld is: je <strong>werkmail + agenda</strong> koppelen, net als WhatsApp vandaag. Bericht volgt in de groep.</div>
+      </div>
+    </div>
+
+    <!-- 11 SLOTBEELD -->
+    <div class="slide">
+      <div class="canvas center">
+        <div class="eyebrow">Dat was sessie 3</div>
+        <div class="idea">Je brein werkt zonder jou. De track draait zonder mij. <span class="accent">Zelfde principe.</span></div>
+        <div class="slide-sub" style="margin-top:24px;">Bewijs het in september.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bar">
+    <span class="brand">stas.brain · sessie 3</span>
+    <div class="mid">
+      <button onclick="prev()">Vorige</button>
+      <span class="counter"><span id="cur">1</span> / <span id="tot">9</span></span>
+      <button onclick="next()">Volgende</button>
+      <div class="dots" id="dots"></div>
+    </div>
+    <span class="hint">pijltjes om te bladeren</span>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let i = 0;
+  const dotsWrap = document.getElementById('dots');
+  slides.forEach((_, n) => { const d = document.createElement('div'); d.className = 'dot' + (n===0?' on':''); d.onclick = () => go(n); dotsWrap.appendChild(d); });
+  document.getElementById('tot').textContent = slides.length;
+  function render() {
+    slides.forEach((s, n) => s.classList.toggle('active', n===i));
+    Array.from(dotsWrap.children).forEach((d, n) => d.classList.toggle('on', n===i));
+    document.getElementById('cur').textContent = i+1;
+    slides[i].querySelector('.canvas').scrollTop = 0;
+  }
+  function go(n){ i = Math.max(0, Math.min(slides.length-1, n)); render(); }
+  function next(){ go(i+1); } function prev(){ go(i-1); }
+  document.addEventListener('keydown', e => {
+    if (e.key==='ArrowRight'||e.key===' ') next();
+    else if (e.key==='ArrowLeft') prev();
+  });
+  render();
+
+  // Timer show-and-tell (slide 4): 4 min per demo, start met de KNOP (spatiebalk bladert)
+  let t = 180, tick = null;
+  const clock = document.getElementById('clock');
+  function paint() {
+    const m = Math.floor(t/60), s = t%60;
+    clock.textContent = m + ':' + String(s).padStart(2,'0');
+    clock.className = 'timer' + (t===0 ? ' done' : (t<=30 ? ' warn' : ''));
+  }
+  function startTimer() {
+    if (tick) return;
+    tick = setInterval(() => { if (t>0) { t--; paint(); } if (t===0) { clearInterval(tick); tick=null; } }, 1000);
+  }
+  function resetTimer() { if (tick) { clearInterval(tick); tick=null; } t = 180; paint(); }
+</script>
+</body>
+</html>
