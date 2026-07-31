@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De kwaliteitscheck-kaart · keep it true</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --em-ink:#383D38; --em-white:#FFFFFF; --em-cream:#F3F3F1; --em-line:#CAC9C4;
+    --em-grey:#686861; --em-mute:#9A9990; --em-lime:#D4FF52; --em-lime-tint:#F6FFDB;
+    --em-lime-tint-50:#E4FF99; --em-coral:#F0787D;
+    --fh:'Space Grotesk',sans-serif; --fb:'Inter Tight',sans-serif; --fm:'JetBrains Mono','SF Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--em-cream);color:var(--em-ink);font-family:var(--fb);padding:24px;line-height:1.45;font-size:13.5px}
+  .card{max-width:820px;margin:0 auto;background:var(--em-white);border:1px solid var(--em-line);border-top:4px solid var(--em-lime);padding:26px 32px}
+  .kicker{display:inline-block;background:var(--em-lime);font-family:var(--fh);font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;margin-bottom:10px}
+  h1{font-family:var(--fh);font-weight:400;font-size:24px;line-height:1.15;margin-bottom:4px}
+  .sub{color:var(--em-grey);font-size:13px;margin-bottom:14px}
+  .motto{font-family:var(--fh);font-size:15px;background:var(--em-lime-tint);border:1px solid var(--em-lime-tint-50);padding:8px 14px;margin-bottom:16px}
+  h2{font-family:var(--fh);font-weight:500;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px}
+  table{width:100%;border-collapse:collapse;margin-bottom:6px}
+  th,td{border:1px solid var(--em-line);padding:6px 9px;text-align:left;vertical-align:top;font-size:12.5px}
+  th{font-family:var(--fh);font-weight:500;background:var(--em-cream);white-space:nowrap}
+  td.num{font-family:var(--fh);background:var(--em-lime);width:26px;text-align:center;font-weight:500}
+  td.tijd{font-family:var(--fm);white-space:nowrap;font-size:11.5px}
+  code,.mono{font-family:var(--fm);font-size:.85em;background:var(--em-lime-tint);border:1px solid var(--em-lime-tint-50);padding:0 5px}
+  ul{list-style:none;margin-bottom:6px}
+  li{position:relative;padding-left:18px;margin-bottom:4px}
+  li::before{content:'';position:absolute;left:0;top:7px;width:8px;height:8px;background:var(--em-lime)}
+  .det{font-family:var(--fm);font-size:.85em;background:var(--em-cream);border:1px solid var(--em-line);padding:0 5px}
+  .twee{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:700px){.twee{grid-template-columns:1fr}}
+  .slot{font-family:var(--fh);font-size:14px;background:var(--em-cream);border:1px solid var(--em-line);border-left:3px solid var(--em-coral);padding:8px 12px;margin-top:12px}
+  @media print{
+    body{background:#fff;padding:0;font-size:11.5px}
+    .card{border:none;max-width:none;padding:10mm 12mm}
+    h2{margin-top:10px}
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <span class="kicker">Learning Track: AI Second Brain · sessie 3 · 31 juli</span>
+  <h1>De kwaliteitscheck-kaart (keep it true)</h1>
+  <div class="sub">Minstens 1x per week. In augustus zeker.</div>
+  <div class="motto">Een brein dat je niet controleert <strong>gaat langzaam liegen</strong>. Niet expres: informatie veroudert, dubbelt en spreekt elkaar tegen. De kwaliteitscheck vangt dat af.</div>
+
+  <h2>Zo draai je hem (10 min per week)</h2>
+  <table>
+    <tr><th></th><th>Stap</th><th>Wat je zegt/doet</th><th>Tijd</th></tr>
+    <tr><td class="num">1</td><td><strong>Start de check</strong></td><td><code>run synthesis</code></td><td class="tijd">1 min</td></tr>
+    <tr><td class="num">2</td><td><strong>Lees de vragen</strong></td><td>Je brein stelt <strong>maximaal 3 vragen</strong> over wat het niet zeker weet. Meer dan 3? Dan is de check kapot; drie goede vragen verslaan er dertig.</td><td class="tijd">2 min</td></tr>
+    <tr><td class="num">3</td><td><strong>Beantwoord ze</strong></td><td>Per vraag één van de vier antwoorden hiernaast. Kort is genoeg.</td><td class="tijd">5 min</td></tr>
+    <tr><td class="num">4</td><td><strong>Controleer</strong></td><td>Lees terug wat het brein met je antwoorden deed. Klopt het niet? Zeg het meteen.</td><td class="tijd">2 min</td></tr>
+  </table>
+
+  <div class="twee">
+    <div>
+      <h2>De vier antwoorden</h2>
+      <table>
+        <tr><th>Antwoord</th><th>Wanneer</th></tr>
+        <tr><td><strong>Klopt</strong> <span class="mono">TAP</span></td><td>Het brein heeft gelijk. Wordt vastgelegd als feit.</td></tr>
+        <tr><td><strong>Context erbij</strong> <span class="mono">CTX</span></td><td>Half waar; er mist iets. Jij vult aan, het brein schrijft het goed weg.</td></tr>
+        <tr><td><strong>Weet ik niet</strong> <span class="mono">IDK</span></td><td>Je weet het echt niet. Het brein parkeert de vraag.</td></tr>
+        <tr><td><strong>Overslaan</strong> <span class="mono">SKIP</span></td><td>Niet (meer) belangrijk. De vraag verdwijnt; het brein leert je prioriteiten.</td></tr>
+      </table>
+    </div>
+    <div>
+      <h2>Waar het brein op let (zes detectors)</h2>
+      <ul>
+        <li><span class="det">[conflict]</span> twee notities spreken elkaar tegen</li>
+        <li><span class="det">[identity]</span> twee namen, misschien dezelfde persoon</li>
+        <li><span class="det">[stale]</span> waarschijnlijk verouderd</li>
+        <li><span class="det">[gap]</span> iets loopt, de volgende stap ontbreekt</li>
+        <li><span class="det">[unclassified]</span> materiaal dat nergens thuis is</li>
+        <li><span class="det">[drift]</span> een project waarvan de status stilstaat</li>
+      </ul>
+      <p style="color:var(--em-grey);font-size:12px">Niet onthouden. Je herkent ze vanzelf in de vragen.</p>
+    </div>
+  </div>
+
+  <div class="slot"><strong>De regel voor augustus:</strong> elke week één keer, bijvoorbeeld vrijdagochtend. Twee weken overslaan = twee weken vragen opgestapeld = een brein dat je op 11 september niet meer vertrouwt.</div>
+</div>
+</body>
+</html>
