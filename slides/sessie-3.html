@@ -28,6 +28,7 @@
       justify-content: flex-start; position: relative; overflow-y: auto;
     }
     .canvas.center { justify-content: center; }
+    .canvas > * { flex-shrink: 0; }
     .canvas::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--em-lime); }
 
     .eyebrow { display: inline-block; align-self: flex-start; background: var(--em-lime); color: var(--em-ink); font-family: var(--font-heading); font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 12px; margin-bottom: 24px; }
