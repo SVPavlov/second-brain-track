@@ -4,383 +4,1120 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Second Brain Track · Trackverslag</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* Stas Brain Design System v1.1, dark, zoals de MTC-dashboardpagina */
-:root{
-  --bg:#141914;--bg-panel:#1C211C;--bg-elevated:#252B25;--bg-inset:#111411;
-  --fg:#E8E8DE;--fg-bright:#F5F5ED;--fg-muted:#9A9A90;--fg-dim:#5C5C55;
-  --accent:#C7FF00;--accent-hover:#D4FF44;--accent-soft:rgba(199,255,0,0.12);--accent-glow:rgba(199,255,0,0.06);--accent-text:#111411;
-  --danger:#F0787D;--danger-soft:rgba(240,120,125,0.15);--warning:#F0B840;--warning-soft:rgba(240,184,64,0.15);
-  --info:#5BA8FF;--info-soft:rgba(91,168,255,0.15);--success:#6BDB6B;--success-soft:rgba(107,219,107,0.15);
-  --border:#2A302A;--border-hover:#3A423A;--border-accent:#C7FF00;
-  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;--sp-10:40px;--sp-12:48px;--sp-16:64px;
-  --radius-sm:4px;--radius:6px;--radius-md:8px;--radius-lg:12px;--radius-pill:100px;
-  --shadow-panel:2px 2px 6px rgba(0,0,0,0.5),-1px -1px 3px rgba(255,255,255,0.02),0 0 0 1px var(--border);
-  --shadow-elevated:4px 4px 16px rgba(0,0,0,0.6),-2px -2px 8px rgba(255,255,255,0.02),0 0 0 1px var(--border-hover);
-  --shadow-inset:inset 2px 2px 6px rgba(0,0,0,0.5),inset -1px -1px 3px rgba(255,255,255,0.03);
-  --shadow-glow:0 0 24px var(--accent-soft),0 0 0 1px var(--border-accent);
-  --shadow-badge:inset 1px 1px 2px rgba(0,0,0,0.3),inset -1px -1px 1px rgba(255,255,255,0.04);
-  --font-mono:'JetBrains Mono','Fira Code','SF Mono',ui-monospace,monospace;
-  --font-sans:'Inter',-apple-system,system-ui,sans-serif;
-  --text-2xs:10px;--text-xs:11px;--text-sm:13px;--text-base:15px;--text-lg:18px;--text-xl:22px;--text-2xl:28px;--text-3xl:36px;--text-4xl:48px;
+/*
+ * Semantic + capability tokens (v3.0)
+ * Extends the emagine base palette with role aliases, status colors,
+ * elevation, focus and a radius scale — so the system serves app UI,
+ * dashboards and forms as well as slides. Base hues live in styles.css.
+ */
+:root {
+  /* ── Role aliases (resolve at use-time; safe regardless of import order) ── */
+  --em-accent: var(--em-lime); /* @kind color */
+  --em-accent-hover: var(--em-lime-tint-50); /* @kind color */
+  --em-accent-soft: var(--em-lime-tint); /* @kind color */
+  --em-surface: var(--em-white); /* @kind color */
+  --em-surface-alt: var(--em-cream); /* @kind color */
+  --em-surface-wash: var(--em-lime-tint); /* @kind color */
+  --em-surface-ink: var(--em-ink); /* @kind color */
+  --em-text: var(--em-ink); /* @kind color */
+  --em-text-secondary: var(--em-grey); /* @kind color */
+  --em-text-muted: #6E6D63;
+  --em-border: var(--em-line); /* @kind color */
+  --em-on-accent: var(--em-ink); /* @kind color */
+  --em-on-ink: var(--em-white); /* @kind color */
+
+  /* ── Status (solids pass WCAG AA as text on white; -soft are tint fills) ── */
+  --em-success: #2E7D53;
+  --em-success-soft: #E5F1E9;
+  --em-warning: #8A6410;
+  --em-warning-soft: #F7EFD8;
+  --em-info: #345F7D;
+  --em-info-soft: #E4EDF3;
+  --em-danger: #B23A40;
+  --em-danger-soft: #FBE4E5;
+
+  /* ── Data-viz categorical palette (auto-swaps in dark theme) ── */
+  --em-chart-1: #3B4A3A;
+  --em-chart-2: #7CAE3A;
+  --em-chart-3: #E4A93A;
+  --em-chart-4: #D2635F;
+  --em-chart-5: #4E86A0;
+  --em-chart-6: #8E7BA6;
+  --em-chart-grid: #E6E5E1;
+  --em-chart-accent: #D4FF52;
+
+  /* ── Elevation (system is mostly flat; keep shadows quiet) ── */
+  --em-shadow-sm: 0 1px 2px rgba(56, 61, 56, 0.08);
+  --em-shadow-md: 0 2px 10px rgba(56, 61, 56, 0.10);
+  --em-shadow-lg: 0 14px 38px rgba(56, 61, 56, 0.16);
+  --em-shadow-focus: 0 0 0 2px var(--em-white), 0 0 0 4px var(--em-ink);
+  --em-shadow-focus-inset: inset 0 0 0 2px var(--em-ink);
+
+  /* ── Radius scale (default stays square; these serve forms + app UI) ── */
+  --em-radius-sm: 4px;
+  --em-radius-lg: 12px;
+  --em-radius-pill: 999px;
 }
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--fg);font-family:var(--font-mono);font-size:var(--text-base);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:48px}
-h1,h2,h3,h4{font-family:var(--font-mono);letter-spacing:-0.03em;line-height:1.15;color:var(--fg-bright)}
-h1{font-size:clamp(30px,5vw,48px);font-weight:800}h2{font-size:clamp(24px,3.5vw,36px);font-weight:700}h3{font-size:var(--text-xl);font-weight:700}h4{font-size:var(--text-lg);font-weight:600;color:var(--fg)}
-strong{color:var(--fg-bright);font-weight:700}
-a{color:var(--accent)}
-.container{max-width:1200px;margin:0 auto;padding:0 var(--sp-6)}
-.nav{background:var(--bg-inset);border-bottom:1px solid var(--border);padding:0 var(--sp-6);height:48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.nav__brand{color:var(--accent);font-weight:800;font-size:var(--text-sm);letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;white-space:nowrap}
-.nav__links{display:flex;gap:var(--sp-1);overflow-x:auto}
-.nav__links a{color:var(--fg-dim);text-decoration:none;font-size:var(--text-2xs);font-weight:500;padding:var(--sp-2) var(--sp-3);border-radius:var(--radius);transition:all .15s;white-space:nowrap}
-.nav__links a:hover{color:var(--fg);background:var(--bg-elevated)}
-.nav__sep{width:1px;height:20px;background:var(--border);margin:0 var(--sp-2);flex-shrink:0}
-.section{padding:var(--sp-12) 0;border-bottom:1px solid var(--border)}
-.section:last-child{border-bottom:none}
-.hero{padding:64px 0 var(--sp-12);text-align:center}
-.hero h1{margin-bottom:var(--sp-4)}
-.hero .subtitle{font-size:var(--text-lg);font-weight:300;color:var(--fg-muted);max-width:720px;margin:0 auto;font-family:var(--font-sans)}
-.eyebrow{font-size:var(--text-2xs);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:var(--sp-1)}
-.section-title{font-size:var(--text-xl);font-weight:700;color:var(--fg-bright);padding-bottom:var(--sp-2);border-bottom:2px solid var(--accent);display:inline-block;margin-bottom:var(--sp-4)}
-.subsection-title{font-size:var(--text-sm);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg-dim);padding-bottom:var(--sp-2);border-bottom:1px solid var(--border);margin:var(--sp-10) 0 var(--sp-4)}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-6)}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-6)}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4)}
-.grid-6{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--sp-4)}
-@media(max-width:900px){.grid-6{grid-template-columns:repeat(3,1fr)}.grid-4{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}.grid-6{grid-template-columns:repeat(2,1fr)}}
-.panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-panel);padding:var(--sp-6)}
-.panel-accent{background:var(--bg-panel);border:1px solid var(--border-accent);border-radius:var(--radius-md);box-shadow:var(--shadow-glow);padding:var(--sp-6)}
-.panel-window{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-panel);overflow:hidden}
-.panel-window__header{background:var(--bg-inset);border-bottom:1px solid var(--border);padding:var(--sp-2) var(--sp-4);display:flex;align-items:center;gap:var(--sp-3);font-size:var(--text-2xs);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg-dim)}
-.panel-window__header::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent-soft)}
-.panel-window__body{padding:var(--sp-6)}
-.panel-inset{background:var(--bg-inset);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-inset);padding:var(--sp-4)}
-.card{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-panel);padding:var(--sp-4);transition:all .15s}
-.card:hover{border-color:var(--border-hover);box-shadow:var(--shadow-elevated);transform:translateY(-1px)}
-.card-accent{border-left:3px solid var(--accent)}
-.card-p1{border-left:3px solid var(--danger)}.card-p2{border-left:3px solid var(--warning)}.card-p3{border-left:3px solid var(--info)}
-.card .role{font-size:var(--text-2xs);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:var(--sp-2)}
-.card h4{font-size:var(--text-sm);margin-bottom:var(--sp-2)}
-.card p{font-size:var(--text-sm);font-weight:300;color:var(--fg-muted);line-height:1.6;font-family:var(--font-sans)}
-.card p+p{margin-top:var(--sp-2)}
-.badge{display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--text-2xs);font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--bg-elevated);color:var(--fg-muted);box-shadow:var(--shadow-badge)}
-.badge-accent{color:var(--accent);border-color:rgba(199,255,0,0.3);background:rgba(199,255,0,0.08)}
-.badge-danger{color:var(--danger);border-color:rgba(240,120,125,0.3);background:var(--danger-soft)}
-.badge-warning{color:var(--warning);border-color:rgba(240,184,64,0.3);background:var(--warning-soft)}
-.badge-info{color:var(--info);border-color:rgba(91,168,255,0.3);background:var(--info-soft)}
-.badge-success{color:var(--success);border-color:rgba(107,219,107,0.3);background:var(--success-soft)}
-.stat{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-panel);padding:var(--sp-4);text-align:center}
-.stat .num{font-size:var(--text-3xl);font-weight:800;color:var(--accent);line-height:1}
-.stat .desc{font-size:var(--text-2xs);font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--fg-dim);margin-top:var(--sp-2)}
-.timeline{display:flex;gap:0;align-items:stretch;margin:var(--sp-8) 0;position:relative;flex-wrap:wrap}
-.timeline::before{content:'';position:absolute;top:18px;left:0;right:0;height:2px;background:var(--border);z-index:0}
-.timeline-item{flex:1;min-width:150px;text-align:center;position:relative;z-index:1;padding:0 var(--sp-2);margin-bottom:var(--sp-4)}
-.timeline-dot{width:36px;height:36px;border-radius:50%;background:var(--bg-panel);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3);font-size:var(--text-sm);font-weight:800;color:var(--accent);box-shadow:0 0 12px var(--accent-soft)}
-.timeline-dot.dim{border-color:var(--fg-dim);color:var(--fg-dim);box-shadow:none}
-.timeline-item .mod-title{font-size:var(--text-sm);font-weight:700;color:var(--fg-bright);margin-bottom:var(--sp-1)}
-.timeline-item .mod-desc{font-size:var(--text-2xs);font-weight:300;color:var(--fg-muted);line-height:1.4;font-family:var(--font-sans)}
-.quote-block{border-left:3px solid var(--accent);padding-left:var(--sp-5);margin:var(--sp-5) 0}
-.quote-block p{font-size:var(--text-base);font-weight:300;color:var(--fg-muted);font-style:italic;line-height:1.7;font-family:var(--font-sans)}
-.quote-block .attr{font-size:var(--text-xs);color:var(--fg-dim);font-weight:600;font-style:normal;margin-top:var(--sp-2);font-family:var(--font-mono)}
-.grid-2>.quote-block,.grid-3>.quote-block{margin:0}
-.tbl{overflow-x:auto}
-table{width:100%;border-collapse:separate;border-spacing:0;font-size:var(--text-sm);min-width:640px}
-th{text-align:left;font-size:var(--text-2xs);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);padding:var(--sp-3) var(--sp-4);border-bottom:2px solid var(--border);background:var(--bg-inset)}
-td{padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--border);color:var(--fg);vertical-align:top;font-family:var(--font-sans);font-weight:300;line-height:1.55}
-tr:nth-child(even) td{background:rgba(255,255,255,0.015)}
-td.cell-primary{font-weight:600;color:var(--fg-bright);font-family:var(--font-mono);white-space:nowrap}
-td.cell-dim{font-size:var(--text-xs);color:var(--fg-dim);font-family:var(--font-mono);white-space:nowrap}
-p.body{font-family:var(--font-sans);font-weight:300;color:var(--fg-muted);line-height:1.7;max-width:76ch;margin-bottom:var(--sp-4)}
-ul.list{list-style:none;font-family:var(--font-sans);font-weight:300;color:var(--fg-muted);line-height:1.6}
-ul.list li{padding-left:18px;position:relative;margin-bottom:var(--sp-2)}
-ul.list li::before{content:'■';position:absolute;left:0;color:var(--accent);font-size:9px;top:5px}
-code{font-family:var(--font-mono);font-size:.85em;background:var(--bg-inset);border:1px solid var(--border);padding:1px 6px;border-radius:var(--radius-sm);color:var(--fg-bright)}
-.mat a{color:var(--fg-bright);text-decoration:none;border-bottom:1px solid rgba(199,255,0,0.4)}
-.mat a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-.status-bar{position:fixed;bottom:0;left:0;right:0;height:28px;background:var(--bg-inset);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 var(--sp-4);font-size:var(--text-2xs);font-weight:500;color:var(--fg-dim);z-index:100}
+
+/*
+ * STAS BRAIN — Design System v3.0 "emagine-aligned"
+ *
+ * Ported 1:1 from the emagine artifact design system used by
+ * Christian Pedersen ("Second Brain - Walkthrough.html",
+ * "Second-Brain-Technical-Architecture.html", 2026-06-12) and
+ * Phillip Ørbæk ("AI-Sales-Enablement-Three-Tracks.html", 2026-06-03).
+ *
+ * Light theme: white/cream surfaces, ink #383D38, lime #D4FF52 accent.
+ * Fonts: Space Grotesk (display) + Inter Tight (text), loaded from Google
+ * Fonts. Drop in self-hosted woff2 (or emagine's licensed Atyp) and add
+ * @font-face here when the files are available.
+ *
+ * Replaces v2.2 dark system (archived: design-system-v2.2-dark.css).
+ *
+ * Deviation from source (deliberate): the source artifacts are fixed
+ * 100vh slide decks and set `html,body { overflow:hidden }` globally.
+ * Here that behavior is scoped to `body.pres` so regular scrolling
+ * pages/dashboards work from the same stylesheet. Everything else —
+ * tokens, type scale, components, breakpoints — is verbatim.
+ *
+ * Usage: <link rel="stylesheet" href="design-system.css">
+ *   or copy the :root block + component classes into any self-contained HTML.
+ *   Slide decks: <body class="pres"><div class="pres-container">…
+ */
+
+/* ── Google Fonts (same families/weights Christian embeds) ── */
+
+/* ── Extended tokens + forms (v3.0 additions) ── */
+/* ── Tokens (verbatim from emagine artifacts) ───────────── */
+:root {
+  --em-ink: #383D38;
+  --em-white: #FFFFFF;
+  --em-cream: #F3F3F1;
+  --em-line: #CAC9C4;
+  --em-grey: #686861;
+  --em-mute: #9A9990;
+  --em-lime: #D4FF52;
+  --em-lime-tint: #F6FFDB;
+  --em-lime-tint-50: #E4FF99;
+  --em-black: #000000;
+  --em-coral: #F0787D;
+  --em-font-display: "Space Grotesk", "Neue Haas Grotesk Display", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --em-font-text: "Inter Tight", "Neue Haas Grotesk Text", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --em-fs-xs: 13px;
+  --em-fs-sm: 15px;
+  --em-fs-base: 17px;
+  --em-font-md: clamp(19px, 1.6vw, 22px);
+  --em-fs-lg: 20px;
+  --em-fs-xl: 22px;
+  --em-font-h3: clamp(22px, 2vw, 26px);
+  --em-font-h2: clamp(36px, 4.2vw, 54px);
+  --em-font-h1: clamp(48px, 6vw, 72px);
+  --em-fs-stat: clamp(40px, 3.8vw, 52px);
+  --em-font-kpi: clamp(36px, 4.4vw, 56px);
+  --em-space-xxs: 4px;
+  --em-space-xs: 8px;
+  --em-space-sm: 12px;
+  --em-space-md: 16px;
+  --em-space-lg: 20px;
+  --em-space-xl: 24px;
+  --em-space-xxl: 32px;
+  --em-space-3xl: 40px;
+  --em-space-4xl: 48px;
+  --em-pad-slide: clamp(32px, 3.5vw, 56px);
+  --em-pad-card: clamp(20px, 2.2vw, 28px);
+  --em-pad-card-lg: clamp(24px, 2.6vw, 32px);
+  --em-gap-grid: clamp(18px, 1.8vw, 24px);
+  --em-gap-split: clamp(24px, 3vw, 40px);
+  --em-gap-kpi: clamp(24px, 3.2vw, 48px);
+  --em-container-width: 1200px;
+  --em-container-padding: 80px;
+  --em-radius: 6px;
+  --em-transition: all 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94); /* @kind other */
+}
+
+/* ── Base ───────────────────────────────────────────────── */
+body {
+  font-family: var(--em-font-text);
+  font-size: var(--em-fs-base);
+  font-weight: 400;
+  color: var(--em-ink);
+  background: var(--em-white);
+  margin: 0; padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Deck mode only (source artifacts apply this globally) */
+html:has(body.pres) { height: 100%; overflow: hidden; }
+body.pres { height: 100%; overflow: hidden; }
+
+h1, h2, h3, h4 {
+  font-family: var(--em-font-display);
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0; padding: 0;
+  overflow-wrap: break-word;
+}
+h1 { font-size: var(--em-font-h1); }
+h2 { font-size: var(--em-font-h2); }
+h3 { font-size: var(--em-font-h3); }
+h4 { font-size: var(--em-fs-lg); }
+p { margin: 0; padding: 0; overflow-wrap: break-word; }
+a { color: var(--em-ink); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; transition: var(--em-transition); }
+a:hover { color: var(--em-grey); }
+a.em-btn, a.em-eyebrow { text-decoration: none; }
+img, svg, video, canvas { max-width: 100%; height: auto; }
+
+/* ── Typography components ──────────────────────────────── */
+.em-eyebrow {
+  font-size: var(--em-fs-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--em-grey);
+  display: block;
+  margin-bottom: var(--em-space-lg);
+}
+.em-eyebrow--lime::before {
+  content: "";
+  display: inline-block;
+  width: 10px; height: 10px;
+  background-color: var(--em-lime);
+  margin-right: var(--em-space-sm);
+  vertical-align: middle;
+}
+.em-lede {
+  font-weight: 300;
+  font-size: var(--em-font-md);
+  color: var(--em-grey);
+  line-height: 1.45;
+}
+
+/* ── Sections (surface variants) ────────────────────────── */
+.em-section { padding: var(--em-pad-slide) 0; position: relative; width: 100%; }
+.em-section--white  { background-color: var(--em-white); color: var(--em-ink); }
+.em-section--cream  { background-color: var(--em-cream); color: var(--em-ink); }
+.em-section--wash   { background-color: var(--em-lime-tint); color: var(--em-ink); }
+.em-section--ink    { background-color: var(--em-ink); color: var(--em-white); }
+
+.em-section--white h1, .em-section--white h2, .em-section--white h3, .em-section--white h4,
+.em-section--cream h1, .em-section--cream h2, .em-section--cream h3, .em-section--cream h4,
+.em-section--wash  h1, .em-section--wash  h2, .em-section--wash  h3, .em-section--wash  h4 { color: var(--em-ink); }
+.em-section--ink h1, .em-section--ink h2, .em-section--ink h3, .em-section--ink h4 { color: var(--em-white); }
+.em-section--ink .em-eyebrow { color: rgba(255,255,255,0.7); }
+.em-section--ink .em-lede { color: rgba(255,255,255,0.7); }
+
+/* ── Layout ─────────────────────────────────────────────── */
+.em-container {
+  width: min(var(--em-container-width), calc(100% - var(--em-container-padding)));
+  margin-inline: auto;
+}
+.em-grid { display: grid; gap: var(--em-gap-grid); }
+.em-grid--1 { grid-template-columns: 1fr; }
+.em-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.em-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.em-grid > *, .split-layout > * { min-width: 0; }
+
+.split-layout { display: grid; grid-template-columns: 1fr 1fr; gap: var(--em-gap-split); align-items: start; }
+.split-layout--40-60 { grid-template-columns: 0.667fr 1fr; }
+
+/* ── Cards ──────────────────────────────────────────────── */
+.em-card {
+  background-color: var(--em-cream);
+  padding: var(--em-pad-card);
+  border-top: 4px solid var(--em-lime);
+  border-radius: 0;
+}
+.em-section--cream .em-card,
+.em-section--wash  .em-card { background-color: var(--em-white); }
+.em-card h3 { font-size: var(--em-fs-lg); margin-bottom: var(--em-space-xs); color: var(--em-ink); }
+.em-card p  { font-size: var(--em-fs-sm); line-height: 1.5; color: var(--em-grey); }
+.em-card__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  background-color: var(--em-lime);
+  font-family: var(--em-font-display);
+  font-weight: 400;
+  font-size: var(--em-fs-sm);
+  color: var(--em-ink);
+  margin-bottom: var(--em-space-md);
+  border-radius: 0;
+}
+
+/* Card variant for dark (ink) sections */
+.service-card {
+  background-color: rgba(255,255,255,0.08);
+  border-top: 4px solid var(--em-lime);
+  padding: var(--em-pad-card-lg);
+  color: var(--em-white);
+}
+.service-card h3 { color: var(--em-white); font-size: var(--em-fs-xl); margin-bottom: var(--em-space-sm); }
+.service-card p  { color: rgba(255,255,255,0.75); font-size: var(--em-fs-base); line-height: 1.55; }
+
+/* ── Timeline / phases ──────────────────────────────────── */
+.em-timeline { display: flex; flex-direction: column; gap: var(--em-space-md); }
+.em-phase {
+  display: flex;
+  flex-direction: row;
+  border-left: 3px solid var(--em-lime);
+  padding-left: var(--em-space-md);
+  gap: var(--em-space-md);
+  align-items: flex-start;
+}
+.em-phase__bar {
+  background-color: var(--em-grey);
+  color: var(--em-white);
+  padding: 6px 12px;
+  font-size: var(--em-fs-xs);
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.em-phase__name { color: var(--em-ink); font-size: var(--em-fs-lg); font-weight: 400; }
+.em-phase__desc { color: var(--em-ink); font-size: var(--em-fs-sm); line-height: 1.4; }
+
+/* ── Buttons ────────────────────────────────────────────── */
+.em-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 28px;
+  font-size: var(--em-fs-base);
+  font-weight: 500;
+  background-color: var(--em-lime);
+  color: var(--em-ink);
+  border: none;
+  border-radius: var(--em-radius);
+  cursor: pointer;
+  transition: var(--em-transition);
+}
+.em-btn:hover { background-color: var(--em-lime-tint-50); }
+
+/* ── Tables ─────────────────────────────────────────────── */
+.em-table { width: 100%; border-collapse: collapse; font-size: var(--em-fs-sm); }
+.em-table th {
+  font-size: var(--em-fs-xs);
+  text-transform: uppercase;
+  color: var(--em-grey);
+  border-bottom: 2px solid var(--em-ink);
+  padding: 14px 10px;
+  text-align: left;
+  font-weight: 500;
+}
+.em-table td { padding: 12px 10px; border-bottom: 1px solid var(--em-line); }
+.em-table tbody tr:nth-child(odd) { background-color: var(--em-cream); }
+.em-table .is-highlight { background-color: var(--em-lime-tint); }
+
+/* ── Tags / chips / badges ──────────────────────────────── */
+.em-tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.em-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  color: var(--em-ink);
+  background: var(--em-lime-tint);
+  border: 1px solid var(--em-lime);
+  white-space: nowrap;
+}
+.em-tag--on-ink { color: var(--em-white); background: rgba(212,255,82,0.10); border-color: rgba(212,255,82,0.45); }
+
+.chip--lime {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--em-lime-tint);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--em-ink);
+  white-space: nowrap;
+}
+.chip--ink {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.12);
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  white-space: nowrap;
+}
+
+.track-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  background: var(--em-lime);
+  color: var(--em-ink);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+.bet-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--em-lime);
+  color: var(--em-ink);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+}
+.bet-badge svg { width: 14px; height: 14px; fill: var(--em-ink); }
+
+/* ── Numbered offering rows ─────────────────────────────── */
+.offering-row {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--em-line);
+  align-items: flex-start;
+}
+.offering-row:last-child { border-bottom: none; }
+.offering-num {
+  width: 28px; height: 28px;
+  background: var(--em-lime);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--em-font-display);
+  font-size: 13px;
+  color: var(--em-ink);
+  flex-shrink: 0;
+}
+.offering-content { flex: 1; min-width: 0; }
+.offering-content h4 { font-size: 15px; margin-bottom: 4px; color: var(--em-ink); }
+.offering-content p  { font-size: 13px; line-height: 1.45; color: var(--em-grey); margin: 0; }
+
+/* ── Chapter-divider slides (giant ghost numeral) ───────── */
+.em-divider > * { position: relative; z-index: 1; }
+.em-divider > .em-divider__ghost { z-index: 0; }
+.em-divider__ghost {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%,-50%);
+  font-family: var(--em-font-display);
+  font-weight: 500;
+  font-size: clamp(190px, 34vw, 440px);
+  line-height: 1;
+  color: var(--em-lime);
+  opacity: 0.48;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.em-section--ink .em-divider__ghost { opacity: 0.18; }
+
+/* ── Presentation / deck chrome ─────────────────────────── */
+.pres-container {
+  width: 100vw;
+  height: 100vh; height: 100dvh;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.pres-slide {
+  height: 100vh; height: 100dvh;
+  max-height: 100vh; max-height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pres-slide .em-container {
+  max-height: 100vh; max-height: 100dvh;
+  overflow: hidden;
+  padding: 0 var(--em-pad-slide);
+}
+
+.nav-dots {
+  position: fixed;
+  right: 24px; top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 100;
+}
+.nav-dot {
+  width: 12px; height: 12px;
+  background-color: var(--em-line);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: var(--em-transition);
+  position: relative;
+}
+.nav-dot:hover { background-color: var(--em-mute); }
+.nav-dot.active { background-color: var(--em-lime); transform: scale(1.3); }
+.nav-dot::after {
+  content: attr(data-title);
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--em-ink);
+  color: var(--em-white);
+  font-family: var(--em-font-text);
+  font-size: var(--em-fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 6px 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 160ms ease, visibility 0s linear 160ms;
+  z-index: 101;
+}
+.nav-dot:hover::after, .nav-dot:focus-visible::after {
+  opacity: 1; visibility: visible;
+  transition: opacity 160ms ease, visibility 0s;
+}
+.nav-dot:not([data-title])::after,
+.nav-dot[data-title=""]::after { content: none; }
+
+.nav-arrows {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+  z-index: 100;
+}
+.arrow-btn {
+  width: 48px; height: 48px;
+  background-color: var(--em-white);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: var(--em-transition);
+}
+.arrow-btn:hover { background-color: var(--em-lime); }
+.arrow-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.arrow-btn svg { width: 20px; height: 20px; stroke: var(--em-ink); stroke-width: 2; fill: none; }
+
+.slide-counter {
+  position: fixed;
+  bottom: 44px; left: 44px;
+  font-size: var(--em-fs-sm);
+  font-weight: 500;
+  color: var(--em-mute);
+}
+.slide-footer-text {
+  position: absolute;
+  bottom: 14px;
+  left: var(--em-pad-slide);
+  font-size: var(--em-fs-xs);
+  color: var(--em-mute);
+}
+.em-section--ink .slide-footer-text { color: rgba(255,255,255,0.35); }
+
+/* ── Scroll-in animation (opt-in via .js-anim on <html>) ── */
+.js-anim .em-anim {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .5s cubic-bezier(.25,.46,.45,.94), transform .5s cubic-bezier(.25,.46,.45,.94);
+}
+.js-anim .pres-slide.is-visible .em-anim { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js-anim .em-anim { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ── Responsive (verbatim breakpoints from source) ──────── */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .em-grid--3 { grid-template-columns: repeat(2, 1fr); }
+  .split-layout--40-60 { grid-template-columns: 1fr 1fr; }
+  .pres-slide .em-container { padding: 0 var(--em-space-xxl); }
+}
+@media (max-height: 820px) and (min-height: 651px) {
+  :root {
+    --em-fs-base: 15px;
+    --em-font-md: clamp(17px, 1.5vw, 20px);
+    --em-fs-lg: 18px;
+    --em-fs-xl: 20px;
+    --em-font-h1: clamp(44px, 5.5vw, 64px);
+    --em-font-h2: clamp(32px, 3.8vw, 48px);
+    --em-font-h3: clamp(18px, 1.8vw, 22px);
+    --em-fs-stat: 40px;
+    --em-font-kpi: clamp(32px, 4vw, 48px);
+    --em-pad-slide: 40px;
+    --em-pad-card: 22px;
+    --em-pad-card-lg: 26px;
+    --em-gap-grid: 18px;
+    --em-gap-split: 28px;
+    --em-gap-kpi: 40px;
+  }
+}
+@media (max-width: 768px) {
+  html, html body, html .pres-container { height: auto !important; overflow: auto !important; }
+  .pres-container { scroll-snap-type: none !important; }
+  .pres-slide {
+    display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100vh; min-height: 100dvh;
+    overflow: hidden !important;
+    scroll-snap-align: unset !important;
+    scroll-snap-stop: unset !important;
+    position: relative;
+    isolation: isolate;
+  }
+  .pres-slide .em-container { max-height: none; overflow: visible; padding: 0 20px; }
+  .nav-dots, .nav-arrows, .slide-counter, .slide-footer-text { display: none !important; }
+  .em-grid--2, .em-grid--3, .split-layout, .split-layout--40-60 { grid-template-columns: 1fr !important; }
+  .em-card { padding: 24px 20px; }
+  :root { --em-fs-base: 16px; --em-pad-slide: 24px; --em-pad-card: 20px; --em-pad-card-lg: 24px; }
+}
+@media (max-height: 650px) {
+  html, html body, html .pres-container { height: auto !important; overflow: auto !important; }
+  .pres-container { scroll-snap-type: none !important; }
+  .pres-slide {
+    display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto;
+    overflow: hidden !important;
+    scroll-snap-align: unset !important;
+    scroll-snap-stop: unset !important;
+    padding: 48px 0;
+    position: relative;
+    isolation: isolate;
+  }
+  .pres-slide .em-container { max-height: none; overflow: visible; }
+  .nav-dots, .nav-arrows, .slide-counter, .slide-footer-text { display: none !important; }
+}
+
+/* Embedded rendering (e.g. inside an iframe/preview) */
+html.is-embedded, html.is-embedded body, html.is-embedded .pres-container { height: auto !important; overflow: auto !important; }
+html.is-embedded .pres-container { scroll-snap-type: none !important; }
+html.is-embedded .pres-slide {
+  display: block !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: auto;
+  overflow: hidden !important;
+  scroll-snap-align: unset !important;
+  scroll-snap-stop: unset !important;
+  padding: 56px 0;
+  position: relative;
+  isolation: isolate;
+}
+html.is-embedded .pres-slide .em-container { max-height: none; overflow: visible; }
+html.is-embedded .nav-dots, html.is-embedded .nav-arrows, html.is-embedded .slide-counter { display: none !important; }
+html.is-embedded .em-grid--3 { grid-template-columns: repeat(2, 1fr); }
+
+/* ═══════════════════════════════════════════════════════════
+   DARK THEME  —  opt in with <html data-theme="dark"> (or on any
+   wrapper). Declared last so the [data-theme="dark"] token scope
+   wins the specificity tie with :root. The base system overloads
+   --em-ink (text / dark surface / text-on-lime) and --em-white
+   (page bg / light text); the remaps below flip the neutral ramp
+   and the class overrides repair those overloaded cases.
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --em-white: #17191A;   /* base page background */
+  --em-cream: #202320;   /* lifted surface · cards · zebra */
+  --em-line:  #383C38;   /* borders · dividers */
+  --em-ink:   #ECEDE9;   /* PRIMARY TEXT (was the dark ink) */
+  --em-grey:  #ABABA2;   /* secondary text */
+  --em-mute:  #7C7C73;   /* decorative / disabled */
+  --em-text-muted: #B7B7AD;
+  --em-lime-tint: #262F1B;   /* dark green wash / tag fill */
+  /* --em-lime, --em-lime-tint-50, --em-coral unchanged — lime pops on dark */
+
+  /* role aliases that must not simply follow the flipped raw tokens */
+  --em-on-accent: #17190F;   /* text on lime stays near-black */
+  --em-on-ink: #ECEDE9;      /* text on the darkest surface stays light */
+
+  /* status — lighter solids read on dark, -soft become deep fills */
+  --em-success: #63C48C; --em-success-soft: #17271E;
+  --em-warning: #DAAB4E; --em-warning-soft: #29220F;
+  --em-info:    #82B2D2; --em-info-soft:    #122430;
+  --em-danger:  #EB8A8F; --em-danger-soft:  #2C1719;
+
+  /* data-viz palette — lightened so series read on the dark base */
+  --em-chart-1: #C9CFC4; --em-chart-2: #A6D95B; --em-chart-3: #F0C062;
+  --em-chart-4: #EC8A86; --em-chart-5: #7FB6D2; --em-chart-6: #BBA9D2;
+  --em-chart-grid: #2E322D;
+
+  /* deeper elevation + a lime focus ring on dark */
+  --em-shadow-sm: 0 1px 2px rgba(0,0,0,0.40);
+  --em-shadow-md: 0 2px 12px rgba(0,0,0,0.45);
+  --em-shadow-lg: 0 16px 42px rgba(0,0,0,0.55);
+  --em-shadow-focus: 0 0 0 2px var(--em-white), 0 0 0 4px var(--em-lime);
+  --em-shadow-focus-inset: inset 0 0 0 2px var(--em-lime);
+}
+/* Text sitting on the bright lime accent must stay near-black */
+[data-theme="dark"] .em-btn:not(.em-btn--ink):not(.em-btn--outline):not(.em-btn--ghost),
+[data-theme="dark"] .em-card__num,
+[data-theme="dark"] .offering-num,
+[data-theme="dark"] .track-badge,
+[data-theme="dark"] .bet-badge,
+[data-theme="dark"] .em-badge--accent { color: #17190F; }
+[data-theme="dark"] .bet-badge svg { fill: #17190F; }
+[data-theme="dark"] .em-check input:checked + .em-check__box::after { border-color: #17190F; }
+[data-theme="dark"] .em-check__box--radio::after { background: #17190F; }
+/* Ink surface stays the darkest panel with light text */
+[data-theme="dark"] .em-section--ink { background-color: #0D0F0D; }
+[data-theme="dark"] .em-section--ink h1,
+[data-theme="dark"] .em-section--ink h2,
+[data-theme="dark"] .em-section--ink h3,
+[data-theme="dark"] .em-section--ink h4,
+[data-theme="dark"] .em-section--ink .em-stat__value { color: var(--em-ink); }
+/* Secondary (ink) button becomes a light chip on dark */
+[data-theme="dark"] .em-btn--ink:hover { background: #D8DAD5; }
+/* Service card keeps light text on its translucent fill */
+[data-theme="dark"] .service-card,
+[data-theme="dark"] .service-card h3 { color: var(--em-ink); }
+/* Cards lift above cream / wash sections instead of sinking */
+[data-theme="dark"] .em-section--cream .em-card,
+[data-theme="dark"] .em-section--wash .em-card { background-color: #2A2E29; }
+/* Form + deck chrome details */
+[data-theme="dark"] .em-switch__track::after { background: #ECEDE9; }
+[data-theme="dark"] .arrow-btn:hover svg { stroke: #17190F; }
+
+/*
+ * Component UI variants (v3.0)
+ * Adds the button variants/sizes, status badges and stat blocks the React
+ * components render. Base component classes (card, tag, timeline, table,
+ * section, eyebrow, offering, divider) live in styles.css.
+ */
+
+/* ── Button variants + sizes (base .em-btn is the solid lime button) ── */
+.em-btn { text-decoration: none; gap: 10px; box-sizing: border-box; }
+.em-btn.em-btn--ink { background: var(--em-ink); color: var(--em-white); }
+.em-btn.em-btn--ink:hover { background: #2B302B; }
+.em-btn.em-btn--outline { background: transparent; color: var(--em-ink); border: 1px solid var(--em-ink); }
+.em-btn.em-btn--outline:hover { background: var(--em-ink); color: var(--em-white); }
+.em-btn.em-btn--ghost { background: transparent; color: var(--em-ink); }
+.em-btn.em-btn--ghost:hover { background: var(--em-cream); }
+.em-btn--sm { padding: 10px 18px; font-size: var(--em-fs-sm); }
+.em-btn--lg { padding: 20px 36px; font-size: var(--em-fs-lg); }
+.em-btn--block { display: flex; width: 100%; }
+.em-btn--disabled, .em-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.em-btn__icon { display: inline-flex; width: 18px; height: 18px; align-items: center; justify-content: center; }
+.em-btn__icon svg { width: 100%; height: 100%; }
+/* On ink surfaces the outline/ghost buttons invert */
+.em-section--ink .em-btn--outline, .em-btn--outline.em-btn--on-ink { color: var(--em-white); border-color: rgba(255,255,255,0.5); }
+.em-section--ink .em-btn--outline:hover, .em-btn--outline.em-btn--on-ink:hover { background: var(--em-white); color: var(--em-ink); border-color: var(--em-white); }
+.em-section--ink .em-btn--ghost, .em-btn--ghost.em-btn--on-ink { color: var(--em-white); }
+.em-section--ink .em-btn--ghost:hover, .em-btn--ghost.em-btn--on-ink:hover { background: rgba(255,255,255,0.12); }
+
+/* ── Status badge (semantic) ── */
+.em-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; font-size: 11px; font-weight: 600; line-height: 1.25; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+.em-badge--accent { background: var(--em-lime); color: var(--em-ink); }
+.em-badge--neutral { background: var(--em-cream); color: var(--em-grey); }
+.em-badge--success { background: var(--em-success-soft); color: var(--em-success); }
+.em-badge--warning { background: var(--em-warning-soft); color: var(--em-warning); }
+.em-badge--info { background: var(--em-info-soft); color: var(--em-info); }
+.em-badge--danger { background: var(--em-danger-soft); color: var(--em-danger); }
+.em-badge__dot { width: 7px; height: 7px; border-radius: var(--em-radius-pill); background: currentColor; flex-shrink: 0; }
+
+/* ── Stat / KPI block ── */
+.em-stat { display: flex; flex-direction: column; gap: var(--em-space-xxs); }
+.em-stat__value { font-family: var(--em-font-display); font-weight: 500; font-size: var(--em-font-kpi); line-height: 1; color: var(--em-ink); font-variant-numeric: tabular-nums; }
+.em-stat__label { font-size: var(--em-fs-sm); color: var(--em-grey); }
+.em-stat__delta { display: inline-flex; align-items: center; gap: 4px; font-size: var(--em-fs-sm); font-weight: 600; }
+.em-stat__delta--up { color: var(--em-success); }
+.em-stat__delta--down { color: var(--em-danger); }
+.em-stat__delta--flat { color: var(--em-text-muted); }
+.em-section--ink .em-stat__value { color: var(--em-white); }
+.em-section--ink .em-stat__label { color: rgba(255,255,255,0.7); }
+
+/* ── Card body helper: optional elevation for app surfaces ── */
+.em-card--raised { box-shadow: var(--em-shadow-md); border-top-color: var(--em-lime); }
+.em-card--flat { border-top: none; border: 1px solid var(--em-line); }
+
+/* ── Theme toggle (segmented light / dark) ── */
+.em-theme-toggle { display: inline-flex; background: var(--em-cream); border: 1px solid var(--em-line); border-radius: var(--em-radius-pill); padding: 3px; gap: 2px; }
+.em-theme-toggle__opt { appearance: none; border: none; background: transparent; cursor: pointer; font-family: var(--em-font-text); font-size: 13px; font-weight: 500; color: var(--em-grey); padding: 6px 14px; border-radius: var(--em-radius-pill); display: inline-flex; align-items: center; gap: 6px; transition: var(--em-transition); }
+.em-theme-toggle__opt[aria-pressed="true"] { background: var(--em-lime); color: #17190F; }
+.em-theme-toggle__opt:focus-visible { outline: none; box-shadow: var(--em-shadow-focus); }
+.em-theme-toggle__ico { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ── Charts: fill their container by default ── */
+.em-chart { width: 100%; max-width: 100%; }
+.em-chart svg { display: block; }
+.em-icon { display: inline-block; vertical-align: middle; }
+
+/* ── Carousels ── */
+.em-carousel { position: relative; }
+.em-carousel__view { overflow: hidden; }
+.em-carousel__track { display: flex; transition: transform 420ms cubic-bezier(.25,.46,.45,.94); will-change: transform; }
+.em-carousel__arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 40px; height: 40px; border-radius: var(--em-radius-pill); border: 1px solid var(--em-line); background: var(--em-surface); color: var(--em-ink); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--em-transition); }
+.em-carousel__arrow:hover { background: var(--em-ink); color: var(--em-white); border-color: var(--em-ink); }
+.em-carousel__arrow:disabled { opacity: .35; cursor: not-allowed; }
+.em-carousel__arrow:focus-visible { outline: none; box-shadow: var(--em-shadow-focus); }
+.em-carousel__arrow--inline { position: static; transform: none; }
+.em-carousel__dots { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+.em-carousel__dot { width: 8px; height: 8px; border-radius: var(--em-radius-pill); border: none; background: var(--em-line); cursor: pointer; padding: 0; transition: var(--em-transition); }
+.em-carousel__dot[aria-current="true"] { background: var(--em-ink); width: 22px; }
+.em-carousel__dot:focus-visible { outline: none; box-shadow: var(--em-shadow-focus); }
+
+/* ── Logo marquee ── */
+@keyframes em-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.em-marquee { display: flex; width: max-content; animation: em-marquee var(--em-marquee-dur, 28s) linear infinite; }
+.em-marquee:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .em-marquee { animation: none; } }
+
+
+/* ── Page-specific (trackverslag) ── */
+.tv-nav{background:var(--em-ink);position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,0.08)}
+.tv-nav__inner{display:flex;align-items:center;gap:var(--em-space-md);min-height:52px;flex-wrap:wrap}
+.tv-nav__brand{font-family:var(--em-font-display);font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--em-lime);color:#17190F;padding:5px 10px;text-decoration:none;white-space:nowrap}
+.tv-nav__links{display:flex;gap:2px;overflow-x:auto;align-items:center}
+.tv-nav__links a{color:rgba(255,255,255,0.75);font-size:13px;text-decoration:none;padding:16px 10px;white-space:nowrap;transition:var(--em-transition)}
+.tv-nav__links a:hover{color:var(--em-lime)}
+.tv-nav__sep{width:1px;height:18px;background:rgba(255,255,255,0.2);margin:0 6px;flex-shrink:0}
+.tv-h1{font-size:var(--em-fs-h1);margin:var(--em-space-sm) 0 var(--em-space-md);max-width:22ch;text-wrap:balance}
+.tv-h2{font-size:var(--em-fs-h2);margin-bottom:var(--em-space-md);text-wrap:balance}
+.tv-h3{font-size:var(--em-fs-h3);margin-bottom:var(--em-space-md)}
+.tv-lede{max-width:70ch;margin-bottom:var(--em-space-xxl)}
+.tv-mt{margin-top:var(--em-space-4xl)}
+.tv-mt-sm{margin-top:var(--em-space-xl)}
+.tv-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--em-gap-kpi)}
+.tv-stats--4{grid-template-columns:repeat(4,1fr)}
+.tv-stats .em-stat{border-top:1px solid var(--em-line);padding-top:var(--em-space-md)}
+.tv-role{display:block;font-size:var(--em-fs-xs);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--em-grey);margin-bottom:var(--em-space-sm)}
+.em-card h3{font-family:var(--em-font-display);font-weight:400}
+.em-card p+p{margin-top:var(--em-space-sm)}
+.em-card .em-badge{margin-right:6px;vertical-align:middle}
+.tv-phase--dim .em-phase__bar{background:var(--em-mute)}
+.tv-phase--dim{border-left-color:var(--em-line)}
+.em-phase__desc{color:var(--em-grey);margin-top:2px}
+.tv-callout{background:var(--em-lime-tint);border-top:4px solid var(--em-lime);padding:var(--em-pad-card)}
+.tv-callout p{color:var(--em-ink);font-size:var(--em-fs-base);line-height:1.55;max-width:80ch}
+.tv-callout .em-eyebrow{margin-bottom:var(--em-space-sm)}
+.tv-quote{margin:0;background:var(--em-white);border-top:4px solid var(--em-lime);padding:var(--em-pad-card)}
+.em-section--white .tv-quote{background:var(--em-cream)}
+.tv-quote p{font-family:var(--em-font-text);font-weight:300;font-size:var(--em-fs-base);line-height:1.6;color:var(--em-ink)}
+.tv-quote cite{display:block;font-style:normal;font-size:var(--em-fs-xs);text-transform:uppercase;letter-spacing:.1em;color:var(--em-grey);margin-top:var(--em-space-md)}
+.tv-quote+.tv-quote{margin-top:var(--em-gap-grid)}
+.tv-rows .offering-row{padding:12px 0}
+.tv-rows .offering-num{font-size:11px;width:auto;min-width:28px;padding:0 6px}
+.em-card .tv-rows{margin-top:var(--em-space-sm)}
+.tv-tbl{overflow-x:auto;background:var(--em-white);border:1px solid var(--em-line)}
+.em-section--white .tv-tbl{border:0}
+.tv-tbl .em-table{min-width:640px}
+.tv-tbl .em-table td{vertical-align:top;line-height:1.5}
+.tv-td-date{white-space:nowrap;font-family:var(--em-font-display);font-size:var(--em-fs-xs)}
+.tv-tbl a{color:var(--em-ink);border-bottom:2px solid var(--em-lime);text-decoration:none}
+.tv-tbl a:hover{color:var(--em-grey)}
+code{font-family:'JetBrains Mono','SF Mono',ui-monospace,monospace;font-size:.85em;background:var(--em-lime-tint);border:1px solid var(--em-lime-tint-50);padding:1px 6px}
+.tv-footer{padding:var(--em-space-xxl) 0;color:var(--em-grey);font-size:var(--em-fs-xs);border-top:1px solid var(--em-line)}
+@media (max-width:900px){.tv-stats{grid-template-columns:repeat(3,1fr)}.tv-stats--4{grid-template-columns:repeat(2,1fr)}.em-grid--3{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.tv-stats,.tv-stats--4,.em-grid--2,.em-grid--3{grid-template-columns:1fr}.em-phase{flex-direction:column;gap:6px}}
+
 </style>
 </head>
 <body>
-
-<nav class="nav">
-  <a class="nav__brand" href="../index.html">// second-brain-track</a>
-  <div class="nav__links">
-    <a href="#overzicht">Overzicht</a><a href="#tijdlijn">Tijdlijn</a><a href="#gebouwd">Gebouwd</a><a href="#gezegd">Gezegd</a><a href="#klantdata">Klantdata</a><a href="#opbrengst">Opbrengst</a><a href="#retro">Retro</a><a href="#materialen">Materialen</a><a href="#verder">Hoe verder</a>
-    <span class="nav__sep"></span>
-    <a href="../log/index.html">Track log</a><a href="../sessies/index.html">Sessies</a><a href="../docs/index.html">Docs</a>
+<nav class="tv-nav">
+  <div class="em-container tv-nav__inner">
+    <a class="tv-nav__brand" href="../index.html">Second Brain Track</a>
+    <div class="tv-nav__links">
+      <a href="#overzicht">Overzicht</a><a href="#tijdlijn">Tijdlijn</a><a href="#gebouwd">Gebouwd</a><a href="#gezegd">Gezegd</a><a href="#klantdata">Klantdata</a><a href="#opbrengst">Opbrengst</a><a href="#retro">Retro</a><a href="#materialen">Materialen</a><a href="#verder">Hoe verder</a>
+      <span class="tv-nav__sep"></span>
+      <a href="../log/index.html">Track log</a><a href="../sessies/index.html">Sessies</a><a href="../docs/index.html">Docs</a>
+    </div>
   </div>
 </nav>
 
-<section class="hero">
-  <div class="container">
-    <div class="eyebrow">AI Second Brain Track · NL pilot · 19 juni tot 11 september 2026</div>
-    <h1>Twaalf weken, tien breinen</h1>
-    <p class="subtitle">Het hele verhaal op één plek: wat we deden, wat jullie bouwden, wat jullie erover zeiden, wat we afspraken over klantdata, alle materialen, en hoe het verder gaat. Geschreven voor de groep, uit de sessies, de WhatsApp-groep, jullie reflecties en de mails.</p>
-  </div>
-</section>
+<section class="em-section em-section--white" id="overzicht">
+  <div class="em-container">
+    <span class="track-badge">AI Second Brain Track · NL pilot · 19 juni tot 11 september 2026</span>
+    <h1 class="tv-h1">Twaalf weken, tien breinen</h1>
+    <p class="em-lede tv-lede">Het hele verhaal op één plek: wat we deden, wat jullie bouwden, wat jullie erover zeiden, wat we afspraken over klantdata, alle materialen, en hoe het verder gaat. Geschreven voor de groep, uit de sessies, de WhatsApp-groep, jullie reflecties en de mails.</p>
 
-<section class="section" id="overzicht">
-  <div class="container">
-    <div class="grid-6">
-      <div class="stat"><div class="num">10</div><div class="desc">deelnemers, cap was 8</div></div>
-      <div class="stat"><div class="num">6</div><div class="desc">vrijdagen</div></div>
-      <div class="stat"><div class="num">8/9</div><div class="desc">breinen na sessie 1</div></div>
-      <div class="stat"><div class="num">7/10</div><div class="desc">demo's op 11 sep</div></div>
-      <div class="stat"><div class="num">243</div><div class="desc">berichten in de groep</div></div>
-      <div class="stat"><div class="num">0</div><div class="desc">IT-tickets · metingen</div></div>
+    <div class="tv-stats">
+      <div class="em-stat"><div class="em-stat__value">10</div><div class="em-stat__label">deelnemers, cap was 8</div></div>
+      <div class="em-stat"><div class="em-stat__value">6</div><div class="em-stat__label">vrijdagen</div></div>
+      <div class="em-stat"><div class="em-stat__value">8/9</div><div class="em-stat__label">breinen na sessie 1</div></div>
+      <div class="em-stat"><div class="em-stat__value">7/10</div><div class="em-stat__label">demo's op 11 september</div></div>
+      <div class="em-stat"><div class="em-stat__value">243</div><div class="em-stat__label">berichten in de groep</div></div>
+      <div class="em-stat"><div class="em-stat__value">0</div><div class="em-stat__label">IT-tickets, en 0 metingen</div></div>
     </div>
 
-    <div class="timeline">
-      <div class="timeline-item"><div class="timeline-dot">1</div><div class="mod-title">19 jun · Bouw je brein</div><div class="mod-desc">Kit installeren, brein vullen, eerste skills. De werklaptop-muur.</div></div>
-      <div class="timeline-item"><div class="timeline-dot">2</div><div class="mod-title">17 jul · Make it do your work</div><div class="mod-desc">Werd show-and-tell plus drie governance-afspraken.</div></div>
-      <div class="timeline-item"><div class="timeline-dot">3</div><div class="mod-title">31 jul · Je brein gaat zelf lezen</div><div class="mod-desc">Skills, hooks, connectors. WhatsApp-koppeling live gerepareerd.</div></div>
-      <div class="timeline-item"><div class="timeline-dot dim">P</div><div class="mod-title">14 + 28 aug · Peer</div><div class="mod-desc">Zonder facilitator. Gebouwd: ja. Samengekomen: nauwelijks.</div></div>
-      <div class="timeline-item"><div class="timeline-dot">6</div><div class="mod-title">11 sep · Slot</div><div class="mod-desc">Elk brein schrijft zijn eigen reflectie. Zeven demo's, vijf antwoorden.</div></div>
-      <div class="timeline-item"><div class="timeline-dot dim">→</div><div class="mod-title">25 sep · Retro alle tracks</div><div class="mod-desc">Deel 7 hieronder is onze inbreng.</div></div>
-    </div>
-
-    <div class="grid-3">
-      <div class="panel-window"><div class="panel-window__header">Het idee</div><div class="panel-window__body"><p class="body" style="margin:0">Gewone tekstbestanden, een instructiebestand dat zegt hoe jij werkt, kleine skills voor terugkerend werk, en een AI die dat leest en uitvoert. Geen platform, geen IT. De bestanden zijn het brein, de AI is de motor.</p></div></div>
-      <div class="panel-window"><div class="panel-window__header">Waarom een pilot</div><div class="panel-window__body"><p class="body" style="margin:0">Proeftuin voor de bredere emagine-uitrol. Alles wat stukging was informatie. Jullie werk en jullie antwoorden gaan, zonder namen, naar de AI-unit als ontwerpinput voor het brein dat zij in Glassbox bouwen.</p></div></div>
-      <div class="panel-window"><div class="panel-window__header">Hoe we werkten</div><div class="panel-window__body"><p class="body" style="margin:0">Zes vrijdagmiddagen in Delft. Drie met Stas, twee peer-middagen, één slot. Elke sessie show-and-tell en een bouwuur. Daartussen de WhatsApp-groep. De kit ging in twaalf weken van v0.1 naar v0.3.4: 21 skills, 4 agents.</p></div></div>
+    <div class="em-grid em-grid--3 tv-mt">
+      <div class="em-card"><h3>Het idee</h3><p>Gewone tekstbestanden, een instructiebestand dat zegt hoe jij werkt, kleine skills voor terugkerend werk, en een AI die dat leest en uitvoert. Geen platform, geen IT. De bestanden zijn het brein, de AI is de motor.</p></div>
+      <div class="em-card"><h3>Waarom een pilot</h3><p>Proeftuin voor de bredere emagine-uitrol. Alles wat stukging was informatie. Jullie werk en jullie antwoorden gaan, zonder namen, naar de AI-unit als ontwerpinput voor het brein dat zij in Glassbox bouwen.</p></div>
+      <div class="em-card"><h3>Hoe we werkten</h3><p>Zes vrijdagmiddagen in Delft. Drie met Stas, twee peer-middagen, één slot. Elke sessie show-and-tell en een bouwuur. Daartussen de WhatsApp-groep. De kit ging van v0.1 naar v0.3.4: 21 skills, 4 agents.</p></div>
     </div>
   </div>
 </section>
 
-<section class="section" id="tijdlijn">
-  <div class="container">
-    <div class="eyebrow">Deel 01</div>
-    <h2 class="section-title">Wat er gebeurde, per datum</h2>
-    <div class="panel-window"><div class="panel-window__header">Chronologie · sessies, groep, mail</div><div class="panel-window__body tbl">
-    <table>
+<section class="em-section em-section--cream" id="tijdlijn">
+  <div class="em-container">
+    <span class="em-eyebrow em-eyebrow--lime">Deel 01</span>
+    <h2 class="tv-h2">Zes vrijdagen</h2>
+    <div class="em-timeline tv-mt-sm">
+      <div class="em-phase"><span class="em-phase__bar">19 jun</span><div><div class="em-phase__name">Sessie 1 · Bouw je brein</div><div class="em-phase__desc">Kit installeren, brein vullen, eerste skills. De werklaptop-muur, twee weken later door de groep zelf geslecht.</div></div></div>
+      <div class="em-phase"><span class="em-phase__bar">17 jul</span><div><div class="em-phase__name">Sessie 2 · Make it do your work</div><div class="em-phase__desc">Werd een show-and-tell van vier setups, plus drie governance-afspraken over klantdata.</div></div></div>
+      <div class="em-phase"><span class="em-phase__bar">31 jul</span><div><div class="em-phase__name">Sessie 3 · Je brein gaat zelf lezen</div><div class="em-phase__desc">Skills, commands, hooks, connectors. De WhatsApp-koppeling live gerepareerd, eigen fork gepubliceerd.</div></div></div>
+      <div class="em-phase tv-phase--dim"><span class="em-phase__bar">14 + 28 aug</span><div><div class="em-phase__name">Peer-middagen zonder facilitator</div><div class="em-phase__desc">Gebouwd: ja. Samengekomen: nauwelijks. Breinen kregen namen.</div></div></div>
+      <div class="em-phase"><span class="em-phase__bar">11 sep</span><div><div class="em-phase__name">Sessie 6 · Slot</div><div class="em-phase__desc">Elk brein schrijft de reflectie van zijn eigenaar. Zeven demo's, vijf schriftelijke antwoorden.</div></div></div>
+      <div class="em-phase tv-phase--dim"><span class="em-phase__bar">25 sep</span><div><div class="em-phase__name">Retro van alle tracks</div><div class="em-phase__desc">Deel 06 hieronder is onze inbreng.</div></div></div>
+    </div>
+
+    <h3 class="tv-h3 tv-mt">Wat er gebeurde, per datum</h3>
+    <div class="tv-tbl">
+    <table class="em-table">
       <thead><tr><th>Datum</th><th>Wat er gebeurde</th></tr></thead>
       <tbody>
-        <tr><td class="cell-primary">19 jun</td><td>Sessie 1. Installeren in de zaal. Alex postte de hele installatievolgorde in de groep (PowerShell, Claude Code, UV, Mistral Vibe).</td></tr>
-        <tr><td class="cell-primary">24 jun</td><td>Check-in: zes antwoorden, zes werkende breinen. "Te veel, enterprise-waardige inrichting en allerlei agents." Eerste klantdata-vraag: mag dit op een privélaptop, AVG-wise?</td></tr>
-        <tr><td class="cell-primary">2 tot 9 jul</td><td>Drie van jullie liepen vast op de werklaptop. Joeri vond de fix dezelfde dag (één PATH-regel plus terminal herstarten). Op 9 juli werkte het bij iedereen. Nul IT-tickets. De fix staat nu in de docs.</td></tr>
-        <tr><td class="cell-primary">10 jul</td><td>Stas vroeg IT om een laptop met developer-rechten voor Levi en om beleid voor langdurig Claude Code-gebruik op werklaptops. Geen antwoord gekomen.</td></tr>
-        <tr><td class="cell-primary">13 jul</td><td>Eerste schatting in de groep: "scheelt voor mij rond de 50%", met de nuance "ik gebruik het niet altijd, ik wil vooral meekijken wat er gebeurt".</td></tr>
-        <tr><td class="cell-primary">17 jul</td><td>Sessie 2 werd een show-and-tell: brein op een Mac Mini bereikbaar vanaf je telefoon, coachingprep uit een Notion-vault, trainingsadministratie vanaf één knop, een aandelenmonitor. Drie governance-afspraken. Sander mailde: is mijn boek-ingest-skill deelbaar?</td></tr>
-        <tr><td class="cell-primary">18 jul</td><td>Het blanket-verbod op klantdata in de kit vervangen door een viertrapsregel plus handout.</td></tr>
-        <tr><td class="cell-primary">21 jul</td><td>Hanneke mailde ongevraagd een eerste opzet voor een emagine-brede second-brain-architectuur, plus de volledige architectuur van haar eigen systeem (14 hoofdstukken).</td></tr>
-        <tr><td class="cell-primary">23 en 24 jul</td><td>Laptopmigratie. "We zitten nog in een soort gedoogbeleid over Claude, dus ik ben terughoudend dit aan het migratieteam voor te leggen." En: let op je lokale Claude-memorymap, die zit buiten je vault.</td></tr>
-        <tr><td class="cell-primary">31 jul</td><td>Sessie 3: skills, commands, hooks, connectors. De WhatsApp-koppeling brak op een fout in het onderliggende project; live gerepareerd, eigen fork gepubliceerd. Hanneke's brein voor het eerst gedeeld. Vraag: hoe scheid je werk en privé token-efficiënt? Geen antwoord gekomen.</td></tr>
-        <tr><td class="cell-primary">3 aug</td><td>Anna Sophia: de WhatsApp-koppeling werkt, na een update van de app.</td></tr>
-        <tr><td class="cell-primary">14 en 28 aug</td><td>Peer-middagen. "Is er iemand wel?" Levi boven aan een bureau, twee keer. Wel gebouwd: Alex' build-orchestrator met GitHub Actions CI (21 aug), Hanneke's boekingspagina live (28 aug).</td></tr>
-        <tr><td class="cell-primary">29 aug tot 1 sep</td><td>Breinen kregen namen en logo's: Aranos, Nexus, Gandalf, en "ik ga ook maar eens een betere naam bedenken".</td></tr>
-        <tr><td class="cell-primary">11 sep</td><td>Slot. Zeven van tien, Hanneke online. Elk brein schreef de reflectie van zijn eigenaar en maakte er een artifact van. Vijf schriftelijke antwoorden binnen een kwartier. Eddy postte zijn cartoon-werkwijze, Hanneke drie reflectiepagina's.</td></tr>
-        <tr><td class="cell-primary">12 sep</td><td>Levi's longread van week 37. Twee van jullie kregen de melding dat de nieuwe emagine-laptop niet compliant is met emagine-policy. IT heeft een heads-up.</td></tr>
-        <tr><td class="cell-primary">16 sep</td><td>Een collega buiten de track mailde dat Anna Sophia hem en een andere collega een uur door haar brein had geleid: "mega inspirerend en indrukwekkend". Hij vraagt of de track in Q4 weer draait.</td></tr>
+        <tr><td class="tv-td-date">19 jun</td><td>Sessie 1. Installeren in de zaal. Alex postte de hele installatievolgorde in de groep (PowerShell, Claude Code, UV, Mistral Vibe).</td></tr>
+        <tr><td class="tv-td-date">24 jun</td><td>Check-in: zes antwoorden, zes werkende breinen. "Te veel, enterprise-waardige inrichting en allerlei agents." Eerste klantdata-vraag: mag dit op een privélaptop, AVG-wise?</td></tr>
+        <tr><td class="tv-td-date">2 tot 9 jul</td><td>Drie van jullie liepen vast op de werklaptop. Joeri vond de fix dezelfde dag (één PATH-regel plus terminal herstarten). Op 9 juli werkte het bij iedereen. Nul IT-tickets. De fix staat nu in de docs.</td></tr>
+        <tr><td class="tv-td-date">10 jul</td><td>Stas vroeg IT om een laptop met developer-rechten voor Levi en om beleid voor langdurig Claude Code-gebruik op werklaptops. Geen antwoord gekomen.</td></tr>
+        <tr><td class="tv-td-date">13 jul</td><td>Eerste schatting in de groep: "scheelt voor mij rond de 50%", met de nuance "ik gebruik het niet altijd, ik wil vooral meekijken wat er gebeurt".</td></tr>
+        <tr><td class="tv-td-date">17 jul</td><td>Sessie 2 werd een show-and-tell: brein op een Mac Mini bereikbaar vanaf je telefoon, coachingprep uit een Notion-vault, trainingsadministratie vanaf één knop, een aandelenmonitor. Drie governance-afspraken. Sander mailde: is mijn boek-ingest-skill deelbaar?</td></tr>
+        <tr><td class="tv-td-date">18 jul</td><td>Het blanket-verbod op klantdata in de kit vervangen door een viertrapsregel plus handout.</td></tr>
+        <tr><td class="tv-td-date">21 jul</td><td>Hanneke mailde ongevraagd een eerste opzet voor een emagine-brede second-brain-architectuur, plus de volledige architectuur van haar eigen systeem, 14 hoofdstukken.</td></tr>
+        <tr><td class="tv-td-date">23 en 24 jul</td><td>Laptopmigratie. "We zitten nog in een soort gedoogbeleid over Claude, dus ik ben terughoudend dit aan het migratieteam voor te leggen." En: let op je lokale Claude-memorymap, die zit buiten je vault.</td></tr>
+        <tr><td class="tv-td-date">31 jul</td><td>Sessie 3: skills, commands, hooks, connectors. De WhatsApp-koppeling brak op een fout in het onderliggende project; live gerepareerd, eigen fork gepubliceerd. Hanneke's brein voor het eerst gedeeld. Vraag: hoe scheid je werk en privé token-efficiënt? Geen antwoord gekomen.</td></tr>
+        <tr><td class="tv-td-date">3 aug</td><td>Anna Sophia: de WhatsApp-koppeling werkt, na een update van de app.</td></tr>
+        <tr><td class="tv-td-date">14 en 28 aug</td><td>Peer-middagen. "Is er iemand wel?" Levi boven aan een bureau, twee keer. Wel gebouwd: Alex' build-orchestrator met GitHub Actions CI (21 aug), Hanneke's boekingspagina live (28 aug).</td></tr>
+        <tr><td class="tv-td-date">29 aug tot 1 sep</td><td>Breinen kregen namen en logo's: Aranos, Nexus, Gandalf, en "ik ga ook maar eens een betere naam bedenken".</td></tr>
+        <tr><td class="tv-td-date">11 sep</td><td>Slot. Zeven van tien, Hanneke online. Elk brein schreef de reflectie van zijn eigenaar en maakte er een artifact van. Vijf schriftelijke antwoorden binnen een kwartier. Eddy postte zijn cartoon-werkwijze, Hanneke drie reflectiepagina's.</td></tr>
+        <tr><td class="tv-td-date">12 sep</td><td>Levi's longread van week 37. Twee van jullie kregen de melding dat de nieuwe emagine-laptop niet compliant is met emagine-policy. IT heeft een heads-up.</td></tr>
+        <tr><td class="tv-td-date">16 sep</td><td>Een collega buiten de track mailde dat Anna Sophia hem en een andere collega een uur door haar brein had geleid: "mega inspirerend en indrukwekkend". Hij vraagt of de track in Q4 weer draait.</td></tr>
       </tbody>
     </table>
-    </div></div>
-  </div>
-</section>
-
-<section class="section" id="gebouwd">
-  <div class="container">
-    <div class="eyebrow">Deel 02</div>
-    <h2 class="section-title">Wat jullie bouwden, en welk probleem het oploste</h2>
-    <div class="grid-3">
-      <div class="card card-accent"><div class="role">Hanneke · AranOS</div><h4>De dagen naast het trainen gingen op aan uren, mail, agenda, logistiek, nazorg</h4><p>Alle mail wordt een actie. 17 routines draaien vanzelf. Om 07:24 meldt het systeem wat blijft liggen, ongevraagd. Drie lokale modellen voor gevoelig werk, tunnel zonder open poorten.</p><p><strong>Eruit:</strong> cursistenportal, boekingspagina, spelplatform, werkapp. 4.207 bestanden, 1.745 commits, 95 sessies. "Ik open mijn mailbox niet meer." Acht diensten die er zonder dit niet waren.</p></div>
-      <div class="card card-accent"><div class="role">Alex · Gandalf / Third brain</div><h4>Een trainingsmodule van idee tot draaiboek kost dagen, en kwaliteit zakt onder tijdsdruk</h4><p>Agents bouwen de module (hobbits bouwen, orcs slopen). Elke wijziging automatisch getest op huisstijl, geheimen en klantdata. De laptop is "een dom ding", alles draait op een mini-pc.</p><p><strong>Eruit:</strong> modules overgedragen aan Hanneke via systeem-agnostische skills; GitHub Actions CI; boodschappen via de AH-API. Prijs: één planreview van 91,5 miljoen tokens.</p></div>
-      <div class="card card-accent"><div class="role">Dennis · Nexus</div><h4>Deliverables in de huisstijl van de klant, snel, zonder elke keer context te plakken</h4><p>19 skills, patronen, mail- en agendatriage, maturity scan, productdefinitie-workshop.</p><p><strong>Eruit:</strong> 11 klantdecks en spreadsheets in huisstijl, 6 dashboards, een werkoverzicht-app. "Sterkere sessies, scherper denken."</p></div>
-      <div class="card card-accent"><div class="role">Joeri</div><h4>Trainingen voorbereiden op 1.789 pagina's gids, in twee talen, elke keer opnieuw</h4><p>Materiaal één keer ingelezen. Agents als teacher, studenten, content authority en layout. Twee instanties, want Booking.</p><p><strong>Eruit:</strong> voorbereiding EN/NL in uren; een Miro-bord na een teamsessie in één prompt; boekenkast; Hue-lampen. Alles kwijt na sessie 2, opnieuw begonnen, "was ook best leuk".</p></div>
-      <div class="card card-accent"><div class="role">Levi</div><h4>Bijblijven in het AI-vak betekent meer lezen dan een mens kan</h4><p>Signal monitor op een mini-pc via Tailscale. Zes Telegram-agents lezen 4.700 transcripten van YouTube en Substack en schrijven wekelijks een long read, met een loop die zichzelf verbetert.</p><p><strong>Eruit:</strong> "een business-intelligence-platform"; 210 nieuwe bestanden in 84 dagen; de longread van week 37 in de groep.</p></div>
-      <div class="card card-accent"><div class="role">Eddy · The Wills</div><h4>Een webinar heeft een consistente serie illustraties nodig, en 's nachts moet de boel blijven draaien</h4><p>Eén vaste stijlzin, de grap beschrijven in plaats van het plaatje, aantallen afdwingen, itereren met de eigenaar. Een mini-pc doet 's nachts checks en back-ups.</p><p><strong>Eruit:</strong> cartoonserie voor het webinar van 1 oktober plus een werkwijze van vijf regels voor de groep; 792 wijzigingen in twaalf weken. "Een brein dat 's nachts alvast nadenkt."</p></div>
-      <div class="card"><div class="role">Arjen</div><h4>Bij een klant met eigen tools en NDA's is een eigen brein nauwelijks inzetbaar</h4><p>Stakeholderleiderschap, spreker bij ABF, ondernemingsraad. Bij Booking: Glean en Gemini, NDA's.</p><p><strong>Eruit:</strong> "Heel leerzaam, benieuwd wat de volgende stap is."</p></div>
-      <div class="card"><div class="role">Uit sessie 2 · ongenoemd</div><h4>Coachingprep, trainingsadministratie, een portefeuille</h4><p>Notion-vault die vragen per persoon genereert (en merkte dat de coach meer praatte dan de coachee). Eén knop die agenda, deelnemers, CRM, huisstijl en deck regelt: "negentig procent van de administratie". Nieuws plus sentiment tot een dagrapport, in productie.</p></div>
-      <div class="card"><div class="role">Stas · Memory Alpha</div><h4>Voorstellen, trainingen en 53 projectkaarten bijhouden naast het trainen</h4><p>Voorstellen in huisstijl, trainingen uit bronmateriaal, dashboard, ochtendbriefing, declaratie, en een hook die het woord "verzonden" blokkeert tot de mail echt in Verzonden items staat.</p><p><strong>Eruit:</strong> twee deals rond op voorstellen uit het brein, een derde in twee dagen gebouwd. Eén phantom-send gevangen door de hook.</p></div>
-    </div>
-    <div class="panel-accent" style="margin-top:var(--sp-6)">
-      <div class="eyebrow">Wat niemand bouwde</div>
-      <p class="body" style="margin:0">Een gedeelde laag. De trainers onder ons kwamen op dezelfde deelstappen uit voor trainingsontwerp en willen die delen. Sander vroeg het in juli al per mail. Het kon niet, want elk brein is een eiland. Hanneke's slotvraag was precies die: "hoe koppel je individuele breinen tot iets gemeenschappelijks, ik ben een beetje lost". Dat is het eerste wat naar de AI-unit gaat.</p>
     </div>
   </div>
 </section>
 
-<section class="section" id="gezegd">
-  <div class="container">
-    <div class="eyebrow">Deel 03</div>
-    <h2 class="section-title">Wat jullie erover zeiden</h2>
-    <div class="subsection-title" style="margin-top:0">Als emagine je een brein geeft · de vijf antwoorden van 11 september, letterlijk</div>
-    <div class="grid-2">
-      <div class="quote-block"><p>Welke functie het meest waardevol: het zelf kunnen bouwen van oplossingen voor eigen use cases, je loopt ergens tegenaan, en dan ga je nadenken en laten bouwen. Wat verandert er: automatisering van saaie taken, vergroting van kwaliteit van product, het kunnen leveren van diensten die zonder de 2nd brain niet of heel moeilijk te leveren zouden zijn. Wat mag er niet ontbreken: de mogelijkheid om zelf use cases om te zetten in AI tools.</p><div class="attr">Alex · 15:21</div></div>
-      <div class="quote-block"><p>Dat ik altijd alles beschikbaar heb. Elk gesprek, elke afspraak, elk dossier, elke mail in één plek. Geen "waar stond dat ook alweer" meer. En het brein heeft er 's nachts alvast over nagedacht voor ik het vraag. Sessievoorbereiding die een avond kostte ligt er 's ochtends. Kost me nu een dag per week minder aan zoeken en bijhouden. Wat mag er niet ontbreken? Eigen data in eigen beheer, gewoon tekstbestanden, geen platform, wij werken onder NDA's. Een geheugen dat leert van je correcties, anders maakt AI elke week dezelfde fout. En harde regels tegen invullen: geen bewering zonder bron.</p><div class="attr">Eddy · 15:23</div></div>
-      <div class="quote-block"><p>Zelf context kunnen creëren. Niet de automatisering, niet de output, maar dat ík bepaal wat mijn brein over mij weet. Ik verbind concepten en ideeën veel sneller aan elkaar. Wat niet mag ontbreken: dat je als gebruiker controle houdt over het zelf creëren van context, en invloed hebt op de system prompts en de inhoud van CLAUDE.md. Zonder die knoppen is het geen second brain, dan is het een tool die iemand anders voor je heeft ingesteld.</p><div class="attr">Levi · 15:26</div></div>
-      <div class="quote-block"><p>Iedere prep voor een training of een interventie begint niet bij 0, maar bouwt verder op eerdere bevindingen. Iedere learning, nieuwe info of observatie wordt direct verwerkt in een nieuwe versie. Kwaliteitscontrole schaalt mee, constante check door agents. Dit scheelt uren werk, laat me heel snel inspringen op observaties en gebeurtenissen. En ik hoef niet meer alles zelf te onthouden, wat lucht in mijn hoofd geeft.</p><div class="attr">Joeri · 15:28</div></div>
-      <div class="quote-block"><p>Snel sterke, klant-huisstijl deliverables kunnen bouwen, al is dat niet los te zien van de rest: automatisch verwerken en onthouden, het overzicht, het leren van fouten. Ik deel eerder en itereer sneller op feedback, mijn voorbereiding verschuift van "hoe moet dit eruitzien" naar "wat wil ik hiermee bereiken". Vier dingen, niet onderhandelbaar: het systeem vraagt bij twijfel en gokt nooit; ik blijf eigenaar van mijn eigen werkwijze; het koppelt met de tools die ik al gebruik; en klantinformatie blijft strikt gescheiden tussen klanten.</p><div class="attr">Dennis · 15:36</div></div>
-      <div class="quote-block"><p>Een front-end voor invoer die op de achtergrond naar markdown schrijft, met knoppen voor gevorderden. Anders krijg je schaduw-ideeën.</p><div class="attr">In de zaal · 11 september</div></div>
+<section class="em-section em-section--white" id="gebouwd">
+  <div class="em-container">
+    <span class="em-eyebrow em-eyebrow--lime">Deel 02</span>
+    <h2 class="tv-h2">Wat jullie bouwden, en welk probleem het oploste</h2>
+    <div class="em-grid em-grid--3 tv-mt-sm">
+      <div class="em-card"><span class="tv-role">Hanneke · AranOS</span><h3>De dagen naast het trainen gingen op aan uren, mail, agenda, logistiek, nazorg</h3><p>Alle mail wordt een actie. 17 routines draaien vanzelf. Om 07:24 meldt het systeem wat blijft liggen, ongevraagd. Drie lokale modellen voor gevoelig werk, tunnel zonder open poorten.</p><p><strong>Eruit:</strong> cursistenportal, boekingspagina, spelplatform, werkapp. 4.207 bestanden, 1.745 commits, 95 sessies. "Ik open mijn mailbox niet meer." Acht diensten die er zonder dit niet waren.</p></div>
+      <div class="em-card"><span class="tv-role">Alex · Gandalf / Third brain</span><h3>Een trainingsmodule van idee tot draaiboek kost dagen, en kwaliteit zakt onder tijdsdruk</h3><p>Agents bouwen de module (hobbits bouwen, orcs slopen). Elke wijziging automatisch getest op huisstijl, geheimen en klantdata. De laptop is "een dom ding", alles draait op een mini-pc.</p><p><strong>Eruit:</strong> modules overgedragen aan Hanneke via systeem-agnostische skills; GitHub Actions CI; boodschappen via de AH-API. Prijs: één planreview van 91,5 miljoen tokens.</p></div>
+      <div class="em-card"><span class="tv-role">Dennis · Nexus</span><h3>Deliverables in de huisstijl van de klant, snel, zonder elke keer context te plakken</h3><p>19 skills, patronen, mail- en agendatriage, maturity scan, productdefinitie-workshop.</p><p><strong>Eruit:</strong> 11 klantdecks en spreadsheets in huisstijl, 6 dashboards, een werkoverzicht-app. "Sterkere sessies, scherper denken."</p></div>
+      <div class="em-card"><span class="tv-role">Joeri</span><h3>Trainingen voorbereiden op 1.789 pagina's gids, in twee talen, elke keer opnieuw</h3><p>Materiaal één keer ingelezen. Agents als teacher, studenten, content authority en layout. Twee instanties, want Booking.</p><p><strong>Eruit:</strong> voorbereiding EN/NL in uren; een Miro-bord na een teamsessie in één prompt; boekenkast; Hue-lampen. Alles kwijt na sessie 2, opnieuw begonnen, "was ook best leuk".</p></div>
+      <div class="em-card"><span class="tv-role">Levi</span><h3>Bijblijven in het AI-vak betekent meer lezen dan een mens kan</h3><p>Signal monitor op een mini-pc via Tailscale. Zes Telegram-agents lezen 4.700 transcripten van YouTube en Substack en schrijven wekelijks een long read, met een loop die zichzelf verbetert.</p><p><strong>Eruit:</strong> "een business-intelligence-platform"; 210 nieuwe bestanden in 84 dagen; de longread van week 37 in de groep.</p></div>
+      <div class="em-card"><span class="tv-role">Eddy · The Wills</span><h3>Een webinar heeft een consistente serie illustraties nodig, en 's nachts moet de boel blijven draaien</h3><p>Eén vaste stijlzin, de grap beschrijven in plaats van het plaatje, aantallen afdwingen, itereren met de eigenaar. Een mini-pc doet 's nachts checks en back-ups.</p><p><strong>Eruit:</strong> cartoonserie voor het webinar van 1 oktober plus een werkwijze van vijf regels voor de groep; 792 wijzigingen in twaalf weken. "Een brein dat 's nachts alvast nadenkt."</p></div>
+      <div class="em-card em-card--flat"><span class="tv-role">Arjen</span><h3>Bij een klant met eigen tools en NDA's is een eigen brein nauwelijks inzetbaar</h3><p>Stakeholderleiderschap, spreker bij ABF, ondernemingsraad. Bij Booking: Glean en Gemini, NDA's.</p><p><strong>Eruit:</strong> "Heel leerzaam, benieuwd wat de volgende stap is."</p></div>
+      <div class="em-card em-card--flat"><span class="tv-role">Uit sessie 2 · ongenoemd</span><h3>Coachingprep, trainingsadministratie, een portefeuille</h3><p>Notion-vault die vragen per persoon genereert, en merkte dat de coach meer praatte dan de coachee. Eén knop die agenda, deelnemers, CRM, huisstijl en deck regelt: "negentig procent van de administratie". Nieuws plus sentiment tot een dagrapport, in productie.</p></div>
+      <div class="em-card em-card--flat"><span class="tv-role">Stas · Memory Alpha</span><h3>Voorstellen, trainingen en 53 projectkaarten bijhouden naast het trainen</h3><p>Voorstellen in huisstijl, trainingen uit bronmateriaal, dashboard, ochtendbriefing, declaratie, en een hook die het woord "verzonden" blokkeert tot de mail echt in Verzonden items staat.</p><p><strong>Eruit:</strong> twee deals rond op voorstellen uit het brein, een derde in twee dagen gebouwd. Eén phantom-send gevangen door de hook.</p></div>
+    </div>
+    <div class="tv-callout tv-mt">
+      <span class="em-eyebrow em-eyebrow--lime">Wat niemand bouwde</span>
+      <p>Een gedeelde laag. De trainers onder ons kwamen op dezelfde deelstappen uit voor trainingsontwerp en willen die delen. Sander vroeg het in juli al per mail. Het kon niet, want elk brein is een eiland. Hanneke's slotvraag was precies die: "hoe koppel je individuele breinen tot iets gemeenschappelijks, ik ben een beetje lost". Dat is het eerste wat naar de AI-unit gaat.</p>
+    </div>
+  </div>
+</section>
+
+<section class="em-section em-section--wash" id="gezegd">
+  <div class="em-container">
+    <span class="em-eyebrow em-eyebrow--lime">Deel 03</span>
+    <h2 class="tv-h2">Wat jullie erover zeiden</h2>
+    <h3 class="tv-h3 tv-mt-sm">Als emagine je een brein geeft: de vijf antwoorden van 11 september, letterlijk</h3>
+    <div class="em-grid em-grid--2">
+      <blockquote class="tv-quote"><p>Welke functie het meest waardevol: het zelf kunnen bouwen van oplossingen voor eigen use cases, je loopt ergens tegenaan, en dan ga je nadenken en laten bouwen. Wat verandert er: automatisering van saaie taken, vergroting van kwaliteit van product, het kunnen leveren van diensten die zonder de 2nd brain niet of heel moeilijk te leveren zouden zijn. Wat mag er niet ontbreken: de mogelijkheid om zelf use cases om te zetten in AI tools.</p><cite>Alex · 15:21</cite></blockquote>
+      <blockquote class="tv-quote"><p>Dat ik altijd alles beschikbaar heb. Elk gesprek, elke afspraak, elk dossier, elke mail in één plek. Geen "waar stond dat ook alweer" meer. En het brein heeft er 's nachts alvast over nagedacht voor ik het vraag. Sessievoorbereiding die een avond kostte ligt er 's ochtends. Kost me nu een dag per week minder aan zoeken en bijhouden. Wat mag er niet ontbreken? Eigen data in eigen beheer, gewoon tekstbestanden, geen platform, wij werken onder NDA's. Een geheugen dat leert van je correcties, anders maakt AI elke week dezelfde fout. En harde regels tegen invullen: geen bewering zonder bron.</p><cite>Eddy · 15:23</cite></blockquote>
+      <blockquote class="tv-quote"><p>Zelf context kunnen creëren. Niet de automatisering, niet de output, maar dat ík bepaal wat mijn brein over mij weet. Ik verbind concepten en ideeën veel sneller aan elkaar. Wat niet mag ontbreken: dat je als gebruiker controle houdt over het zelf creëren van context, en invloed hebt op de system prompts en de inhoud van CLAUDE.md. Zonder die knoppen is het geen second brain, dan is het een tool die iemand anders voor je heeft ingesteld.</p><cite>Levi · 15:26</cite></blockquote>
+      <blockquote class="tv-quote"><p>Iedere prep voor een training of een interventie begint niet bij 0, maar bouwt verder op eerdere bevindingen. Iedere learning, nieuwe info of observatie wordt direct verwerkt in een nieuwe versie. Kwaliteitscontrole schaalt mee, constante check door agents. Dit scheelt uren werk, laat me heel snel inspringen op observaties en gebeurtenissen. En ik hoef niet meer alles zelf te onthouden, wat lucht in mijn hoofd geeft.</p><cite>Joeri · 15:28</cite></blockquote>
+      <blockquote class="tv-quote"><p>Snel sterke, klant-huisstijl deliverables kunnen bouwen, al is dat niet los te zien van de rest: automatisch verwerken en onthouden, het overzicht, het leren van fouten. Ik deel eerder en itereer sneller op feedback, mijn voorbereiding verschuift van "hoe moet dit eruitzien" naar "wat wil ik hiermee bereiken". Vier dingen, niet onderhandelbaar: het systeem vraagt bij twijfel en gokt nooit; ik blijf eigenaar van mijn eigen werkwijze; het koppelt met de tools die ik al gebruik; en klantinformatie blijft strikt gescheiden tussen klanten.</p><cite>Dennis · 15:36</cite></blockquote>
+      <blockquote class="tv-quote"><p>Een front-end voor invoer die op de achtergrond naar markdown schrijft, met knoppen voor gevorderden. Anders krijg je schaduw-ideeën.</p><cite>In de zaal · 11 september</cite></blockquote>
     </div>
 
-    <div class="subsection-title">Uit de reflecties</div>
-    <div class="grid-2">
-      <div class="quote-block"><p>Het probleem was nooit kunnen. Onthouden kost energie. De gebruikelijke oplossing is beter je best doen. Die werkt twee weken. Niets mag afhangen van volgehouden discipline: werkt iets alleen op een goede dag, dan is het stuk. De backlog werd de werkelijkheid, niet meer mijn hoofd. Het bouwen was het curriculum. Bouwen en leren liepen te los van elkaar. Eerder laten zien: veel werkte al weken voordat iemand het gezien had, dat is feedback die je weggooit. Eerlijk erbij: het gaat regelmatig stuk. Er is een bestand dat alleen bekende fouten bijhoudt, met datum. Dat is het nuttigste document dat ik heb.</p><div class="attr">Hanneke · drie reflectiepagina's, 11 september</div></div>
+    <h3 class="tv-h3 tv-mt">Uit de reflecties</h3>
+    <div class="em-grid em-grid--2">
+      <blockquote class="tv-quote"><p>Het probleem was nooit kunnen. Onthouden kost energie. De gebruikelijke oplossing is beter je best doen. Die werkt twee weken. Niets mag afhangen van volgehouden discipline: werkt iets alleen op een goede dag, dan is het stuk. De backlog werd de werkelijkheid, niet meer mijn hoofd. Het bouwen was het curriculum. Bouwen en leren liepen te los van elkaar. Eerder laten zien: veel werkte al weken voordat iemand het gezien had, dat is feedback die je weggooit. Eerlijk erbij: het gaat regelmatig stuk. Er is een bestand dat alleen bekende fouten bijhoudt, met datum. Dat is het nuttigste document dat ik heb.</p><cite>Hanneke · drie reflectiepagina's, 11 september</cite></blockquote>
       <div>
-        <div class="quote-block"><p>De AI is de tekenaar; de mens blijft de regisseur.</p><div class="attr">Eddy · cartoon-werkwijze, 11 september 14:10</div></div>
-        <div class="quote-block"><p>Structuur verliest van enthousiasme: twee van de drie sessies liepen anders dan ontworpen en de weekmeting vuurde in vier pogingen nooit. Verifiëren is het echte werk. Meten op dag één, niet aan het eind. Een facilitator budgetteren in plaats van tooling: augustus zonder mij was één collega aan een bureau.</p><div class="attr">Stas · reflectie 11 september</div></div>
+        <blockquote class="tv-quote"><p>De AI is de tekenaar; de mens blijft de regisseur.</p><cite>Eddy · cartoon-werkwijze, 11 september 14:10</cite></blockquote>
+        <blockquote class="tv-quote"><p>Structuur verliest van enthousiasme: twee van de drie sessies liepen anders dan ontworpen en de weekmeting vuurde in vier pogingen nooit. Verifiëren is het echte werk. Meten op dag één, niet aan het eind. Een facilitator budgetteren in plaats van tooling: augustus zonder mij was één collega aan een bureau.</p><cite>Stas · reflectie 11 september</cite></blockquote>
       </div>
     </div>
 
-    <div class="subsection-title">Tussendoor, in de groep</div>
-    <div class="panel-inset">
-      <ul class="list">
-        <li>"Gebruik de setup nu heel veel!" (10 juli)</li>
-        <li>"Ja scheelt voor mij rond de 50%. Ik gebruik het niet altijd, omdat wat ik doe een leertraject is en ik vooral mee wil kijken wat er gebeurt. Ik mis hiermee soms info die ik wel wil hebben om te kunnen bijsturen." (13 juli)</li>
-        <li>"De skill om documenten te ingesten leest langere documenten minder goed. Daardoor miste mijn second brain een aantal key points. In overleg met Claude zelf heb ik die aangepast naar een verbeterde skill. Zijn jullie dit ook tegengekomen?" (23 juli)</li>
-        <li>"Ontwikkelpijplijn waarin repeterende stappen deterministisch in Python staan in plaats van dat het model die steeds zelf bedenkt met agents en skills, waarvoor veel tokens worden verbrand. Verwachting 25% reductie." (21 augustus)</li>
-        <li>"Ik kan er vandaag niet bij zijn, helaas, zal ook een verslagje maken met mijn 2nd brain en delen! Ben ook erg benieuwd hoe het vervolg eruitziet en of ik kan helpen als relatieve leek nog." (11 september)</li>
-      </ul>
+    <h3 class="tv-h3 tv-mt">Tussendoor, in de groep</h3>
+    <div class="tv-rows">
+      <div class="offering-row"><div class="offering-num">10/7</div><div class="offering-content"><p>"Gebruik de setup nu heel veel!"</p></div></div>
+      <div class="offering-row"><div class="offering-num">13/7</div><div class="offering-content"><p>"Ja scheelt voor mij rond de 50%. Ik gebruik het niet altijd, omdat wat ik doe een leertraject is en ik vooral mee wil kijken wat er gebeurt. Ik mis hiermee soms info die ik wel wil hebben om te kunnen bijsturen."</p></div></div>
+      <div class="offering-row"><div class="offering-num">23/7</div><div class="offering-content"><p>"De skill om documenten te ingesten leest langere documenten minder goed. Daardoor miste mijn second brain een aantal key points. In overleg met Claude zelf heb ik die aangepast naar een verbeterde skill. Zijn jullie dit ook tegengekomen?"</p></div></div>
+      <div class="offering-row"><div class="offering-num">21/8</div><div class="offering-content"><p>"Ontwikkelpijplijn waarin repeterende stappen deterministisch in Python staan in plaats van dat het model die steeds zelf bedenkt met agents en skills, waarvoor veel tokens worden verbrand. Verwachting 25% reductie."</p></div></div>
+      <div class="offering-row"><div class="offering-num">11/9</div><div class="offering-content"><p>"Ik kan er vandaag niet bij zijn, helaas, zal ook een verslagje maken met mijn 2nd brain en delen! Ben ook erg benieuwd hoe het vervolg eruitziet en of ik kan helpen als relatieve leek nog."</p></div></div>
     </div>
   </div>
 </section>
 
-<section class="section" id="klantdata">
-  <div class="container">
-    <div class="eyebrow">Deel 04</div>
-    <h2 class="section-title">Klantdata: wat we afspraken, hoe jullie het oplosten, wat open bleef</h2>
-    <div class="grid-3">
-      <div class="panel-window"><div class="panel-window__header">Afgesproken in de zaal · 17 juli</div><div class="panel-window__body"><ul class="list">
-        <li><strong>Geen transcriptie zonder toestemming.</strong> Een woordelijk transcript voelt anders dan aantekeningen. Middenweg: live samenvatten zonder het ruwe transcript te bewaren.</li>
-        <li><strong>Twee lagen.</strong> Persoonlijk en privé blijft van jou. Deelbaar, team- en klantrelevant gaat in gestructureerde OneDrive-mappen.</li>
-        <li><strong>Vet before you install.</strong> Repos en skills kunnen malware of prompt-injecties bevatten. Laat je brein een repo scannen vóór je iets overneemt.</li>
-      </ul></div></div>
-      <div class="panel-window"><div class="panel-window__header">De regel in de kit · 18 juli</div><div class="panel-window__body"><ul class="list">
-        <li><span class="badge badge-success">1 en 2</span> Publiek en intern werk: vrij.</li>
-        <li><span class="badge badge-info">3</span> Klantidentificerende context (namen, situatie, afspraken): mag in je persoonlijke vault. Ruwe vertrouwelijke documenten (contracten met prijzen, deelnemerslijsten, NDA-materiaal): ontmoedigd, nooit naar een gedeelde laag. Anonimiseer met een tokenmap die je machine niet verlaat.</li>
-        <li><span class="badge badge-danger">4</span> Gereguleerde data (bank, verzekeraar, gezondheid, betaalgegevens): nooit.</li>
-        <li>Eerlijk erbij: dit was Stas' besluit, en het accepteert dat klantcontext naar jullie privé-GitHub-repo's synct. De bestaande security-clearance dekte OneDrive, geen persoonlijke GitHubs.</li>
-      </ul></div></div>
-      <div class="panel-window"><div class="panel-window__header">Hoe jullie het zelf oplosten</div><div class="panel-window__body"><ul class="list">
-        <li>Klantdata in een aparte OneDrive-map die het brein niet ziet (Alex).</li>
-        <li>Gevoelige chatkanalen buiten versiebeheer; de lokale Claude-memorymap niet naar GitHub (24 juli).</li>
-        <li>Klantmail en deelnemersgegevens alleen door lokale modellen; geen emagine-materiaal naar externe research-tools; "de metadata mag in de vault, de bytes niet" (Hanneke).</li>
-        <li>Een sanitisatie-architectuur voor gereguleerd werk: lokaal model haalt identificatoren weg, cloudmodel redeneert over de gesaneerde versie, een mens keurt goed (Levi, longread).</li>
-        <li>Bij Booking het brein helemaal weghouden van klantwerk. "Klantinformatie blijft strikt gescheiden tussen klanten" (Dennis).</li>
-      </ul></div></div>
-    </div>
-    <div class="grid-2" style="margin-top:var(--sp-6)">
-      <div class="card card-p1"><div class="role" style="color:var(--danger)">Open · beleid</div><h4>Geen antwoord van IT</h4><p>De vraag van 10 juli (laptop met developer-rechten, beleid voor langdurig gebruik op werklaptops) is niet beantwoord. 23 juli: "we zitten nog in een soort gedoogbeleid over Claude". 12 september: twee van jullie kregen de melding dat de nieuwe emagine-laptop niet compliant is met emagine-policy.</p></div>
-      <div class="card card-p2"><div class="role" style="color:var(--warning)">Open · klantsystemen</div><h4>"A can of worms"</h4><p>Zo zei Stas het in de AI-weekly van 15 september: klantdata bij een bank of vergelijkbare klant vraagt om toestemming van die klant om iets te koppelen, en daar is nu geen antwoord op. Dat geldt ook voor emagine's eigen systemen.</p><p><strong>Conclusie:</strong> elke technische muur hebben jullie zelf geslecht. Geen enkele beleidsmuur. De trainers kwamen het verst, omdat al hun content van emagine zelf is.</p></div>
+<section class="em-section em-section--white" id="klantdata">
+  <div class="em-container">
+    <span class="em-eyebrow em-eyebrow--lime">Deel 04</span>
+    <h2 class="tv-h2">Klantdata: wat we afspraken, hoe jullie het oplosten, wat open bleef</h2>
+    <div class="em-grid em-grid--3 tv-mt-sm">
+      <div class="em-card"><h3>Afgesproken in de zaal, 17 juli</h3>
+        <div class="tv-rows">
+          <div class="offering-row"><div class="offering-num">1</div><div class="offering-content"><h4>Geen transcriptie zonder toestemming</h4><p>Een woordelijk transcript voelt anders dan aantekeningen. Middenweg: live samenvatten zonder het ruwe transcript te bewaren.</p></div></div>
+          <div class="offering-row"><div class="offering-num">2</div><div class="offering-content"><h4>Twee lagen</h4><p>Persoonlijk en privé blijft van jou. Deelbaar, team- en klantrelevant gaat in gestructureerde OneDrive-mappen.</p></div></div>
+          <div class="offering-row"><div class="offering-num">3</div><div class="offering-content"><h4>Vet before you install</h4><p>Repos en skills kunnen malware of prompt-injecties bevatten. Laat je brein een repo scannen vóór je iets overneemt.</p></div></div>
+        </div>
+      </div>
+      <div class="em-card"><h3>De regel in de kit, 18 juli</h3>
+        <p><span class="em-badge em-badge--success">Trap 1 en 2</span> Publiek en intern werk: vrij.</p>
+        <p><span class="em-badge em-badge--info">Trap 3</span> Klantidentificerende context (namen, situatie, afspraken): mag in je persoonlijke vault. Ruwe vertrouwelijke documenten (contracten met prijzen, deelnemerslijsten, NDA-materiaal): ontmoedigd, nooit naar een gedeelde laag. Anonimiseer met een tokenmap die je machine niet verlaat.</p>
+        <p><span class="em-badge em-badge--danger">Trap 4</span> Gereguleerde data (bank, verzekeraar, gezondheid, betaalgegevens): nooit.</p>
+        <p>Eerlijk erbij: dit was Stas' besluit, en het accepteert dat klantcontext naar jullie privé-GitHub-repo's synct. De bestaande security-clearance dekte OneDrive, geen persoonlijke GitHubs.</p>
+      </div>
+      <div class="em-card"><h3>Hoe jullie het zelf oplosten</h3>
+        <p>Klantdata in een aparte OneDrive-map die het brein niet ziet (Alex).</p>
+        <p>Gevoelige chatkanalen buiten versiebeheer; de lokale Claude-memorymap niet naar GitHub (24 juli).</p>
+        <p>Klantmail en deelnemersgegevens alleen door lokale modellen; geen emagine-materiaal naar externe research-tools; "de metadata mag in de vault, de bytes niet" (Hanneke).</p>
+        <p>Een sanitisatie-architectuur voor gereguleerd werk: lokaal model haalt identificatoren weg, cloudmodel redeneert over de gesaneerde versie, een mens keurt goed (Levi, longread).</p>
+        <p>Bij Booking het brein helemaal weghouden van klantwerk. "Klantinformatie blijft strikt gescheiden tussen klanten" (Dennis).</p>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="opbrengst">
-  <div class="container">
-    <div class="eyebrow">Deel 05</div>
-    <h2 class="section-title">Wat het opleverde, eerlijk</h2>
-    <div class="grid-4">
-      <div class="stat"><div class="num">~50%</div><div class="desc">schatting, 13 juli</div></div>
-      <div class="stat"><div class="num">5–8 u</div><div class="desc">per week, "op gevoel"</div></div>
-      <div class="stat"><div class="num">1 dag</div><div class="desc">per week minder zoeken (Eddy)</div></div>
-      <div class="stat"><div class="num">50–95%</div><div class="desc">van de niet-trainingsdagen (Hanneke, schatting)</div></div>
-    </div>
-    <div class="grid-2" style="margin-top:var(--sp-6)">
-      <div class="panel"><div class="eyebrow">Wat er wél is</div><p class="body">Niemand heeft gemeten. De weekmeting is in vier pogingen nooit gepost, en dat is Stas' les, niet die van jullie. Wat er wél is: de schattingen hierboven, plus "meer dan 12 uur per week" van Stas zelf, ook niet gemeten.</p><p class="body" style="margin:0">Belangrijker dan uren: nieuw werk. Acht diensten bij Hanneke die er zonder dit niet waren. Twee deals bij Stas. Diensten "die zonder de 2nd brain niet of heel moeilijk te leveren zouden zijn" bij Alex. Tijdwinst maakt bestaand werk goedkoper; dit maakt nieuw werk mogelijk.</p></div>
-      <div class="panel"><div class="eyebrow">Wat het kostte</div><ul class="list"><li>Gebruikslimieten op persoonlijke abonnementen, herhaaldelijk ("nog even de laatste Fable tokens eruit wringen", 7 juli).</li><li>Eén testsuite die 91,5 miljoen tokens opat.</li><li>Iemand week deels uit naar een ander model omdat hij er langer op kon ontwikkelen.</li><li>Werk en privé op één plek: voor de helft van de groep een open probleem.</li><li>Iemand raakte alles kwijt na sessie 2.</li></ul></div>
+<section class="em-section em-section--ink">
+  <div class="em-container">
+    <span class="em-eyebrow em-eyebrow--lime">Wat open bleef</span>
+    <div class="em-grid em-grid--2">
+      <div class="service-card"><h3>Geen antwoord van IT</h3><p>De vraag van 10 juli (laptop met developer-rechten, beleid voor langdurig gebruik op werklaptops) is niet beantwoord. 23 juli: "we zitten nog in een soort gedoogbeleid over Claude". 12 september: twee van jullie kregen de melding dat de nieuwe emagine-laptop niet compliant is met emagine-policy.</p></div>
+      <div class="service-card"><h3>"A can of worms"</h3><p>Zo zei Stas het in de AI-weekly van 15 september: klantdata bij een bank of vergelijkbare klant vraagt om toestemming van die klant om iets te koppelen, en daar is nu geen antwoord op. Dat geldt ook voor emagine's eigen systemen.</p><p><strong>Conclusie:</strong> elke technische muur hebben jullie zelf geslecht. Geen enkele beleidsmuur. De trainers kwamen het verst, omdat al hun content van emagine zelf is.</p></div>
     </div>
   </div>
 </section>
 
-<section class="section" id="retro">
-  <div class="container">
-    <div class="eyebrow">Deel 06</div>
-    <h2 class="section-title">Wat werkte, wat niet</h2>
-    <div class="grid-2">
-      <div class="panel-window"><div class="panel-window__header">Werkte</div><div class="panel-window__body"><ul class="list">
-        <li><strong>Van elkaar leren.</strong> Meerdere keren genoemd als het meest waardevolle. "Ik had dit zelf nooit bedacht, ik was hier niet mee aan de slag gegaan zonder deze track."</li>
-        <li><strong>De groep loste elke technische muur zelf op:</strong> de PATH-fix, de WhatsApp-koppeling, de migratie, de kit-updates.</li>
-        <li><strong>Bouwen op eigen echt werk.</strong> De materialen zijn nauwelijks gebruikt; de demo's en de groep deden het werk. Dat is een learning, geen gat.</li>
-        <li><strong>Breinen een naam geven.</strong> Niemand had erom gevraagd. Vier van tien deden het.</li>
-      </ul></div></div>
-      <div class="panel-window"><div class="panel-window__header">Werkte niet</div><div class="panel-window__body"><ul class="list">
-        <li><strong>Meten.</strong> Een nulmeting vooraf had gemoeten; drie keer genoemd op 11 september.</li>
-        <li><strong>Augustus zonder facilitator.</strong> Bouwen gebeurde, samenkomen niet. Datum, plek en gastheer hadden vóór de vakantie vast moeten staan.</li>
-        <li><strong>Structuur verloor van enthousiasme.</strong> Sessie 2 werd een show-and-tell, sessie 3 werd live debuggen. Allebei waardevol, allebei niet het plan.</li>
-        <li><strong>Bouwen en leren liepen te los van elkaar</strong> (Hanneke). En te lang doorbouwen voordat iemand iets zag.</li>
-        <li><strong>Vragen zonder antwoord:</strong> de Caveman-tokentool (13 jul), de ingest-skill op lange documenten (23 jul), werk/privé scheiden (31 jul), Sanders deelbare skill (17 jul, mail), Hanneke's architectuurvoorstel (21 jul, mail). Die pakt Stas alsnog op.</li>
-      </ul></div></div>
+<section class="em-section em-section--cream" id="opbrengst">
+  <div class="em-container">
+    <span class="em-eyebrow em-eyebrow--lime">Deel 05</span>
+    <h2 class="tv-h2">Wat het opleverde, eerlijk</h2>
+    <div class="tv-stats tv-stats--4 tv-mt-sm">
+      <div class="em-stat"><div class="em-stat__value">~50%</div><div class="em-stat__label">schatting in de groep, 13 juli</div></div>
+      <div class="em-stat"><div class="em-stat__value">5 tot 8 u</div><div class="em-stat__label">per week, "op gevoel"</div></div>
+      <div class="em-stat"><div class="em-stat__value">1 dag</div><div class="em-stat__label">per week minder zoeken (Eddy)</div></div>
+      <div class="em-stat"><div class="em-stat__value">50 tot 95%</div><div class="em-stat__label">van de niet-trainingsdagen (Hanneke, schatting)</div></div>
+    </div>
+    <div class="em-grid em-grid--2 tv-mt">
+      <div class="em-card"><h3>Wat er wél is</h3><p>Niemand heeft gemeten. De weekmeting is in vier pogingen nooit gepost, en dat is Stas' les, niet die van jullie. Wat er wél is: de schattingen hierboven, plus "meer dan 12 uur per week" van Stas zelf, ook niet gemeten.</p><p>Belangrijker dan uren: nieuw werk. Acht diensten bij Hanneke die er zonder dit niet waren. Twee deals bij Stas. Diensten "die zonder de 2nd brain niet of heel moeilijk te leveren zouden zijn" bij Alex. Tijdwinst maakt bestaand werk goedkoper; dit maakt nieuw werk mogelijk.</p></div>
+      <div class="em-card"><h3>Wat het kostte</h3><p>Gebruikslimieten op persoonlijke abonnementen, herhaaldelijk ("nog even de laatste Fable tokens eruit wringen", 7 juli).</p><p>Eén testsuite die 91,5 miljoen tokens opat.</p><p>Iemand week deels uit naar een ander model omdat hij er langer op kon ontwikkelen.</p><p>Werk en privé op één plek: voor de helft van de groep een open probleem.</p><p>Iemand raakte alles kwijt na sessie 2.</p></div>
     </div>
   </div>
 </section>
 
-<section class="section mat" id="materialen">
-  <div class="container">
-    <div class="eyebrow">Deel 07</div>
-    <h2 class="section-title">Alle materialen</h2>
-    <p class="body">Alles wat er voor de track is gemaakt, en alles wat jullie zelf deelden. Wat in de WhatsApp-groep staat, is daar terug te vinden op datum.</p>
+<section class="em-section em-section--white" id="retro">
+  <div class="em-container">
+    <span class="em-eyebrow em-eyebrow--lime">Deel 06</span>
+    <h2 class="tv-h2">Wat werkte, wat niet</h2>
+    <div class="em-grid em-grid--2 tv-mt-sm">
+      <div class="em-card"><h3>Werkte</h3>
+        <div class="tv-rows">
+          <div class="offering-row"><div class="offering-num">1</div><div class="offering-content"><h4>Van elkaar leren</h4><p>Meerdere keren genoemd als het meest waardevolle. "Ik had dit zelf nooit bedacht, ik was hier niet mee aan de slag gegaan zonder deze track."</p></div></div>
+          <div class="offering-row"><div class="offering-num">2</div><div class="offering-content"><h4>De groep loste elke technische muur zelf op</h4><p>De PATH-fix, de WhatsApp-koppeling, de migratie, de kit-updates.</p></div></div>
+          <div class="offering-row"><div class="offering-num">3</div><div class="offering-content"><h4>Bouwen op eigen echt werk</h4><p>De materialen zijn nauwelijks gebruikt; de demo's en de groep deden het werk. Dat is een learning, geen gat.</p></div></div>
+          <div class="offering-row"><div class="offering-num">4</div><div class="offering-content"><h4>Breinen een naam geven</h4><p>Niemand had erom gevraagd. Vier van tien deden het.</p></div></div>
+        </div>
+      </div>
+      <div class="em-card em-card--flat"><h3>Werkte niet</h3>
+        <div class="tv-rows">
+          <div class="offering-row"><div class="offering-num">1</div><div class="offering-content"><h4>Meten</h4><p>Een nulmeting vooraf had gemoeten; drie keer genoemd op 11 september.</p></div></div>
+          <div class="offering-row"><div class="offering-num">2</div><div class="offering-content"><h4>Augustus zonder facilitator</h4><p>Bouwen gebeurde, samenkomen niet. Datum, plek en gastheer hadden vóór de vakantie vast moeten staan.</p></div></div>
+          <div class="offering-row"><div class="offering-num">3</div><div class="offering-content"><h4>Structuur verloor van enthousiasme</h4><p>Sessie 2 werd een show-and-tell, sessie 3 werd live debuggen. Allebei waardevol, allebei niet het plan.</p></div></div>
+          <div class="offering-row"><div class="offering-num">4</div><div class="offering-content"><h4>Bouwen en leren liepen te los van elkaar</h4><p>Hanneke's woorden. En te lang doorbouwen voordat iemand iets zag.</p></div></div>
+          <div class="offering-row"><div class="offering-num">5</div><div class="offering-content"><h4>Vragen zonder antwoord</h4><p>De Caveman-tokentool (13 jul), de ingest-skill op lange documenten (23 jul), werk/privé scheiden (31 jul), Sanders deelbare skill (17 jul, mail), Hanneke's architectuurvoorstel (21 jul, mail). Die pakt Stas alsnog op.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="subsection-title" style="margin-top:0">Van Stas, per sessie</div>
-    <div class="tbl panel-window"><div class="panel-window__header">Slides, kaarten, handleidingen, report-outs</div><div class="panel-window__body tbl">
-    <table>
+<section class="em-section em-section--cream" id="materialen">
+  <div class="em-container">
+    <span class="em-eyebrow em-eyebrow--lime">Deel 07</span>
+    <h2 class="tv-h2">Alle materialen</h2>
+    <p class="em-lede tv-lede">Alles wat er voor de track is gemaakt, en alles wat jullie zelf deelden. Wat in de WhatsApp-groep staat, is daar terug te vinden op datum.</p>
+
+    <h3 class="tv-h3 tv-mt-sm">Van Stas, per sessie</h3>
+    <div class="tv-tbl">
+    <table class="em-table">
       <thead><tr><th>Sessie</th><th>Materiaal</th><th>Waar</th></tr></thead>
       <tbody>
-        <tr><td class="cell-primary">Start</td><td>Starter kit (vault-template, 21 skills, 4 agents, v0.3.4), met een veilige update-route die je eigen notities niet aanraakt</td><td><a href="https://github.com/SVPavlov/ai-second-brain-starter-kit">GitHub</a> · <a href="https://placid-ripple-8nh2.here.now/">zip-download</a></td></tr>
-        <tr><td class="cell-primary">Start</td><td>Documentatie: overview, quick start, install (Windows en macOS), vaultstructuur, je profiel, skills, hoe geheugen werkt, synthese-discipline, backup en updates, veilig werken, "already have a brain?", Claude Code / Desktop / Cowork, FAQ, verder lezen</td><td><a href="../docs/index.html">Docs</a> · <a href="https://brisk-sonnet-2xyy.here.now/">doorzoekbare versie</a></td></tr>
-        <tr><td class="cell-primary">Start</td><td>OneDrive-map "For participants": START-HERE, QUICKSTART, GETTING-STARTED, werkboek sessie 1, aftercare-guide sessie 1, slides, starter-kit.zip, report-out sessie 1</td><td><a href="https://prowarenessweongroupbv-my.sharepoint.com/:f:/g/personal/s_pavlov_prowareness_nl/IgD4eYJGsQwwS6x_mpY2PftSAYA1UvPK3LT11h_G6mOmlfM?e=ZVV6Ap">OneDrive-map</a></td></tr>
-        <tr><td class="cell-primary">1 · 19 jun</td><td>Slides "Bouw je brein"; werkboek; aftercare-guide; report-out in de groep; installatiegids</td><td><a href="../slides/sessie-1.html">Slides</a> · <a href="../docs/index.html">Installatiegids</a></td></tr>
-        <tr><td class="cell-primary">2 · 17 jul</td><td>Slides "Make it do your work"; de routine-kaart (vijf minuten per dag); report-out (NL, gestyled) in de groep op 31 juli; twee nieuwe skills <code>/decide</code> en <code>/wrap-up</code>, daarna <code>test-my-brain</code> en <code>vault-audit</code></td><td><a href="../slides/sessie-2.html">Slides</a> · <a href="../slides/loop-card.html">Routine-kaart</a></td></tr>
-        <tr><td class="cell-primary">3 · 31 jul</td><td>Slides "Je brein gaat zelf lezen" (met WhatsApp-koppeling stap voor stap); handleiding WhatsApp koppelen; werkende fork van whatsapp-mcp (405-fix); advisor-agent gedeeld in de groep; peer-sessie kaart en kwaliteitscheck-kaart voor augustus; recap in de groep</td><td><a href="../slides/sessie-3.html">Slides</a> · <a href="../docs/whatsapp-koppelen.html">Handleiding</a> · <a href="https://github.com/SVPavlov/whatsapp-mcp">Fork</a> · <a href="../docs/peer-sessie-kaart.html">Peer-kaart</a> · <a href="../docs/kwaliteitscheck-kaart.html">Kwaliteitscheck</a></td></tr>
-        <tr><td class="cell-primary">Aug</td><td>De peer-sessie kaart als agenda, de kwaliteitscheck-kaart als huiswerk</td><td><a href="../docs/peer-sessie-kaart.html">Peer-kaart</a> · <a href="../docs/kwaliteitscheck-kaart.html">Kwaliteitscheck</a></td></tr>
-        <tr><td class="cell-primary">6 · 11 sep</td><td>Slides slotsessie (met Glassbox-uitleg); de reflectieprompt en de drie vragen; kit v0.3.4; report-out (volgt in de groep)</td><td><a href="../slides/sessie-6.pdf">Slides (PDF)</a> · <a href="../docs/reflectie-prompt.html">Reflectieprompt</a></td></tr>
-        <tr><td class="cell-primary">Altijd</td><td>Track log per sessie; sessiepagina met alle materialen; handout "Working with client data" (de viertrapsregel, in de docs onder Working Safely)</td><td><a href="../log/index.html">Track log</a> · <a href="../sessies/index.html">Sessies</a> · <a href="../docs/index.html">Docs</a></td></tr>
+        <tr><td class="tv-td-date">Start</td><td>Starter kit (vault-template, 21 skills, 4 agents, v0.3.4), met een veilige update-route die je eigen notities niet aanraakt</td><td><a href="https://github.com/SVPavlov/ai-second-brain-starter-kit">GitHub</a> · <a href="https://placid-ripple-8nh2.here.now/">zip-download</a></td></tr>
+        <tr><td class="tv-td-date">Start</td><td>Documentatie: overview, quick start, install (Windows en macOS), vaultstructuur, je profiel, skills, hoe geheugen werkt, synthese-discipline, backup en updates, veilig werken, "already have a brain?", Claude Code / Desktop / Cowork, FAQ, verder lezen</td><td><a href="../docs/index.html">Docs</a> · <a href="https://brisk-sonnet-2xyy.here.now/">doorzoekbare versie</a></td></tr>
+        <tr><td class="tv-td-date">Start</td><td>OneDrive-map "For participants": START-HERE, QUICKSTART, GETTING-STARTED, werkboek sessie 1, aftercare-guide sessie 1, slides, starter-kit.zip, report-out sessie 1</td><td><a href="https://prowarenessweongroupbv-my.sharepoint.com/:f:/g/personal/s_pavlov_prowareness_nl/IgD4eYJGsQwwS6x_mpY2PftSAYA1UvPK3LT11h_G6mOmlfM?e=ZVV6Ap">OneDrive-map</a></td></tr>
+        <tr><td class="tv-td-date">1 · 19 jun</td><td>Slides "Bouw je brein"; werkboek; aftercare-guide; report-out in de groep; installatiegids</td><td><a href="../slides/sessie-1.html">Slides</a> · <a href="../docs/index.html">Installatiegids</a></td></tr>
+        <tr><td class="tv-td-date">2 · 17 jul</td><td>Slides "Make it do your work"; de routine-kaart (vijf minuten per dag); report-out (NL, gestyled) in de groep op 31 juli; nieuwe skills <code>/decide</code> en <code>/wrap-up</code>, daarna <code>test-my-brain</code> en <code>vault-audit</code></td><td><a href="../slides/sessie-2.html">Slides</a> · <a href="../slides/loop-card.html">Routine-kaart</a></td></tr>
+        <tr><td class="tv-td-date">3 · 31 jul</td><td>Slides "Je brein gaat zelf lezen" (met WhatsApp-koppeling stap voor stap); handleiding WhatsApp koppelen; werkende fork van whatsapp-mcp (405-fix); advisor-agent gedeeld in de groep; peer-sessie kaart en kwaliteitscheck-kaart voor augustus; recap in de groep</td><td><a href="../slides/sessie-3.html">Slides</a> · <a href="../docs/whatsapp-koppelen.html">Handleiding</a> · <a href="https://github.com/SVPavlov/whatsapp-mcp">Fork</a> · <a href="../docs/peer-sessie-kaart.html">Peer-kaart</a> · <a href="../docs/kwaliteitscheck-kaart.html">Kwaliteitscheck</a></td></tr>
+        <tr><td class="tv-td-date">Aug</td><td>De peer-sessie kaart als agenda, de kwaliteitscheck-kaart als huiswerk</td><td><a href="../docs/peer-sessie-kaart.html">Peer-kaart</a> · <a href="../docs/kwaliteitscheck-kaart.html">Kwaliteitscheck</a></td></tr>
+        <tr><td class="tv-td-date">6 · 11 sep</td><td>Slides slotsessie (met Glassbox-uitleg); de reflectieprompt en de drie vragen; kit v0.3.4; report-out (volgt in de groep)</td><td><a href="../slides/sessie-6.pdf">Slides (PDF)</a> · <a href="../docs/reflectie-prompt.html">Reflectieprompt</a></td></tr>
+        <tr><td class="tv-td-date">Altijd</td><td>Track log per sessie; sessiepagina met alle materialen; handout "Working with client data" (de viertrapsregel, in de docs onder Working Safely)</td><td><a href="../log/index.html">Track log</a> · <a href="../sessies/index.html">Sessies</a> · <a href="../docs/index.html">Docs</a></td></tr>
       </tbody>
     </table>
-    </div></div>
+    </div>
 
-    <div class="subsection-title">Van jullie, via WhatsApp en mail</div>
-    <div class="panel-window"><div class="panel-window__header">Gedeeld in de groep of naar Stas gemaild</div><div class="panel-window__body tbl">
-    <table>
+    <h3 class="tv-h3 tv-mt">Van jullie, via WhatsApp en mail</h3>
+    <div class="tv-tbl">
+    <table class="em-table">
       <thead><tr><th>Datum</th><th>Wie</th><th>Wat</th><th>Waar</th></tr></thead>
       <tbody>
-        <tr><td class="cell-dim">19 jun</td><td class="cell-primary">Alex</td><td>De hele installatievolgorde voor Windows: PowerShell, Claude Code, UV, Mistral Vibe</td><td>Groep</td></tr>
-        <tr><td class="cell-dim">2 jul</td><td class="cell-primary">Joeri</td><td>De PATH-fix voor de werklaptop (twee regels PowerShell plus terminal herstarten). Staat nu in de docs.</td><td>Groep</td></tr>
-        <tr><td class="cell-dim">2 jul</td><td class="cell-primary">deelnemer</td><td>Skool-community "cliefnotes": gratis foundation course over het evolueren van een second brain naar een PersonalOS</td><td>Groep (link)</td></tr>
-        <tr><td class="cell-dim">13 jul</td><td class="cell-primary">deelnemer</td><td>Caveman (getcaveman.dev), claimt tot 65% tokens te besparen; plus drie documenten over testautomatisering en de eigen setup</td><td>Groep (link + 3 documenten)</td></tr>
-        <tr><td class="cell-dim">17 jul</td><td class="cell-primary">Sander</td><td>Claude-skill voor het ingesten van boeken; vraag of die deelbaar is</td><td>Mail aan Stas</td></tr>
-        <tr><td class="cell-dim">21 jul</td><td class="cell-primary">Hanneke</td><td>"Prowareness Second Brain": eerste opzet voor een emagine-brede architectuur (zip); plus "HPV architectuur en functionaliteit", 14 hoofdstukken over haar eigen systeem</td><td>Mail aan Stas</td></tr>
-        <tr><td class="cell-dim">23 jul</td><td class="cell-primary">deelnemer</td><td>Verbeterde ingest-skill voor lange documenten (na gemiste key points)</td><td>Groep (beschreven)</td></tr>
-        <tr><td class="cell-dim">29 jul</td><td class="cell-primary">deelnemer</td><td>Instagram-reel ter discussie</td><td>Groep (link)</td></tr>
-        <tr><td class="cell-dim">31 jul</td><td class="cell-primary">Hanneke</td><td>"Hier de second brain van Hanneke": eerste gedeelde brein</td><td>Groep</td></tr>
-        <tr><td class="cell-dim">21 aug</td><td class="cell-primary">Alex</td><td>GitHub Actions CI-run op de build-orchestrator Gandalf (repo flannk/thirdbrain)</td><td>Groep (link)</td></tr>
-        <tr><td class="cell-dim">28 aug</td><td class="cell-primary">Hanneke</td><td>Boekingspagina live: <a href="https://book.effectiveatwork.net">book.effectiveatwork.net</a>; een document; een YouTube-link</td><td>Groep</td></tr>
-        <tr><td class="cell-dim">29 aug</td><td class="cell-primary">Dennis</td><td>Nexus: orchestrator-document en beeld</td><td>Groep (document + beeld)</td></tr>
-        <tr><td class="cell-dim">29 en 30 aug</td><td class="cell-primary">Hanneke</td><td>Aranos: logo met ezelskop, de inspiratiebron (Singularity Online), beelden van het systeem</td><td>Groep (beelden)</td></tr>
-        <tr><td class="cell-dim">10 sep</td><td class="cell-primary">Hanneke</td><td>Video-demo van het brein, vooraf opgenomen</td><td>Groep (video)</td></tr>
-        <tr><td class="cell-dim">11 sep</td><td class="cell-primary">Eddy</td><td>"Cartoons maken met AI": werkwijze in vijf regels, geschreven door zijn brein, plus de cartoon</td><td>Groep (document + beeld, 14:10)</td></tr>
-        <tr><td class="cell-dim">11 sep</td><td class="cell-primary">Hanneke</td><td>Drie reflectiepagina's: "AranOS stelt zichzelf voor", "Reflectie Hanneke", "Wat er kantelde"; plus twee one-pagers</td><td>Groep (documenten, 12:45 tot 15:01)</td></tr>
-        <tr><td class="cell-dim">11 sep</td><td class="cell-primary">Alex, Eddy, Levi, Joeri, Dennis</td><td>De vijf schriftelijke antwoorden op "als emagine je een brein geeft" (deel 03 hierboven)</td><td>Groep, 15:21 tot 15:36</td></tr>
-        <tr><td class="cell-dim">12 sep</td><td class="cell-primary">Levi</td><td>"AI Long Read, week 37: The Reviewer Is the Bottleneck", acht pagina's uit zijn signal monitor</td><td>Groep (PDF, 07:55)</td></tr>
-        <tr><td class="cell-dim">12 sep</td><td class="cell-primary">deelnemer</td><td>"45 min sessie voor een nieuwe aparte app, afgeschermde functionaliteit en volledige integratie", met twee foto's</td><td>Groep (beelden)</td></tr>
-        <tr><td class="cell-dim">16 sep</td><td class="cell-primary">Anna Sophia</td><td>Een uur demo van haar brein aan twee collega's buiten de track (gemeld door een van hen)</td><td>Mail aan Stas</td></tr>
-        <tr><td class="cell-dim">Nog niet binnen</td><td class="cell-primary">Sander, Anna Sophia, Matthijs, Arjen</td><td>Reflectie en artifact van 11 september. Post ze in de groep, dan komen ze hier bij.</td><td><a href="../docs/reflectie-prompt.html">De prompt</a></td></tr>
+        <tr><td class="tv-td-date">19 jun</td><td>Alex</td><td>De hele installatievolgorde voor Windows: PowerShell, Claude Code, UV, Mistral Vibe</td><td>Groep</td></tr>
+        <tr><td class="tv-td-date">2 jul</td><td>Joeri</td><td>De PATH-fix voor de werklaptop (twee regels PowerShell plus terminal herstarten). Staat nu in de docs.</td><td>Groep</td></tr>
+        <tr><td class="tv-td-date">2 jul</td><td>deelnemer</td><td>Skool-community "cliefnotes": gratis foundation course over het evolueren van een second brain naar een PersonalOS</td><td>Groep, link</td></tr>
+        <tr><td class="tv-td-date">13 jul</td><td>deelnemer</td><td>Caveman (getcaveman.dev), claimt tot 65% tokens te besparen; plus drie documenten over testautomatisering en de eigen setup</td><td>Groep, link en 3 documenten</td></tr>
+        <tr><td class="tv-td-date">17 jul</td><td>Sander</td><td>Claude-skill voor het ingesten van boeken; vraag of die deelbaar is</td><td>Mail aan Stas</td></tr>
+        <tr><td class="tv-td-date">21 jul</td><td>Hanneke</td><td>"Prowareness Second Brain": eerste opzet voor een emagine-brede architectuur (zip); plus "HPV architectuur en functionaliteit", 14 hoofdstukken over haar eigen systeem</td><td>Mail aan Stas</td></tr>
+        <tr><td class="tv-td-date">23 jul</td><td>deelnemer</td><td>Verbeterde ingest-skill voor lange documenten, na gemiste key points</td><td>Groep, beschreven</td></tr>
+        <tr><td class="tv-td-date">29 jul</td><td>deelnemer</td><td>Instagram-reel ter discussie</td><td>Groep, link</td></tr>
+        <tr><td class="tv-td-date">31 jul</td><td>Hanneke</td><td>"Hier de second brain van Hanneke": eerste gedeelde brein</td><td>Groep</td></tr>
+        <tr><td class="tv-td-date">21 aug</td><td>Alex</td><td>GitHub Actions CI-run op de build-orchestrator Gandalf (repo flannk/thirdbrain)</td><td>Groep, link</td></tr>
+        <tr><td class="tv-td-date">28 aug</td><td>Hanneke</td><td>Boekingspagina live: <a href="https://book.effectiveatwork.net">book.effectiveatwork.net</a>; een document; een YouTube-link</td><td>Groep</td></tr>
+        <tr><td class="tv-td-date">29 aug</td><td>Dennis</td><td>Nexus: orchestrator-document en beeld</td><td>Groep, document en beeld</td></tr>
+        <tr><td class="tv-td-date">29 en 30 aug</td><td>Hanneke</td><td>Aranos: logo met ezelskop, de inspiratiebron (Singularity Online), beelden van het systeem</td><td>Groep, beelden</td></tr>
+        <tr><td class="tv-td-date">10 sep</td><td>Hanneke</td><td>Video-demo van het brein, vooraf opgenomen</td><td>Groep, video</td></tr>
+        <tr><td class="tv-td-date">11 sep</td><td>Eddy</td><td>"Cartoons maken met AI": werkwijze in vijf regels, geschreven door zijn brein, plus de cartoon</td><td>Groep, document en beeld, 14:10</td></tr>
+        <tr><td class="tv-td-date">11 sep</td><td>Hanneke</td><td>Drie reflectiepagina's: "AranOS stelt zichzelf voor", "Reflectie Hanneke", "Wat er kantelde"; plus twee one-pagers</td><td>Groep, documenten, 12:45 tot 15:01</td></tr>
+        <tr><td class="tv-td-date">11 sep</td><td>Alex, Eddy, Levi, Joeri, Dennis</td><td>De vijf schriftelijke antwoorden op "als emagine je een brein geeft" (deel 03)</td><td>Groep, 15:21 tot 15:36</td></tr>
+        <tr><td class="tv-td-date">12 sep</td><td>Levi</td><td>"AI Long Read, week 37: The Reviewer Is the Bottleneck", acht pagina's uit zijn signal monitor</td><td>Groep, PDF, 07:55</td></tr>
+        <tr><td class="tv-td-date">12 sep</td><td>deelnemer</td><td>"45 min sessie voor een nieuwe aparte app, afgeschermde functionaliteit en volledige integratie", met twee foto's</td><td>Groep, beelden</td></tr>
+        <tr><td class="tv-td-date">16 sep</td><td>Anna Sophia</td><td>Een uur demo van haar brein aan twee collega's buiten de track, gemeld door een van hen</td><td>Mail aan Stas</td></tr>
+        <tr class="is-highlight"><td class="tv-td-date">Nog niet binnen</td><td>Sander, Anna Sophia, Matthijs, Arjen</td><td>Reflectie en artifact van 11 september. Post ze in de groep, dan komen ze hier bij.</td><td><a href="../docs/reflectie-prompt.html">De prompt</a></td></tr>
       </tbody>
     </table>
-    </div></div>
-  </div>
-</section>
-
-<section class="section" id="verder">
-  <div class="container">
-    <div class="eyebrow">Deel 08</div>
-    <h2 class="section-title">Hoe verder</h2>
-    <div class="grid-3">
-      <div class="card card-accent"><div class="role">De groep</div><h4>Blijft open</h4><p>Post wat je bouwt, vraag wat vastzit. Levi's longread en Eddy's werkwijze staan er al. Kit bijwerken: <code>git fetch kit && git checkout kit/main -- .claude CLAUDE.md</code>.</p></div>
-      <div class="card card-accent"><div class="role">25 september</div><h4>Retro van alle tracks</h4><p>Deel 06 hierboven is onze inbreng: van elkaar leren werkte, meten en augustus niet.</p></div>
-      <div class="card card-accent"><div class="role">Naar de AI-unit</div><h4>Zonder namen, tenzij je dat wilt</h4><p>Jullie antwoorden, reflecties en de klantdata-uitdaging gaan als ontwerpinput naar het Glassbox-brein. Wil je met naam genoemd worden, zeg het in de groep.</p></div>
-      <div class="card card-p3"><div class="role" style="color:var(--info)">Open vraag</div><h4>Een tweede reeks?</h4><p>Een collega buiten de track vroeg er op 16 september al om. Zeg het als je er een mening over hebt, ook over de vorm: een nieuwe reeks, een maandelijkse middag door de groep zelf, of een gedeelde laag voor de trainers.</p></div>
-      <div class="card card-p3"><div class="role" style="color:var(--info)">Nog te doen</div><h4>Je reflectie</h4><p>Was je er op 11 september niet bij, of heb je je reflectie en artifact nog niet gepost? Zet ze in de groep. De <a href="../docs/reflectie-prompt.html">prompt</a> staat online.</p></div>
-      <div class="card card-p3"><div class="role" style="color:var(--info)">Stas pakt op</div><h4>De open vragen</h4><p>Sanders skill, Hanneke's architectuurvoorstel, werk/privé scheiden, de ingest-skill, en het beleidsantwoord van IT.</p></div>
     </div>
   </div>
 </section>
 
-<div class="status-bar"><span>// second-brain-track · trackverslag · versie 18 september 2026</span><span>bronnen: sessies · WhatsApp-groep · reflecties · mail</span></div>
+<section class="em-section em-section--white" id="verder">
+  <div class="em-container">
+    <span class="em-eyebrow em-eyebrow--lime">Deel 08</span>
+    <h2 class="tv-h2">Hoe verder</h2>
+    <div class="em-grid em-grid--3 tv-mt-sm">
+      <div class="em-card"><h3>De groep blijft open</h3><p>Post wat je bouwt, vraag wat vastzit. Levi's longread en Eddy's werkwijze staan er al. Kit bijwerken: <code>git fetch kit && git checkout kit/main -- .claude CLAUDE.md</code>.</p></div>
+      <div class="em-card"><h3>25 september: retro van alle tracks</h3><p>Deel 06 hierboven is onze inbreng: van elkaar leren werkte, meten en augustus niet.</p></div>
+      <div class="em-card"><h3>Naar de AI-unit, zonder namen</h3><p>Jullie antwoorden, reflecties en de klantdata-uitdaging gaan als ontwerpinput naar het Glassbox-brein. Wil je met naam genoemd worden, zeg het in de groep.</p></div>
+      <div class="em-card em-card--flat"><h3>Een tweede reeks?</h3><p>Een collega buiten de track vroeg er op 16 september al om. Zeg het als je er een mening over hebt, ook over de vorm: een nieuwe reeks, een maandelijkse middag door de groep zelf, of een gedeelde laag voor de trainers.</p></div>
+      <div class="em-card em-card--flat"><h3>Je reflectie</h3><p>Was je er op 11 september niet bij, of heb je je reflectie en artifact nog niet gepost? Zet ze in de groep. De <a href="../docs/reflectie-prompt.html">prompt</a> staat online.</p></div>
+      <div class="em-card em-card--flat"><h3>Stas pakt op</h3><p>Sanders skill, Hanneke's architectuurvoorstel, werk/privé scheiden, de ingest-skill, en het beleidsantwoord van IT.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="tv-footer"><div class="em-container">AI Second Brain Track · NL pilot · 19 juni tot 11 september 2026 · bronnen: sessies, WhatsApp-groep, reflecties, mail · versie 18 september 2026</div></footer>
+
 </body>
 </html>
