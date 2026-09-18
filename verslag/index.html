@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Second Brain Track · Trackverslag</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --em-ink:#383D38; --em-white:#FFFFFF; --em-cream:#F3F3F1; --em-line:#CAC9C4;
+    --em-grey:#686861; --em-mute:#9A9990; --em-lime:#D4FF52; --em-lime-tint:#F6FFDB;
+    --em-lime-tint-50:#E4FF99; --em-coral:#F0787D;
+    --fh:'Space Grotesk',sans-serif; --fb:'Inter Tight',sans-serif; --fm:'JetBrains Mono','SF Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--em-cream);color:var(--em-ink);font-family:var(--fb);line-height:1.6;padding:0 0 32px}
+  .wrap{max-width:820px;margin:0 auto;padding:32px 20px 0}
+  .kicker{display:inline-block;background:var(--em-lime);font-family:var(--fh);font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;margin-bottom:14px}
+  h1{font-family:var(--fh);font-weight:400;font-size:clamp(34px,5vw,46px);line-height:1.1;margin-bottom:8px}
+  .lead{color:var(--em-grey);font-size:17px;max-width:58ch;margin-bottom:26px}
+  .cijfers{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:28px}
+  .cijfer{background:var(--em-white);border:1px solid var(--em-line);padding:16px 18px}
+  .cijfer b{display:block;font-family:var(--fh);font-weight:400;font-size:32px;line-height:1}
+  .cijfer span{font-size:13.5px;color:var(--em-grey)}
+  .entry{background:var(--em-white);border:1px solid var(--em-line);padding:32px 36px;margin-bottom:28px}
+  .entry-kop{margin-bottom:14px}
+  .entry h2{font-family:var(--fh);font-weight:400;font-size:28px;line-height:1.15}
+  .datum{font-family:var(--fm);font-size:13px;color:var(--em-mute)}
+  .entry h3{font-family:var(--fh);font-weight:500;font-size:15px;letter-spacing:.8px;text-transform:uppercase;margin:26px 0 10px;padding-top:18px;border-top:1px solid var(--em-line)}
+  .entry h3:first-of-type{margin-top:6px;padding-top:0;border-top:0}
+  .entry p{font-size:15.5px;margin-bottom:12px;max-width:66ch}
+  .entry ul{list-style:none;margin-bottom:10px}
+  .entry li{position:relative;padding-left:22px;font-size:15.5px;margin-bottom:10px;max-width:66ch}
+  .entry li::before{content:'';position:absolute;left:0;top:9px;width:10px;height:10px;background:var(--em-lime)}
+  .tbl{overflow-x:auto;margin:6px 0 14px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+  th{text-align:left;border-bottom:2px solid var(--em-ink);padding:8px 10px;font-weight:500;font-family:var(--fh)}
+  td{border-bottom:1px solid var(--em-line);padding:8px 10px;vertical-align:top}
+  blockquote{border-left:4px solid var(--em-lime);background:var(--em-lime-tint);padding:12px 16px;margin:10px 0 14px;font-size:15px;max-width:66ch}
+  blockquote cite{display:block;font-style:normal;font-family:var(--fm);font-size:12.5px;color:var(--em-mute);margin-top:6px}
+  .callout{background:var(--em-lime-tint);border:1px solid var(--em-lime-tint-50);padding:16px 20px;margin:14px 0;font-size:15px;max-width:66ch}
+  .let{border-left:4px solid var(--em-coral);background:#FDEBEC;padding:12px 16px;margin:12px 0;font-size:14.5px;max-width:66ch}
+  .links{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+  .links a{font-family:var(--fh);font-size:13px;color:var(--em-ink);background:var(--em-white);border:1px solid var(--em-line);padding:8px 13px;text-decoration:none}
+  .links a:hover{border-color:var(--em-ink)}
+  code{font-family:var(--fm);font-size:.85em;background:var(--em-lime-tint);border:1px solid var(--em-lime-tint-50);padding:1px 6px}
+  footer{color:var(--em-mute);font-size:13px;text-align:center;margin:30px 0 10px}
+</style>
+</head>
+<body>
+<nav style="background:#383D38;padding:0 20px;font-family:'Space Grotesk',sans-serif;">
+  <div style="max-width:820px;margin:0 auto;display:flex;gap:4px;align-items:center;flex-wrap:wrap;height:auto;min-height:48px;">
+    <a href="../index.html" style="background:#D4FF52;color:#383D38;font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;text-decoration:none;margin-right:12px;">Second Brain Track</a>
+    <a href="../index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Home</a>
+    <a href="../log/index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Track log</a>
+    <a href="../verslag/index.html" style="color:#D4FF52;font-size:13px;text-decoration:none;padding:14px 10px;">Trackverslag</a>
+    <a href="../sessies/index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Sessies</a>
+    <a href="../docs/index.html" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Docs</a>
+    <a href="https://github.com/SVPavlov/ai-second-brain-starter-kit" style="color:#F3F3F1;font-size:13px;text-decoration:none;padding:14px 10px;">Kit op GitHub</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <span class="kicker">AI Second Brain Track · NL pilot · 19 juni tot 11 september 2026</span>
+  <h1>Trackverslag: twaalf weken, tien breinen</h1>
+  <p class="lead">Het hele verhaal op één plek: wat we deden, wat jullie bouwden, wat jullie erover zeiden, wat we afspraken over klantdata, en hoe het verder gaat. Geschreven voor de groep. Alles hieronder komt uit de sessies, de WhatsApp-groep, jullie reflecties en de mails die je me stuurde.</p>
+
+  <div class="cijfers">
+    <div class="cijfer"><b>10</b><span>deelnemers, cap was 8</span></div>
+    <div class="cijfer"><b>6</b><span>vrijdagen, 3 met Stas, 2 peer, 1 slot</span></div>
+    <div class="cijfer"><b>8 van 9</b><span>breinen draaiden na sessie 1</span></div>
+    <div class="cijfer"><b>7 van 10</b><span>presenteerden op 11 september</span></div>
+    <div class="cijfer"><b>243</b><span>berichten in de groep, 172 van jullie</span></div>
+    <div class="cijfer"><b>0</b><span>IT-tickets, 0 metingen</span></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-kop"><h2>1. Waar het over ging</h2><span class="datum">de opzet</span></div>
+    <h3>Het idee</h3>
+    <p>Ieder van ons bouwt een eigen second brain: gewone tekstbestanden, een instructiebestand dat zegt hoe jij werkt, kleine skills voor terugkerend werk, en een AI die dat leest en uitvoert. Geen platform, geen IT. De starter kit stond publiek op GitHub en kreeg in twaalf weken vier updates, tot v0.3.4 met 21 skills en 4 agents.</p>
+    <h3>Waarom een pilot</h3>
+    <p>Deze track was de proeftuin voor de bredere emagine-uitrol. Alles wat hier stukging, was informatie. Wat jullie hebben gebouwd en gezegd gaat, zonder namen, naar de AI-unit van emagine als ontwerpinput voor het brein dat zij in Glassbox bouwen.</p>
+    <h3>Hoe we werkten</h3>
+    <p>Zes vrijdagmiddagen in Delft. Drie met mij erbij, twee peer-middagen in augustus, één afsluiting. Elke sessie een show-and-tell en een bouwuur. Daartussen de WhatsApp-groep voor vragen, fixes en wat er stukging.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-kop"><h2>2. Wat er gebeurde, per datum</h2><span class="datum">19 juni tot 16 september</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Datum</th><th>Wat er gebeurde</th></tr></thead>
+      <tbody>
+        <tr><td>19 jun</td><td>Sessie 1, bouw je brein. Installeren in de zaal. Eén van jullie postte de hele installatievolgorde in de groep voor de anderen.</td></tr>
+        <tr><td>24 jun</td><td>Check-in: zes antwoorden, zes werkende breinen. "Te veel, enterprise-waardige inrichting en allerlei agents." Eerste klantdata-vraag: mag dit op een privélaptop, AVG-wise?</td></tr>
+        <tr><td>2 tot 9 jul</td><td>Drie van jullie liepen vast op de werklaptop. Joeri vond de fix dezelfde dag (één PATH-regel plus terminal herstarten) en postte hem. Op 9 juli werkte het bij iedereen. Nul IT-tickets. De fix staat nu in de documentatie.</td></tr>
+        <tr><td>10 jul</td><td>Ik vroeg IT om een laptop met developer-rechten voor Levi en om beleid voor langdurig Claude Code-gebruik op werklaptops. Daar is geen antwoord op gekomen.</td></tr>
+        <tr><td>13 jul</td><td>Eerste schatting in de groep: "scheelt voor mij rond de 50%". Met de nuance: "ik gebruik het niet altijd, omdat ik vooral mee wil kijken wat er gebeurt".</td></tr>
+        <tr><td>17 jul</td><td>Sessie 2 werd een show-and-tell: een brein op een Mac Mini bereikbaar vanaf je telefoon, coachingvoorbereiding uit een Notion-vault, trainingsadministratie vanaf één knop ("negentig procent van de administratie"), een aandelenmonitor. En drie governance-afspraken (zie deel 5). Dezelfde dag vroeg Sander per mail of zijn boek-ingest-skill deelbaar is.</td></tr>
+        <tr><td>18 jul</td><td>Ik verving het blanket-verbod op klantdata in de kit door een viertrapsregel plus handout (deel 5).</td></tr>
+        <tr><td>21 jul</td><td>Hanneke mailde, ongevraagd, een eerste opzet voor een emagine-brede second-brain-architectuur, plus de volledige architectuur van haar eigen systeem.</td></tr>
+        <tr><td>23 en 24 jul</td><td>Laptopmigratie. Jullie zochten samen uit waar lokale breinen de migratie overleven. "We zitten nog in een soort gedoogbeleid over Claude, dus ik ben terughoudend dit aan het migratieteam voor te leggen." En: let op je lokale Claude-memorymap, die zit buiten je vault.</td></tr>
+        <tr><td>31 jul</td><td>Sessie 3: skills, commands, hooks, connectors. De WhatsApp-koppeling uit de handleiding brak op een fout in het onderliggende project; tijdens de sessie gerepareerd, eigen versie gepubliceerd. Vraag in de groep: hoe scheid je werk en privé token-efficiënt? Daar is geen antwoord op gekomen.</td></tr>
+        <tr><td>3 aug</td><td>Anna Sophia: de WhatsApp-koppeling werkt, na een update van de app.</td></tr>
+        <tr><td>14 en 28 aug</td><td>Peer-middagen zonder mij. In de groep: "is er iemand wel?", en Levi boven aan een bureau, twee keer. De kaart is niet opgepakt. Wel gebouwd: Alex' build-orchestrator met CI op 21 augustus, Hanneke's boekingspagina live op 28 augustus.</td></tr>
+        <tr><td>29 aug tot 1 sep</td><td>Breinen kregen namen en logo's: Aranos, Nexus, Gandalf, en "ik ga ook maar eens een betere naam bedenken".</td></tr>
+        <tr><td>11 sep</td><td>Afsluiting. Zeven van tien, Hanneke online. Elk brein schreef de reflectie van zijn eigenaar en maakte er een artifact van. Vijf schriftelijke antwoorden op "als emagine je een brein geeft" binnen een kwartier. Eddy postte zijn cartoon-werkwijze, Hanneke drie reflectiepagina's.</td></tr>
+        <tr><td>12 sep</td><td>Levi's longread van week 37. En: twee van jullie kregen een mail dat de nieuwe emagine-laptop niet compliant is met emagine-policy. IT heeft een heads-up.</td></tr>
+        <tr><td>16 sep</td><td>Een collega buiten de track mailde dat Anna Sophia hem en een andere collega een uur door haar brein had geleid. "Mega inspirerend en indrukwekkend." Hij vraagt of de track in Q4 weer draait.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-kop"><h2>3. Wat jullie bouwden</h2><span class="datum">zoals getoond op 11 september of gedeeld in de groep</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Wie, brein</th><th>Het probleem</th><th>Wat het brein doet</th><th>Wat eruit kwam</th></tr></thead>
+      <tbody>
+        <tr><td>Hanneke, AranOS</td><td>De dagen naast het trainen gingen op aan uren, mail, agenda, logistiek, nazorg</td><td>Alle mail wordt een actie; 17 routines draaien vanzelf; om 07:24 meldt het systeem wat blijft liggen, ongevraagd; drie lokale modellen voor gevoelig werk</td><td>Cursistenportal, boekingspagina, spelplatform, werkapp. 4.207 bestanden, 1.745 commits, 95 sessies. "Ik open mijn mailbox niet meer." Acht dingen die er zonder dit niet waren</td></tr>
+        <tr><td>Alex, Gandalf / Third brain</td><td>Een trainingsmodule van idee tot draaiboek kost dagen en de kwaliteit zakt onder tijdsdruk</td><td>Agents bouwen de module; elke wijziging wordt automatisch getest op huisstijl, geheimen en klantdata; laptop is "een dom ding", alles draait op een mini-pc</td><td>Modules overgedragen aan Hanneke via systeem-agnostische skills; GitHub Actions CI; boodschappen via de AH-API. Prijs: één planreview van 91,5 miljoen tokens</td></tr>
+        <tr><td>Dennis, Nexus</td><td>Deliverables in de huisstijl van de klant, snel, zonder elke keer context te plakken</td><td>19 skills, patronen, mail- en agendatriage, maturity scan, productdefinitie-workshop</td><td>11 klantdecks en spreadsheets in huisstijl, 6 dashboards, werkoverzicht-app. "Sterkere sessies, scherper denken"</td></tr>
+        <tr><td>Joeri</td><td>Trainingen voorbereiden op 1.789 pagina's gids, in twee talen, elke keer opnieuw</td><td>Materiaal één keer ingelezen; agents als teacher, studenten, content authority en layout</td><td>Voorbereiding in EN/NL in uren; een Miro-bord na een teamsessie in één prompt; boekenkast; Hue-lampen. Alles kwijt na sessie 2, opnieuw begonnen</td></tr>
+        <tr><td>Levi</td><td>Bijblijven in het AI-vak betekent meer lezen dan een mens kan</td><td>Signal monitor op een mini-pc via Tailscale: 6 Telegram-agents lezen 4.700 transcripten en schrijven wekelijks een long read met een zelflerende loop</td><td>"Een business-intelligence-platform"; 210 nieuwe bestanden in 84 dagen; longread wk37 in de groep</td></tr>
+        <tr><td>Eddy, The Wills</td><td>Een webinar heeft een consistente serie illustraties nodig en AI-plaatjes zien er willekeurig uit; en 's nachts moet de boel blijven draaien</td><td>Eén vaste stijlzin, de grap beschrijven, aantallen afdwingen, itereren met de eigenaar; een mini-pc doet 's nachts checks en back-ups</td><td>Cartoonserie voor 1 oktober plus een werkwijze van vijf regels voor de groep; 792 wijzigingen in twaalf weken. "Een brein dat 's nachts alvast nadenkt"</td></tr>
+        <tr><td>Arjen</td><td>Bij een klant met eigen tools en NDA's is een eigen brein nauwelijks inzetbaar</td><td>Stakeholderleiderschap, spreker volgende week, ondernemingsraad</td><td>"Heel leerzaam, benieuwd wat de volgende stap is"</td></tr>
+        <tr><td>Uit sessie 2, ongenoemd</td><td>Coachingvoorbereiding uit losse notities; trainingsadministratie; een portefeuille in de gaten houden</td><td>Notion-vault die vragen per persoon genereert; één knop die agenda, deelnemers, CRM, huisstijl en deck regelt; nieuws plus sentiment tot een dagrapport</td><td>Vragen op maat (en de AI merkte dat de coach meer praatte dan de coachee); "negentig procent van de administratie"; dagrapport in productie</td></tr>
+        <tr><td>Stas, Memory Alpha</td><td>Voorstellen, trainingen en 53 projectkaarten bijhouden naast het trainen</td><td>Voorstellen in huisstijl, trainingen uit bronmateriaal, dashboard, ochtendbriefing, declaratie, een hook die "verzonden" blokkeert tot het echt verzonden is</td><td>Twee deals rond op voorstellen uit het brein, een derde in twee dagen gebouwd. Een phantom-send gevangen door de hook</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout">Wat niemand bouwde: een gedeelde laag. De trainers onder ons kwamen op dezelfde deelstappen uit voor trainingsontwerp en willen die delen. Sander vroeg het in juli al per mail. Het kon niet, want elk brein is een eiland. Hanneke's slotvraag was precies die: "hoe koppel je individuele breinen tot iets gemeenschappelijks, ik ben een beetje lost". Dat is het eerste wat ik aan de AI-unit meegeef.</div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-kop"><h2>4. Wat jullie erover zeiden</h2><span class="datum">letterlijk, uit de groep en jullie reflecties</span></div>
+    <h3>Als emagine je een brein geeft: de vijf antwoorden van 11 september</h3>
+    <blockquote>Welke functie het meest waardevol: het zelf kunnen bouwen van oplossingen voor eigen use cases, je loopt ergens tegenaan, en dan ga je nadenken en laten bouwen. Wat verandert er: automatisering van saaie taken, vergroting van kwaliteit van product, het kunnen leveren van diensten die zonder de 2nd brain niet of heel moeilijk te leveren zouden zijn. Wat mag er niet ontbreken: de mogelijkheid om zelf use cases om te zetten in AI tools.<cite>Alex, 15:21</cite></blockquote>
+    <blockquote>Dat ik altijd alles beschikbaar heb. Elk gesprek, elke afspraak, elk dossier, elke mail in één plek, thuis en onderweg. Geen "waar stond dat ook alweer" meer. En het brein heeft er 's nachts alvast over nagedacht voor ik het vraag. Sessievoorbereiding die een avond kostte ligt er 's ochtends. Koopsignalen in appjes die ik anders had gemist. Kost me nu een dag per week minder aan zoeken en bijhouden. Wat mag er niet ontbreken? Drie dingen. Eigen data in eigen beheer, gewoon tekstbestanden, geen platform, wij werken onder NDA's. Een geheugen dat leert van je correcties, anders maakt AI elke week dezelfde fout. En harde regels tegen invullen: geen bewering zonder bron, want het grootste risico is AI die overtuigend klinkt terwijl de context niet klopt.<cite>Eddy, 15:23</cite></blockquote>
+    <blockquote>Zelf context kunnen creëren. Niet de automatisering, niet de output, maar dat ík bepaal wat mijn brein over mij weet. Ik verbind verschillende concepten en ideeën veel sneller aan elkaar. Wat niet mag ontbreken als je werkgever zoiets bouwt: dat je als gebruiker controle houdt over het zelf creëren van context, en invloed hebt op de system prompts en de inhoud van CLAUDE.md. Zonder die knoppen is het geen second brain, dan is het een tool die iemand anders voor je heeft ingesteld.<cite>Levi, 15:26</cite></blockquote>
+    <blockquote>Iedere prep voor een training of een interventie begint niet bij 0, maar bouwt verder op eerdere bevindingen. Iedere learning, nieuwe info of observatie wordt direct verwerkt in een nieuwe versie. Kwaliteitscontrole schaalt mee, constante check door agents. Dit scheelt uren werk, laat me heel snel inspringen op observaties en gebeurtenissen. En ik hoef niet meer alles zelf te onthouden, wat lucht in mijn hoofd geeft.<cite>Joeri, 15:28</cite></blockquote>
+    <blockquote>Snel sterke, klant-huisstijl deliverables kunnen bouwen, al vind ik dat niet los te zien van de rest: automatisch verwerken en onthouden, het overzicht, het leren van fouten. Ik deel eerder en itereer sneller op feedback, mijn voorbereiding verschuift van "hoe moet dit eruitzien" naar "wat wil ik hiermee bereiken". Vier dingen, niet onderhandelbaar: het systeem vraagt bij twijfel en gokt nooit; ik blijf zelf eigenaar van mijn eigen werkwijze, geen opgelegd sjabloon; het koppelt met de tools die ik al gebruik; en klantinformatie blijft strikt gescheiden tussen klanten.<cite>Dennis, 15:36</cite></blockquote>
+    <p>In de zaal kwam er nog één bij: een front-end voor invoer die op de achtergrond naar markdown schrijft, met knoppen voor gevorderden, "anders krijg je schaduw-ideeën".</p>
+
+    <h3>Uit de reflecties</h3>
+    <blockquote>Het probleem was nooit kunnen. Onthouden kost energie. De gebruikelijke oplossing is beter je best doen. Die werkt twee weken. Niets mag afhangen van volgehouden discipline: werkt iets alleen op een goede dag, dan is het stuk. De backlog werd de werkelijkheid, niet meer mijn hoofd. Het bouwen was het curriculum. Bouwen en leren liepen te los van elkaar; de opleiding liep ernaast in plaats van erdoorheen. Eerder laten zien: veel werkte al weken voordat iemand het gezien had, dat is feedback die je weggooit. Eerlijk erbij: het gaat regelmatig stuk. Er is een bestand dat alleen bekende fouten bijhoudt, met datum. Dat is het nuttigste document dat ik heb.<cite>Hanneke, drie reflectiepagina's, 11 september</cite></blockquote>
+    <blockquote>De AI is de tekenaar; de mens blijft de regisseur.<cite>Eddy's werkwijze voor cartoons, gedeeld 11 september 14:10</cite></blockquote>
+    <blockquote>Structuur verliest van enthousiasme: twee van de drie sessies liepen anders dan ontworpen en de weekmeting vuurde in vier pogingen nooit. Verifiëren is het echte werk. Meten op dag één, niet aan het eind. Een facilitator budgetteren in plaats van tooling: augustus zonder mij was één collega aan een bureau.<cite>Stas, reflectie 11 september</cite></blockquote>
+
+    <h3>Tussendoor, in de groep</h3>
+    <ul>
+      <li>"Gebruik de setup nu heel veel!" (10 juli)</li>
+      <li>"Ja scheelt voor mij rond de 50%. Ik gebruik het niet altijd, omdat wat ik doe een leertraject is en ik vooral mee wil kijken wat er gebeurt. Ik mis hiermee soms info die ik wel wil hebben om te kunnen bijsturen." (13 juli)</li>
+      <li>"De skill om documenten te ingesten leest langere documenten minder goed. Daardoor miste mijn second brain een aantal key points. In overleg met Claude zelf heb ik die nu aangepast. Zijn jullie dit ook tegengekomen?" (23 juli)</li>
+      <li>"Ontwikkelpijplijn waarin repeterende stappen deterministisch in Python staan in plaats van dat het model die steeds zelf bedenkt met agents en skills, waarvoor veel tokens worden verbrand. Verwachting 25% reductie." (21 augustus)</li>
+      <li>"Ik kan er vandaag niet bij zijn, helaas, zal ook een verslagje maken met mijn 2nd brain en delen! Ben ook erg benieuwd hoe het vervolg eruitziet en of ik kan helpen als relatieve leek nog." (11 september)</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-kop"><h2>5. Klantdata: wat we afspraken en wat open bleef</h2><span class="datum">de eerste vraag op 24 juni, de laatste open vraag op 11 september</span></div>
+    <h3>Wat we in de zaal afspraken (sessie 2, 17 juli)</h3>
+    <ul>
+      <li>Klantgesprekken transcriberen zonder expliciete toestemming: nee. Een woordelijk transcript voelt anders dan aantekeningen. Middenweg: de AI live laten samenvatten zonder het ruwe transcript te bewaren.</li>
+      <li>Twee lagen voor je data. Persoonlijk en privé blijft van jou. Deelbaar, team- en klantrelevant gaat in gestructureerde OneDrive-mappen.</li>
+      <li>Vet before you install: repos en skills kunnen malware of prompt-injecties bevatten. Laat je brein een repo scannen voordat je iets overneemt.</li>
+    </ul>
+    <h3>De regel in de kit (18 juli)</h3>
+    <p>Het blanket-verbod ("geen klantvertrouwelijke data tot de enterprise-stack er is") is vervangen door vier trappen. Publiek en intern werk: vrij. Klantidentificerende context (namen, situatie, afspraken): mag in je persoonlijke vault. Ruwe vertrouwelijke documenten (contracten met prijzen, deelnemerslijsten, NDA-materiaal): ontmoedigd, nooit richting een gedeelde laag. Gereguleerde data (bank, verzekeraar, gezondheid, betaalgegevens): nooit. Daarbij de handout <em>Working with client data</em>: classificeer eerst, anonimiseer trap drie met een tokenmap die je machine niet verlaat, trap vier nooit. Eerlijk erbij: dit was mijn besluit, en het accepteert dat klantcontext naar jullie privé-GitHub-repo's synct. De bestaande security-clearance dekte OneDrive, geen persoonlijke GitHubs.</p>
+    <h3>Hoe jullie het zelf oplosten</h3>
+    <ul>
+      <li>Klantdata in een aparte OneDrive-map die het brein niet ziet (Alex).</li>
+      <li>Gevoelige chatkanalen buiten versiebeheer; de lokale Claude-memorymap niet naar GitHub (24 juli).</li>
+      <li>Klantmail en deelnemersgegevens alleen door lokale modellen; geen emagine-materiaal naar externe research-tools; "de metadata mag in de vault, de bytes niet" (Hanneke).</li>
+      <li>Een voorstel voor een sanitisatie-architectuur voor gereguleerd werk: lokaal model haalt identificatoren weg, cloudmodel redeneert over de gesaneerde versie, een mens keurt goed (Levi, longread).</li>
+      <li>Bij Booking het brein helemaal weghouden van klantwerk: NDA's en eigen tools (Glean, Gemini). "Klantinformatie blijft strikt gescheiden tussen klanten" (Dennis).</li>
+    </ul>
+    <h3>Wat open bleef</h3>
+    <div class="let">
+      <p style="margin-bottom:8px">Mijn vraag aan IT van 10 juli (laptop met developer-rechten, beleid voor langdurig gebruik op werklaptops) is niet beantwoord. Op 23 juli schreef een van jullie: "we zitten nog in een soort gedoogbeleid over Claude". Op 12 september kregen twee van jullie de melding dat de nieuwe emagine-laptop niet compliant is met emagine-policy. En in de AI-weekly van 15 september heb ik het zo gezegd: klantdata bij een bank of vergelijkbare klant is "a can of worms we do not have an answer to right now", en dat geldt ook voor emagine's eigen systemen.</p>
+      <p style="margin-bottom:0">Conclusie: elke technische muur hebben jullie zelf geslecht. Geen enkele beleidsmuur. De trainers kwamen het verst, omdat al hun content van emagine zelf is.</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-kop"><h2>6. Wat het opleverde, eerlijk</h2><span class="datum">schattingen, geen metingen</span></div>
+    <p>Niemand heeft gemeten. De weekmeting is in vier pogingen nooit gepost, en dat is mijn les, niet die van jullie. Wat er wél is: "rond de 50%" (juli), "een dag per week minder zoeken en bijhouden", "zo'n 8 uur per week, gebaseerd op niks, op gevoel", "5 tot 8 uur klopt wel, misschien aan de lage kant". Hanneke schat 50 tot 95 procent van de dagen naast het trainen, eigen schatting, geen meting. Ikzelf meer dan 12 uur per week, en ik meet het ook niet.</p>
+    <p>Belangrijker dan uren: nieuw werk. Acht diensten bij Hanneke die er zonder dit niet waren. Twee deals bij mij. Diensten "die zonder de 2nd brain niet of heel moeilijk te leveren zouden zijn" bij Alex. Tijdwinst maakt bestaand werk goedkoper; dit maakt nieuw werk mogelijk.</p>
+    <p>Wat het kostte: gebruikslimieten op persoonlijke abonnementen, herhaaldelijk. Eén testsuite die 91,5 miljoen tokens opat. Werk en privé op één plek is voor de helft van de groep een open probleem. En iemand raakte alles kwijt na sessie 2.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-kop"><h2>7. Wat werkte, wat niet</h2><span class="datum">de trackreview</span></div>
+    <h3>Werkte</h3>
+    <ul>
+      <li>Van elkaar leren. Meerdere keren genoemd als het meest waardevolle. "Ik had dit zelf nooit bedacht, ik was hier niet mee aan de slag gegaan zonder deze track."</li>
+      <li>De groep loste elke technische muur zelf op: de PATH-fix, de WhatsApp-koppeling, de migratie, de kit-updates.</li>
+      <li>Bouwen op eigen echt werk. De materialen zijn nauwelijks gebruikt; de demo's en de groep deden het werk. Dat is een learning, geen gat.</li>
+      <li>Breinen een naam geven. Niemand had erom gevraagd. Vier van tien deden het.</li>
+    </ul>
+    <h3>Werkte niet</h3>
+    <ul>
+      <li>Meten. Een nulmeting vooraf had gemoeten; drie keer genoemd op 11 september.</li>
+      <li>Augustus zonder facilitator. Bouwen gebeurde, samenkomen niet. Datum, plek en gastheer hadden vóór de vakantie vast moeten staan, niet op een kaart.</li>
+      <li>Structuur verloor van enthousiasme: sessie 2 werd een show-and-tell, sessie 3 werd live debuggen. Allebei waardevol, allebei niet het plan.</li>
+      <li>Bouwen en leren liepen te los van elkaar (Hanneke). En te lang doorbouwen voordat iemand iets zag.</li>
+      <li>Vragen in de groep die geen antwoord kregen: de Caveman-tokentool (13 juli), de ingest-skill op lange documenten (23 juli), werk/privé token-efficiënt scheiden (31 juli), Sanders deelbare skill (17 juli, mail), Hanneke's architectuurvoorstel (21 juli, mail). Die pak ik alsnog op.</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-kop"><h2>8. Hoe verder</h2><span class="datum">vanaf nu</span></div>
+    <ul>
+      <li>De WhatsApp-groep blijft. Post wat je bouwt, vraag wat vastzit. Levi's longread en Eddy's werkwijze staan er al.</li>
+      <li>Alle materialen staan op deze site: slides, handleidingen, de kaarten, de reflectieprompt, dit verslag. De kit staat op v0.3.4: <code>git fetch kit && git checkout kit/main -- .claude CLAUDE.md</code>.</li>
+      <li>25 september: retro-middag van alle tracks. Deel 7 hierboven is onze inbreng.</li>
+      <li>Jullie antwoorden en reflecties gaan naar de AI-unit van emagine als ontwerpinput voor het Glassbox-brein, zonder namen. Wil je met naam genoemd worden, zeg het in de groep; anders blijft het anoniem.</li>
+      <li>Een tweede reeks: daar denk ik over na. Een collega buiten de track vroeg er op 16 september al om. Zeg het als je er een mening over hebt, ook over de vorm: een nieuwe reeks, een maandelijkse middag door de groep zelf, of een gedeelde laag voor de trainers.</li>
+      <li>Was je er op 11 september niet bij en heb je je reflectie nog niet gepost? Zet hem in de groep, dan neem ik hem mee. De <a href="../docs/reflectie-prompt.html">prompt</a> staat online.</li>
+    </ul>
+    <div class="links">
+      <a href="../log/index.html">Track log per sessie</a>
+      <a href="../sessies/index.html">Sessies en materialen</a>
+      <a href="../docs/index.html">Documentatie</a>
+      <a href="../docs/reflectie-prompt.html">Reflectieprompt</a>
+      <a href="https://github.com/SVPavlov/ai-second-brain-starter-kit">Kit v0.3.4</a>
+    </div>
+  </div>
+
+  <footer>AI Second Brain Track · NL pilot · 19 juni tot 11 september 2026 · bronnen: sessies, WhatsApp-groep, reflecties, mails · versie 18 september</footer>
+</div>
+</body>
+</html>
