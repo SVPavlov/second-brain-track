@@ -5,15 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Second Brain Track · Trackverslag</title>
 <script>
-/*
- * emagine theme switch — light/dark for static pages, decks and any
- * non-React artifact. Include in <head> BEFORE the stylesheet paints so
- * there's no flash of the wrong theme:
- *   <script src="theme.js"></script>
- * Then wire any control to it:  onclick="emagineTheme.toggle()"
- * Interops 1:1 with the <ThemeToggle> React component (same storage key,
- * same data-theme attribute, same em-themechange event).
- */
 (function () {
   var KEY = 'em-theme';
   var root = document.documentElement;
@@ -834,9 +825,9 @@ html.is-embedded .em-grid--3 { grid-template-columns: repeat(2, 1fr); }
 .tv-nav__links a{color:rgba(255,255,255,0.75);font-size:13px;text-decoration:none;padding:16px 10px;white-space:nowrap;transition:var(--em-transition)}
 .tv-nav__links a:hover{color:var(--em-lime)}
 .tv-nav__sep{width:1px;height:18px;background:rgba(255,255,255,0.2);margin:0 6px;flex-shrink:0}
-.tv-h1{font-size:var(--em-fs-h1);margin:var(--em-space-sm) 0 var(--em-space-md);max-width:22ch;text-wrap:balance}
-.tv-h2{font-size:var(--em-fs-h2);margin-bottom:var(--em-space-md);text-wrap:balance}
-.tv-h3{font-size:var(--em-fs-h3);margin-bottom:var(--em-space-md)}
+.tv-h1{font-size:var(--em-font-h1);margin:var(--em-space-sm) 0 var(--em-space-md);max-width:22ch;text-wrap:balance}
+.tv-h2{font-size:var(--em-font-h2);margin-bottom:var(--em-space-md);text-wrap:balance}
+.tv-h3{font-size:var(--em-font-h3);margin-bottom:var(--em-space-md)}
 .tv-lede{max-width:70ch;margin-bottom:var(--em-space-xxl)}
 .tv-mt{margin-top:var(--em-space-4xl)}
 .tv-mt-sm{margin-top:var(--em-space-xl)}
@@ -885,6 +876,7 @@ code{font-family:'JetBrains Mono','SF Mono',ui-monospace,monospace;font-size:.85
 .tv-nav .em-theme-toggle{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.18)}
 .tv-nav .em-theme-toggle__opt{color:rgba(255,255,255,0.75)}
 .tv-nav .em-theme-toggle__opt[aria-pressed="true"]{background:var(--em-lime);color:#17190F}
+
 
 </style>
 </head>
