@@ -1,9 +1,52 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Second Brain Track · Trackverslag</title>
+<script>
+/*
+ * emagine theme switch — light/dark for static pages, decks and any
+ * non-React artifact. Include in <head> BEFORE the stylesheet paints so
+ * there's no flash of the wrong theme:
+ *   <script src="theme.js"></script>
+ * Then wire any control to it:  onclick="emagineTheme.toggle()"
+ * Interops 1:1 with the <ThemeToggle> React component (same storage key,
+ * same data-theme attribute, same em-themechange event).
+ */
+(function () {
+  var KEY = 'em-theme';
+  var root = document.documentElement;
+  function system() {
+    return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function stored() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function current() { return stored() || 'dark'; }
+  function apply(t) { root.setAttribute('data-theme', t); }
+  function set(t) {
+    try { localStorage.setItem(KEY, t); } catch (e) {}
+    apply(t);
+    document.dispatchEvent(new CustomEvent('em-themechange', { detail: t }));
+  }
+  function toggle() { set(current() === 'dark' ? 'light' : 'dark'); }
+  apply(current());
+  // Follow the OS until the user makes an explicit choice.
+  if (window.matchMedia) {
+    try {
+      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        if (!stored()) apply('dark');
+      });
+    } catch (e) {}
+  }
+  window.emagineTheme = { get: current, set: set, toggle: toggle };
+})();
+
+document.addEventListener('DOMContentLoaded', function(){
+  function paint(){ var t=document.documentElement.getAttribute('data-theme')||'dark';
+    document.querySelectorAll('[data-theme-opt]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-theme-opt')===t ? 'true':'false'); }); }
+  paint(); document.addEventListener('em-themechange', paint);
+});
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /*
@@ -783,7 +826,6 @@ html.is-embedded .em-grid--3 { grid-template-columns: repeat(2, 1fr); }
 .em-marquee:hover { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .em-marquee { animation: none; } }
 
-
 /* ── Page-specific (trackverslag) ── */
 .tv-nav{background:var(--em-ink);position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,0.08)}
 .tv-nav__inner{display:flex;align-items:center;gap:var(--em-space-md);min-height:52px;flex-wrap:wrap}
@@ -831,6 +873,19 @@ code{font-family:'JetBrains Mono','SF Mono',ui-monospace,monospace;font-size:.85
 @media (max-width:900px){.tv-stats{grid-template-columns:repeat(3,1fr)}.tv-stats--4{grid-template-columns:repeat(2,1fr)}.em-grid--3{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:640px){.tv-stats,.tv-stats--4,.em-grid--2,.em-grid--3{grid-template-columns:1fr}.em-phase{flex-direction:column;gap:6px}}
 
+
+/* dark-mode repairs for page-specific parts */
+[data-theme="dark"] .tv-nav{background:#0D0F0D;border-bottom-color:#2A2E2A}
+[data-theme="dark"] .tv-quote p{color:var(--em-ink)}
+[data-theme="dark"] .tv-callout p{color:var(--em-ink)}
+[data-theme="dark"] .tv-tbl{background:var(--em-cream)}
+[data-theme="dark"] .tv-tbl a{color:var(--em-ink)}
+[data-theme="dark"] code{color:var(--em-ink);border-color:#3A4A22}
+.tv-toggle{margin-left:10px;flex-shrink:0}
+.tv-nav .em-theme-toggle{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.18)}
+.tv-nav .em-theme-toggle__opt{color:rgba(255,255,255,0.75)}
+.tv-nav .em-theme-toggle__opt[aria-pressed="true"]{background:var(--em-lime);color:#17190F}
+
 </style>
 </head>
 <body>
@@ -841,6 +896,10 @@ code{font-family:'JetBrains Mono','SF Mono',ui-monospace,monospace;font-size:.85
       <a href="#overzicht">Overzicht</a><a href="#tijdlijn">Tijdlijn</a><a href="#gebouwd">Gebouwd</a><a href="#gezegd">Gezegd</a><a href="#klantdata">Klantdata</a><a href="#opbrengst">Opbrengst</a><a href="#retro">Retro</a><a href="#materialen">Materialen</a><a href="#verder">Hoe verder</a>
       <span class="tv-nav__sep"></span>
       <a href="../log/index.html">Track log</a><a href="../sessies/index.html">Sessies</a><a href="../docs/index.html">Docs</a>
+      <div class="em-theme-toggle tv-toggle" role="group" aria-label="Thema">
+        <button type="button" class="em-theme-toggle__opt" data-theme-opt="light" aria-pressed="false" onclick="emagineTheme.set('light')">Licht</button>
+        <button type="button" class="em-theme-toggle__opt" data-theme-opt="dark" aria-pressed="true" onclick="emagineTheme.set('dark')">Donker</button>
+      </div>
     </div>
   </div>
 </nav>
